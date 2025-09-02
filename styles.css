@@ -1,1 +1,36 @@
+/* Place your CSS styles in this file */
 
+h1 {
+    text-align: center;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: normal;
+}
+
+th{
+    font-weight:normal;
+    border-left: 1px solid black;
+    border-right:1px solid black;
+    margin:5px;
+}
+table{
+    border:1px solid black;
+        border-collapse:collapse;
+}
+td{
+    border-left: 1px solid black;
+    border-right:1px solid black;
+    border-collapse:true;
+    text-align:center;
+    min-width: 60px;
+
+}
+tr{
+        border-top:1px solid black;
+}
+body{
+    background-color:rgba(10,10,10,0.15);
+
+}
+select{
+    background-color:rgba(10,10,10,0.15);
+}
