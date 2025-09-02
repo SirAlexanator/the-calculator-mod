@@ -6,31 +6,34 @@ h1 {
     font-weight: normal;
 }
 
-th{
-    font-weight:normal;
+th {
+    font-weight: normal;
     border-left: 1px solid black;
-    border-right:1px solid black;
-    margin:5px;
+    border-right: 1px solid black;
+    margin: 5px;
 }
-table{
-    border:1px solid black;
-        border-collapse:collapse;
+
+table {
+    border: 1px solid black;
+    border-collapse: collapse;
 }
-td{
+
+td {
     border-left: 1px solid black;
-    border-right:1px solid black;
-    border-collapse:true;
-    text-align:center;
+    border-right: 1px solid black;
+    border-collapse: collapse;
+    text-align: center;
     min-width: 60px;
+}
 
+tr {
+    border-top: 1px solid black;
 }
-tr{
-        border-top:1px solid black;
-}
-body{
-    background-color:rgba(10,10,10,0.15);
 
+body {
+    background-color: rgba(10,10,10,0.15);
 }
-select{
-    background-color:rgba(10,10,10,0.15);
+
+select {
+    background-color: rgba(10,10,10,0.15);
 }

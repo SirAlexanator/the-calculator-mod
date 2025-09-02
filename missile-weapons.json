@@ -1,0 +1,258 @@
+[
+    {
+        "Key": "torch_25_1_0",
+        "Type": "any",
+        "Range": 25,
+        "Damage": 1,
+        "AP": 0,
+        "Target": false
+    },
+    {
+        "Key": "javelin_prec_40_20_12",
+        "Type": "any",
+        "Range": 40,
+        "Damage": 20,
+        "AP": 20,
+        "Target": false
+    },
+    {
+        "Key": "pilum_normal_40_20_10",
+        "Type": "any",
+        "Range": 40,
+        "Damage": 20,
+        "AP": 10,
+        "Target": false
+    },
+    {
+        "Key": "javelin_poison_40_15_8",
+        "Type": "any",
+        "Range": 40,
+        "Damage": 15,
+        "AP": 8,
+        "Target": true
+    },
+    {
+        "Key": "stone_hand_75_5_1",
+        "Type": "any",
+        "Range": 75,
+        "Damage": 5,
+        "AP": 1,
+        "Target": true
+    },
+    {
+        "Key": "javelin_fire_80_7_1",
+        "Type": "pel",
+        "Range": 80,
+        "Damage": 7,
+        "AP": 1,
+        "Target": true
+    },
+    {
+        "Key": "javelin_improved_80_29_12",
+        "Type": "any",
+        "Range": 80,
+        "Damage": 29,
+        "AP": 12,
+        "Target": true
+    },
+    {
+        "Key": "javelin_normal_80_20_12",
+        "Type": "any",
+        "Range": 80,
+        "Damage": 20,
+        "AP": 12,
+        "Target": true
+    },
+    {
+        "Key": "javelin_wooden_80_20_9",
+        "Type": "any",
+        "Range": 80,
+        "Damage": 20,
+        "AP": 9,
+        "Target": true
+    },
+    {
+        "Key": "javelin_ankyle_100_20_12",
+        "Type": "any",
+        "Range": 100,
+        "Damage": 20,
+        "AP": 12,
+        "Target": true
+    },
+    {
+        "Key": "arrow_composite_horse_heavy_100_32_8",
+        "Type": "arr",
+        "Range": 100,
+        "Damage": 32,
+        "AP": 8,
+        "Target": true
+    },
+    {
+        "Key": "arrow_normal_horse_heavy_100_27_8",
+        "Type": "arr",
+        "Range": 100,
+        "Damage": 27,
+        "AP": 8,
+        "Target": true
+    },
+    {
+        "Key": "arrow_composite_heavy_110_32_8",
+        "Type": "arr",
+        "Range": 110,
+        "Damage": 32,
+        "AP": 8,
+        "Target": true
+    },
+    {
+        "Key": "arrow_composite_horse_125_36_4",
+        "Type": "arr",
+        "Range": 125,
+        "Damage": 36,
+        "AP": 4,
+        "Target": true
+    },
+    {
+        "Key": "arrow_flaming_125_15_1",
+        "Type": "arr",
+        "Range": 125,
+        "Damage": 15,
+        "AP": 1,
+        "Target": true
+    },
+    {
+        "Key": "arrow_flaming_long_125_15_1",
+        "Type": "arr",
+        "Range": 125,
+        "Damage": 15,
+        "AP": 1,
+        "Target": true
+    },
+    {
+        "Key": "arrow_longbow_125_36_4",
+        "Type": "arr",
+        "Range": 125,
+        "Damage": 36,
+        "AP": 4,
+        "Target": true
+    },
+    {
+        "Key": "arrow_normal_125_31_4",
+        "Type": "arr",
+        "Range": 125,
+        "Damage": 31,
+        "AP": 4,
+        "Target": true
+    },
+    {
+        "Key": "arrow_poison_horse_125_20_3",
+        "Type": "arr",
+        "Range": 125,
+        "Damage": 20,
+        "AP": 3,
+        "Target": true
+    },
+    {
+        "Key": "arrow_recurve_horse_125_31_4",
+        "Type": "arr",
+        "Range": 125,
+        "Damage": 31,
+        "AP": 4,
+        "Target": true
+    },
+    {
+        "Key": "arrow_whistling_125_5_0",
+        "Type": "arr",
+        "Range": 125,
+        "Damage": 5,
+        "AP": 0,
+        "Target": true
+    },
+    {
+        "Key": "arrow_whistling_horse_125_5_0",
+        "Type": "arr",
+        "Range": 125,
+        "Damage": 5,
+        "AP": 0,
+        "Target": true
+    },
+    {
+        "Key": "arrow_composite_150_36_4",
+        "Type": "arr",
+        "Range": 150,
+        "Damage": 36,
+        "AP": 4,
+        "Target": true
+    },
+    {
+        "Key": "arrow_long_150_31_4",
+        "Type": "arr",
+        "Range": 150,
+        "Damage": 31,
+        "AP": 4,
+        "Target": true
+    },
+    {
+        "Key": "arrow_poison_150_20_3",
+        "Type": "arr",
+        "Range": 150,
+        "Damage": 20,
+        "AP": 3,
+        "Target": true
+    },
+    {
+        "Key": "sling_stone_150_16_4",
+        "Type": "sli",
+        "Range": 150,
+        "Damage": 16,
+        "AP": 4,
+        "Target": true
+    },
+    {
+        "Key": "sling_stone_improved_150_17_6",
+        "Type": "sli",
+        "Range": 150,
+        "Damage": 17,
+        "AP": 6,
+        "Target": true
+    },
+    {
+        "Key": "sling_stone_lead_150_21_8",
+        "Type": "sli",
+        "Range": 150,
+        "Damage": 21,
+        "AP": 8,
+        "Target": true
+    },
+    {
+        "Key": "chu-ko-nu_135_15_5",
+        "Type": "pel",
+        "Range": 135,
+        "Damage": 15,
+        "AP": 5,
+        "Target": true
+    },
+    {
+        "Key": "crossbow_110_10_15",
+        "Type": "pel",
+        "Range": 110,
+        "Damage": 10,
+        "AP": 15,
+        "Target": true
+    },
+    {
+        "Key": "caliver_170_0_40",
+        "Type": "gun",
+        "Range": 170,
+        "Damage": 0,
+        "AP": 40,
+        "Target": false
+    },
+    {
+        "Key": "javelin_ankyle_100_20_12",
+        "Type": "pel",
+        "Range": 100,
+        "Damage": 20,
+        "AP": 12,
+        "Target": false
+    }
+]

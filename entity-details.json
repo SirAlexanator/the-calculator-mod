@@ -1,0 +1,425 @@
+[
+    {
+        "Entity": "rome_infantry_heavy",
+        "HP": 40,
+        "Mass": 130,
+        "Walk Speed": 1.2,
+        "Run Speed": 3,
+        "Charge Speed": 4,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_infantry_light",
+        "HP": 40,
+        "Mass": 70,
+        "Walk Speed": 1.8,
+        "Run Speed": 3.6,
+        "Charge Speed": 5,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_infantry_medium",
+        "HP": 40,
+        "Mass": 100,
+        "Walk Speed": 1.4,
+        "Run Speed": 3.2,
+        "Charge Speed": 4.5,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_infantry_very_heavy",
+        "HP": 40,
+        "Mass": 160,
+        "Walk Speed": 1.2,
+        "Run Speed": 2.8,
+        "Charge Speed": 3.5,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_infantry_very_light",
+        "HP": 40,
+        "Mass": 40,
+        "Walk Speed": 2,
+        "Run Speed": 3.8,
+        "Charge Speed": 5.5,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_camel",
+        "HP": 40,
+        "Mass": 450,
+        "Walk Speed": 1.85,
+        "Run Speed": 7.25,
+        "Charge Speed": 12,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_camel_cataphract",
+        "HP": 55,
+        "Mass": 750,
+        "Walk Speed": 1.65,
+        "Run Speed": 6.5,
+        "Charge Speed": 11,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_heavy",
+        "HP": 35,
+        "Mass": 600,
+        "Walk Speed": 1.5,
+        "Run Speed": 8,
+        "Charge Speed": 11,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_heavy_missile",
+        "HP": 30,
+        "Mass": 600,
+        "Walk Speed": 1.5,
+        "Run Speed": 8,
+        "Charge Speed": 11,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_heavy_shock",
+        "HP": 30,
+        "Mass": 700,
+        "Walk Speed": 1.5,
+        "Run Speed": 8,
+        "Charge Speed": 11,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_light",
+        "HP": 25,
+        "Mass": 200,
+        "Walk Speed": 1.8,
+        "Run Speed": 10,
+        "Charge Speed": 12,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_light_missile",
+        "HP": 20,
+        "Mass": 200,
+        "Walk Speed": 1.8,
+        "Run Speed": 9,
+        "Charge Speed": 12,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_light_shock",
+        "HP": 20,
+        "Mass": 300,
+        "Walk Speed": 1.8,
+        "Run Speed": 10,
+        "Charge Speed": 12,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_medium",
+        "HP": 25,
+        "Mass": 400,
+        "Walk Speed": 1.65,
+        "Run Speed": 9,
+        "Charge Speed": 11,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_medium_missile",
+        "HP": 20,
+        "Mass": 400,
+        "Walk Speed": 1.65,
+        "Run Speed": 9,
+        "Charge Speed": 11,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_medium_shock",
+        "HP": 20,
+        "Mass": 500,
+        "Walk Speed": 1.65,
+        "Run Speed": 9,
+        "Charge Speed": 11,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_numidian_heavy",
+        "HP": 35,
+        "Mass": 600,
+        "Walk Speed": 1.7,
+        "Run Speed": 8.5,
+        "Charge Speed": 11,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_numidian_heavy",
+        "HP": 35,
+        "Mass": 700,
+        "Walk Speed": 1.7,
+        "Run Speed": 8.5,
+        "Charge Speed": 11,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_numidian_light",
+        "HP": 20,
+        "Mass": 150,
+        "Walk Speed": 2,
+        "Run Speed": 12.5,
+        "Charge Speed": 13,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_numidian_medii",
+        "HP": 25,
+        "Mass": 400,
+        "Walk Speed": 1.8,
+        "Run Speed": 10,
+        "Charge Speed": 11,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_numidian_medii",
+        "HP": 25,
+        "Mass": 500,
+        "Walk Speed": 1.8,
+        "Run Speed": 10,
+        "Charge Speed": 11,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_super_heavy",
+        "HP": 55,
+        "Mass": 1100,
+        "Walk Speed": 1.2,
+        "Run Speed": 6,
+        "Charge Speed": 10,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_venetian_light",
+        "HP": 40,
+        "Mass": 150,
+        "Walk Speed": 2.2,
+        "Run Speed": 14,
+        "Charge Speed": 15,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_very_heavy",
+        "HP": 40,
+        "Mass": 700,
+        "Walk Speed": 1.35,
+        "Run Speed": 7,
+        "Charge Speed": 11,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_very_heavy_mis",
+        "HP": 35,
+        "Mass": 700,
+        "Walk Speed": 1.35,
+        "Run Speed": 7,
+        "Charge Speed": 11,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_very_heavy_sho",
+        "HP": 35,
+        "Mass": 800,
+        "Walk Speed": 1.35,
+        "Run Speed": 7,
+        "Charge Speed": 11,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_very_light",
+        "HP": 20,
+        "Mass": 150,
+        "Walk Speed": 1.95,
+        "Run Speed": 12,
+        "Charge Speed": 12,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_very_light_mis",
+        "HP": 20,
+        "Mass": 150,
+        "Walk Speed": 1.95,
+        "Run Speed": 10,
+        "Charge Speed": 12,
+        "Type": "mt"
+    },
+    {
+        "Entity": "rome_horse_very_light_shoc",
+        "HP": 20,
+        "Mass": 250,
+        "Walk Speed": 1.95,
+        "Run Speed": 12,
+        "Charge Speed": 12,
+        "Type": "mt"
+    },
+    {
+        "Entity": "indian_armoured_elephant",
+        "HP": 1150,
+        "Mass": 3350,
+        "Walk Speed": 1.4,
+        "Run Speed": 5.5,
+        "Charge Speed": 7.5,
+        "Type": "an",
+        "Price": 80
+    },
+    {
+        "Entity": "indian_elephant",
+        "HP": 950,
+        "Mass": 3100,
+        "Walk Speed": 1.4,
+        "Run Speed": 5.5,
+        "Charge Speed": 7.5,
+        "Type": "an",
+        "Price": 60
+    },
+    {
+        "Entity": "boar",
+        "HP": 30,
+        "Mass": 90,
+        "Walk Speed": 1.75,
+        "Run Speed": 4,
+        "Charge Speed": 9,
+        "Type": "an",
+        "Price": 5
+    },
+    {
+        "Entity": "molossian_dog",
+        "HP": 20,
+        "Mass": 40,
+        "Walk Speed": 2.6,
+        "Run Speed": 8,
+        "Charge Speed": 10,
+        "Type": "an",
+        "Price": 2
+    },
+    {
+        "Entity": "wardog",
+        "HP": 20,
+        "Mass": 40,
+        "Walk Speed": 2.6,
+        "Run Speed": 9,
+        "Charge Speed": 12.5,
+        "Type": "an",
+        "Price": 3
+    },
+    {
+        "Entity": "rome_chariot_celtic",
+        "HP": 150,
+        "Mass": 1500,
+        "Walk Speed": 1.7,
+        "Run Speed": 8,
+        "Charge Speed": 10,
+        "Type": "cht",
+        "Price": 40
+    },
+    {
+        "Entity": "rome_chariot_generic",
+        "HP": 200,
+        "Mass": 2000,
+        "Walk Speed": 2.2,
+        "Run Speed": 7.5,
+        "Charge Speed": 11,
+        "Type": "cht",
+        "Price": 45
+    },
+    {
+        "Entity": "rome_chariot_scythed",
+        "HP": 250,
+        "Mass": 2500,
+        "Walk Speed": 1.65,
+        "Run Speed": 7,
+        "Charge Speed": 10,
+        "Type": "cht",
+        "Price": 50
+    },
+    {
+        "Entity": "ballista_medium",
+        "Standard Ammo": 15,
+        "Price per Ammo": 25,
+        "Price per Piece": 50,
+        "Type": "arty"
+    },
+    {
+        "Entity": "beehive_thrower",
+        "Standard Ammo": 15,
+        "Price per Ammo": 25,
+        "Price per Piece": 60,
+        "Type": "arty"
+    },
+    {
+        "Entity": "cheiroballistra",
+        "Standard Ammo": 40,
+        "Price per Ammo": 7,
+        "Price per Piece": 30,
+        "Type": "arty"
+    },
+    {
+        "Entity": "onager",
+        "Standard Ammo": 15,
+        "Price per Ammo": 35,
+        "Price per Piece": 50,
+        "Type": "arty"
+    },
+    {
+        "Entity": "onager_large",
+        "Standard Ammo": 15,
+        "Price per Ammo": 40,
+        "Price per Piece": 100,
+        "Type": "arty"
+    },
+    {
+        "Entity": "polybolos",
+        "Standard Ammo": 60,
+        "Price per Ammo": 3,
+        "Price per Piece": 15,
+        "Type": "arty"
+    },
+    {
+        "Entity": "scorpio",
+        "Standard Ammo": 70,
+        "Price per Ammo": 6,
+        "Price per Piece": 22,
+        "Type": "arty"
+    },
+    {
+        "Entity": "scorpion_pot_thrower",
+        "Standard Ammo": 30,
+        "Price per Ammo": 6,
+        "Price per Piece": 22,
+        "Type": "arty"
+    },
+    {
+        "Entity": "snake_pot_thrower",
+        "Standard Ammo": 15,
+        "Price per Ammo": 6,
+        "Price per Piece": 22,
+        "Type": "arty"
+    },
+    {
+        "Entity": "trebuchet",
+        "Standard Ammo": 15,
+        "Price per Ammo": 30,
+        "Price per Piece": 80,
+        "Type": "arty"
+    },
+    {
+        "Entity": "none",
+        "Standard Ammo": 0,
+        "Price per Ammo": 0,
+        "Price per Piece": 0,
+        "HP": 0,
+        "Mass": 0,
+        "Walk Speed": 0,
+        "Run Speed": 0,
+        "Charge Speed": 0,
+        "Type": "none"
+    }
+]
