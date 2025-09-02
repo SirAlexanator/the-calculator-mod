@@ -1,0 +1,346 @@
+[
+  {
+    "Key": "balkan_sword_25_10",
+    "Damage": 25,
+    "Ap Damage": 10,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": false
+  },
+  {
+    "Key": "celtic_longsword_36_4",
+    "Damage": 36,
+    "Ap Damage": 4,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": false
+  },
+  {
+    "Key": "celtic_longsword_bonus_infantry_20_5_15",
+    "Damage": 20,
+    "Ap Damage": 5,
+    "Damage v Inf": 15,
+    "Bonus v Cav": 0,
+    "Two Handed": false
+  },
+  {
+    "Key": "celtic_longsword_elite_40_5",
+    "Damage": 40,
+    "Ap Damage": 5,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": false
+  },
+  {
+    "Key": "celtic_spear_anti_cav_15_7_25",
+    "Damage": 15,
+    "Ap Damage": 7,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 25,
+    "Two Handed": false
+  },
+  {
+    "Key": "celtic_spear_cav_20_7_10",
+    "Damage": 20,
+    "Ap Damage": 7,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 10,
+    "Two Handed": false
+  },
+  {
+    "Key": "celtic_spear_cav_elite_24_7_10",
+    "Damage": 24,
+    "Ap Damage": 7,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 10,
+    "Two Handed": false
+  },
+  {
+    "Key": "celtic_spear_elite_24_6_15",
+    "Damage": 24,
+    "Ap Damage": 6,
+    "Damage v Inf": 15,
+    "Bonus v Cav": 0,
+    "Two Handed": false
+  },
+  {
+    "Key": "claymore_30_20",
+    "Damage": 30,
+    "Ap Damage": 20,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": true
+  },
+  {
+    "Key": "club_6_9_10",
+    "Damage": 6,
+    "Ap Damage": 9,
+    "Damage v Inf": 10,
+    "Bonus v Cav": 0,
+    "Two Handed": false
+  },
+  {
+    "Key": "dagger_10_2",
+    "Damage": 10,
+    "Ap Damage": 2,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": false
+  },
+  {
+    "Key": "dirk_25_4",
+    "Damage": 25,
+    "Ap Damage": 4,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": false
+  },
+  {
+    "Key": "eastern_axe_16_10",
+    "Damage": 16,
+    "Ap Damage": 10,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": false
+  },
+  {
+    "Key": "eastern_axe_elite_20_12",
+    "Damage": 20,
+    "Ap Damage": 12,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": false
+  },
+  {
+    "Key": "eastern_sword_elite_34_4",
+    "Damage": 34,
+    "Ap Damage": 4,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": false
+  },
+  {
+    "Key": "falcata_30_5",
+    "Damage": 30,
+    "Ap Damage": 5,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": false
+  },
+  {
+    "Key": "falcata_elite_36_5",
+    "Damage": 36,
+    "Ap Damage": 5,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": false
+  },
+  {
+    "Key": "falcion_32_8",
+    "Damage": 32,
+    "Ap Damage": 8,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": false
+  },
+  {
+    "Key": "falx_25_14_15",
+    "Damage": 25,
+    "Ap Damage": 14,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 15,
+    "Two Handed": true
+  },
+  {
+    "Key": "generic_sword_30_4",
+    "Damage": 30,
+    "Ap Damage": 4,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": false
+  },
+  {
+    "Key": "gladius_elite_34_5",
+    "Damage": 34,
+    "Ap Damage": 5,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": false
+  },
+  {
+    "Key": "gladius_elite_cav_36_5",
+    "Damage": 36,
+    "Ap Damage": 5,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": false
+  },
+  {
+    "Key": "hoplite_spear_20_6_15",
+    "Damage": 20,
+    "Ap Damage": 6,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 15,
+    "Two Handed": false
+  },
+  {
+    "Key": "hoplite_spear_cav_20_6_10",
+    "Damage": 20,
+    "Ap Damage": 6,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 10,
+    "Two Handed": false
+  },
+  {
+    "Key": "hoplite_spear_elite_22_8_15",
+    "Damage": 22,
+    "Ap Damage": 8,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 15,
+    "Two Handed": false
+  },
+  {
+    "Key": "horse_hewer_15_10_25",
+    "Damage": 15,
+    "Ap Damage": 10,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 25,
+    "Two Handed": true
+  },
+  {
+    "Key": "kopis_30_6",
+    "Damage": 30,
+    "Ap Damage": 6,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": false
+  },
+  {
+    "Key": "kopis_cav_32_6",
+    "Damage": 32,
+    "Ap Damage": 6,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": false
+  },
+  {
+    "Key": "lance_14_11_10",
+    "Damage": 14,
+    "Ap Damage": 11,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 10,
+    "Two Handed": true
+  },
+  {
+    "Key": "lance_elite_15_12_10",
+    "Damage": 15,
+    "Ap Damage": 12,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 10,
+    "Two Handed": true
+  },
+  {
+    "Key": "pike_20_4",
+    "Damage": 20,
+    "Ap Damage": 4,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": true
+  },
+  {
+    "Key": "pike_elite_24_4",
+    "Damage": 24,
+    "Ap Damage": 4,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": true
+  },
+  {
+    "Key": "pike_levy_16_4",
+    "Damage": 16,
+    "Ap Damage": 4,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": true
+  },
+  {
+    "Key": "rhomphaia_30_15_20",
+    "Damage": 30,
+    "Ap Damage": 15,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 20,
+    "Two Handed": true
+  },
+  {
+    "Key": "shortsword_20_4",
+    "Damage": 20,
+    "Ap Damage": 4,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": false
+  },
+  {
+    "Key": "shotel_23_12",
+    "Damage": 23,
+    "Ap Damage": 12,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": false
+  },
+  {
+    "Key": "spear_20_5_20",
+    "Damage": 20,
+    "Ap Damage": 5,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 20,
+    "Two Handed": false
+  },
+  {
+    "Key": "spear_anti_cav_15_5_30",
+    "Damage": 15,
+    "Ap Damage": 5,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 30,
+    "Two Handed": false
+  },
+  {
+    "Key": "spear_cav_20_5_15",
+    "Damage": 20,
+    "Ap Damage": 5,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 15,
+    "Two Handed": false
+  },
+  {
+    "Key": "spear_cav_elite_24_5_15",
+    "Damage": 24,
+    "Ap Damage": 5,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 15,
+    "Two Handed": false
+  },
+  {
+    "Key": "spear_elite_24_5_20",
+    "Damage": 24,
+    "Ap Damage": 5,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 20,
+    "Two Handed": false
+  },
+  {
+    "Key": "warsword_40_15",
+    "Damage": 40,
+    "Ap Damage": 15,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": true
+  },
+  {
+    "Key": "long_axe_20_24",
+    "Damage": 20,
+    "Ap Damage": 24,
+    "Damage v Inf": 0,
+    "Bonus v Cav": 0,
+    "Two Handed": true
+  }
+]
