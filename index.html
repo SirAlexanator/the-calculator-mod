@@ -1,1 +1,505 @@
+<!doctype html>
 
+<html>
+    <head>
+        <meta charset="utf-8">
+
+        <title>The Calculator Mod</title>
+
+        <!-- Load external CSS styles -->
+        <link rel="stylesheet" href="styles.css">
+
+    </head>
+
+    <body>
+        <h1>The Calculator Mod</h1>
+    <table>
+        <tr>
+            <th id="total-points-usage">Points Usage 0/34</th>
+            <th>Price</th>
+            <th>Name</th>
+            <th>Man Count</th>
+            <th>Morale</th>
+            <th>Charge Bonus</th>
+            <th>Melee Attack</th>
+            <th>Melee Defense</th>
+            <th>Armor</th>
+            <th>Hp</th>
+            <th>Ammo</th>
+            <th>Accuracy</th>
+            <th>Melee Weapon</th>
+            <th>Missile Weapon</th>
+            <th>Shield</th>
+            <th>Mount</th>
+            <th>Animal/Artillery/Chariot</th>
+            <th>Number of Animals/Artillery</th>
+            </tr>
+        <tr>
+            <td contenteditable="false" id="PU-1" > </td>
+            <td contenteditable="false" id="P-1"> </td>
+            <td contenteditable="true" id="N-1"> </td>
+            <td contenteditable="true" id="MC-1"> </td>
+            <td contenteditable="true" id="M-1"> </td>
+            <td contenteditable="true" id="CB-1"> </td>
+            <td contenteditable="true" id="MA-1"> </td>
+            <td contenteditable="true" id="MD-1"> </td>
+            <td contenteditable="true" id="Armor-1"> </td>
+            <td contenteditable="true" id="H-1"> </td>
+            <td contenteditable="true" id="Ammo-1"> </td>
+            <td contenteditable="true" id="Accuracy-1"> </td>
+            <td contenteditable="true" id="MW-1"><select id="weapon-select-1">
+  <option value="balkan_sword_25_10">Balkan Sword (25/10)</option>
+  <option value="celtic_longsword_36_4">Celtic Longsword (36/4)</option>
+  <option value="celtic_longsword_bonus_infantry_20_5_15">Celtic Longsword (Bonus Infantry 20/5/15)</option>
+  <option value="celtic_longsword_elite_40_5">Celtic Longsword (Elite 40/5)</option>
+  <option value="celtic_spear_anti_cav_15_7_25">Celtic Spear (Anti-Cavalry 15/7/25)</option>
+  <option value="celtic_spear_cav_20_7_10">Celtic Spear (Cavalry 20/7/10)</option>
+  <option value="celtic_spear_cav_elite_24_7_10">Celtic Spear (Cavalry Elite 24/7/10)</option>
+  <option value="celtic_spear_elite_24_6_15">Celtic Spear (Elite 24/6/15)</option>
+  <option value="claymore_30_20">Claymore (30/20)</option>
+  <option value="club_6_9_10">Club (6/9/10)</option>
+  <option value="dagger_10_2">Dagger (10/2)</option>
+  <option value="dirk_25_4">Dirk (25/4)</option>
+  <option value="eastern_axe_16_10">Eastern Axe (16/10)</option>
+  <option value="eastern_axe_elite_20_12">Eastern Axe (Elite 20/12)</option>
+  <option value="eastern_sword_elite_34_4">Eastern Sword (Elite 34/4)</option>
+  <option value="falcata_30_5">Falcata (30/5)</option>
+  <option value="falcata_elite_36_5">Falcata (Elite 36/5)</option>
+  <option value="falcion_32_8">Falcion (32/8)</option>
+  <option value="falx_25_14_15">Falx (25/14/15)</option>
+  <option value="generic_sword_30_4">Generic Sword (30/4)</option>
+  <option value="gladius_elite_34_5">Gladius (Elite 34/5)</option>
+  <option value="gladius_elite_cav_36_5">Gladius (Elite Cavalry 36/5)</option>
+  <option value="hoplite_spear_20_6_15">Hoplite Spear (20/6/15)</option>
+  <option value="hoplite_spear_cav_20_6_10">Hoplite Spear (Cavalry 20/6/10)</option>
+  <option value="hoplite_spear_elite_22_8_15">Hoplite Spear (Elite 22/8/15)</option>
+  <option value="horse_hewer_15_10_25">Horse Hewer (15/10/25)</option>
+  <option value="kopis_30_6">Kopis (30/6)</option>
+  <option value="kopis_cav_32_6">Kopis (Cavalry 32/6)</option>
+  <option value="lance_14_11_10">Lance (14/11/10)</option>
+  <option value="lance_elite_15_12_10">Lance (Elite 15/12/10)</option>
+  <option value="pike_20_4">Pike (20/4)</option>
+  <option value="pike_elite_24_4">Pike (Elite 24/4)</option>
+  <option value="pike_levy_16_4">Pike (Levy 16/4)</option>
+  <option value="rhomphaia_30_15_20">Rhomphaia (30/15/20)</option>
+  <option value="shortsword_20_4">Shortsword (20/4)</option>
+  <option value="shotel_23_12">Shotel (23/12)</option>
+  <option value="spear_20_5_20">Spear (20/5/20)</option>
+  <option value="spear_anti_cav_15_5_30">Spear (Anti-Cavalry 15/5/30)</option>
+  <option value="spear_cav_20_5_15">Spear (Cavalry 20/5/15)</option>
+  <option value="spear_cav_elite_24_5_15">Spear (Cavalry Elite 24/5/15)</option>
+  <option value="spear_elite_24_5_20">Spear (Elite 24/5/20)</option>
+  <option value="warsword_40_15">Warsword (40/15)</option>
+  <option value="long_axe_20_24">Long Axe (20/24)</option>
+</select>
+                 </td>
+            <td contenteditable="true" id="MisW-1">
+               <select id="ranged-weapon-select">
+                <option value="none">None</option>
+  <option value="torch_25_1_0">Torch (25/1/0)</option>
+  <option value="javelin_prec_40_20_12">Javelin (Precise 40/20/12)</option>
+  <option value="pilum_normal_40_20_10">Pilum (Normal 40/20/10)</option>
+  <option value="javelin_poison_40_15_8">Javelin (Poison 40/15/8)</option>
+  <option value="stone_hand_75_5_1">Stone (Hand 75/5/1)</option>
+  <option value="javelin_fire_80_7_1">Javelin (Fire 80/7/1)</option>
+  <option value="javelin_improved_80_29_12">Javelin (Improved 80/29/12)</option>
+  <option value="javelin_normal_80_20_12">Javelin (Normal 80/20/12)</option>
+  <option value="javelin_wooden_80_20_9">Javelin (Wooden 80/20/9)</option>
+  <option value="javelin_ankyle_100_20_12">Javelin (Ankyle 100/20/12)</option>
+  <option value="arrow_composite_horse_heavy_100_32_8">Arrow (Composite Horse Heavy 100/32/8)</option>
+  <option value="arrow_normal_horse_heavy_100_27_8">Arrow (Normal Horse Heavy 100/27/8)</option>
+  <option value="arrow_composite_heavy_110_32_8">Arrow (Composite Heavy 110/32/8)</option>
+  <option value="arrow_composite_horse_125_36_4">Arrow (Composite Horse 125/36/4)</option>
+  <option value="arrow_flaming_125_15_1">Arrow (Flaming 125/15/1)</option>
+  <option value="arrow_flaming_long_125_15_1">Arrow (Flaming Long 125/15/1)</option>
+  <option value="arrow_longbow_125_36_4">Arrow (Longbow 125/36/4)</option>
+  <option value="arrow_normal_125_31_4">Arrow (Normal 125/31/4)</option>
+  <option value="arrow_poison_horse_125_20_3">Arrow (Poison Horse 125/20/3)</option>
+  <option value="arrow_recurve_horse_125_31_4">Arrow (Recurve Horse 125/31/4)</option>
+  <option value="arrow_whistling_125_5_0">Arrow (Whistling 125/5/0)</option>
+  <option value="arrow_whistling_horse_125_5_0">Arrow (Whistling Horse 125/5/0)</option>
+  <option value="arrow_composite_150_36_4">Arrow (Composite 150/36/4)</option>
+  <option value="arrow_long_150_31_4">Arrow (Long 150/31/4)</option>
+  <option value="arrow_poison_150_20_3">Arrow (Poison 150/20/3)</option>
+  <option value="sling_stone_150_16_4">Sling Stone (150/16/4)</option>
+  <option value="sling_stone_improved_150_17_6">Sling Stone (Improved 150/17/6)</option>
+  <option value="sling_stone_lead_150_21_8">Sling Stone (Lead 150/21/8)</option>
+  <option value="chu-ko-nu_135_15_5">Chu-Ko-Nu (135/15/5)</option>
+  <option value="crossbow_110_10_15">Crossbow (110/10/15)</option>
+  <option value="caliver_170_0_40">Caliver (170/0/40)</option>
+</select> </td>
+            <td contenteditable="true" id="S-1"> 
+                <select id="shield-select">
+  <option value="none">None (0)</option>
+  <option value="thracian_0">Thracian (0)</option>
+  <option value="caetra_cavalry_10">Caetra (Cavalry 10)</option>
+  <option value="caetra_20">Caetra (20)</option>
+  <option value="cavalry_20">Cavalry Shield (20)</option>
+  <option value="germanic_cav_20">Germanic (Cavalry 20)</option>
+  <option value="caetra_fast_cav_25">Caetra (Fast Cavalry 25)</option>
+  <option value="celtic_round_25">Celtic (Round 25)</option>
+  <option value="hoplite_cav_25">Hoplite (Cavalry 25)</option>
+  <option value="pelta_cavalry_25">Pelta (Cavalry 25)</option>
+  <option value="pikemen_25">Pikemen (25)</option>
+  <option value="celtic_shock_30">Celtic (Shock 30)</option>
+  <option value="small_bronze_30">Small Bronze (30)</option>
+  <option value="small_round_30">Small Round (30)</option>
+  <option value="celtic_40">Celtic (40)</option>
+  <option value="germanic_shock_40">Germanic (Shock 40)</option>
+  <option value="iberian_scuta_40">Iberian Scuta (40)</option>
+  <option value="oval_40">Oval (40)</option>
+  <option value="thureos_40">Thureos (40)</option>
+  <option value="celtic_missile_50">Celtic (Missile 50)</option>
+  <option value="hoplite_50">Hoplite (50)</option>
+  <option value="large_hide_50">Large Hide (50)</option>
+  <option value="pelta_50">Pelta (50)</option>
+  <option value="peltast_thureos_50">Peltast Thureos (50)</option>
+  <option value="round_50">Round (50)</option>
+  <option value="scutum_50">Scutum (50)</option>
+  <option value="scutum_imperial_50">Scutum (Imperial 50)</option>
+  <option value="scutum_marian_50">Scutum (Marian 50)</option>
+  <option value="germanic_hex_55">Germanic (Hexagonal 55)</option>
+  <option value="germanic_wood_55">Germanic (Wood 55)</option>
+  <option value="tower_55">Tower (55)</option>
+  <option value="germanic_small_skirm_60">Germanic (Small Skirmish 60)</option>
+  <option value="germanic_wall_60">Germanic (Wall 60)</option>
+</select>
+            </td>
+            <td contenteditable="true" id="Mount-1"><select id="mount-select">
+  <option value="none">None</option>
+  <option value="rome_camel">Camel</option>
+  <option value="rome_camel_cataphract">Camel (Cataphract)</option>
+  <option value="rome_horse_heavy">Heavy Horse</option>
+  <option value="rome_horse_heavy_missile">Heavy Horse (Missile)</option>
+  <option value="rome_horse_heavy_shock">Heavy Horse (Shock)</option>
+  <option value="rome_horse_light">Light Horse</option>
+  <option value="rome_horse_light_missile">Light Horse (Missile)</option>
+  <option value="rome_horse_light_shock">Light Horse (Shock)</option>
+  <option value="rome_horse_medium">Medium Horse</option>
+  <option value="rome_horse_medium_missile">Medium Horse (Missile)</option>
+  <option value="rome_horse_medium_shock">Medium Horse (Shock)</option>
+  <option value="rome_horse_numidian_heavy">Numidian Heavy Horse</option>
+  <option value="rome_horse_numidian_heavy_shock">Numidian Heavy Horse (Shock)</option>
+  <option value="rome_horse_numidian_light">Numidian Light Horse</option>
+  <option value="rome_horse_numidian_medium">Numidian Medium Horse</option>
+  <option value="rome_horse_numidian_medium_shock">Numidian Medium Horse (Shock)</option>
+  <option value="rome_horse_super_heavy">Super Heavy Horse</option>
+  <option value="rome_horse_venetian_light">Venetian Light Horse</option>
+  <option value="rome_horse_very_heavy">Very Heavy Horse</option>
+  <option value="rome_horse_very_heavy_missile">Very Heavy Horse (Missile)</option>
+  <option value="rome_horse_very_heavy_shock">Very Heavy Horse (Shock)</option>
+  <option value="rome_horse_very_light">Very Light Horse</option>
+  <option value="rome_horse_very_light_missile">Very Light Horse (Missile)</option>
+  <option value="rome_horse_very_light_shock">Very Light Horse (Shock)</option>
+</select> </td>
+            <td contenteditable="true" id="AAC-1"><select id="mount-engine-select">
+  <option value="none">None</option>
+  <option value="indian_armored_elephant">Indian Armored Elephant</option>
+  <option value="indian_elephant">Indian Elephant</option>
+  <option value="boar">Boar</option>
+  <option value="molossian_dog">Molossian Dog</option>
+  <option value="wardog">War Dog</option>
+  <option value="rome_chariot_celtic">Celtic Chariot</option>
+  <option value="rome_chariot_generic">Generic Chariot</option>
+  <option value="rome_chariot_scythed">Scythed Chariot</option>
+  <option value="ballista_medium">Medium Ballista</option>
+  <option value="beehive_thrower">Beehive Thrower</option>
+  <option value="cheiroballistra">Cheiroballistra</option>
+  <option value="onager">Onager</option>
+  <option value="onager_large">Large Onager</option>
+  <option value="polybolos">Polybolos</option>
+  <option value="scorpio">Scorpio</option>
+  <option value="scorpion_pot_thrower">Scorpion Pot Thrower</option>
+  <option value="snake_pot_thrower">Snake Pot Thrower</option>
+  <option value="trebuchet">Trebuchet</option>
+</select> </td>
+            <td contenteditable="true" id="NAAC-1"> </td>
+            </tr>
+            <tr>
+            <td contenteditable="false" id="PU-2"> </td>
+            <td contenteditable="false" id="P-2"> </td>
+            <td contenteditable="true" id="N-2"> </td>
+            <td contenteditable="true" id="MC-2"> </td>
+            <td contenteditable="true" id="M-2"> </td>
+            <td contenteditable="true" id="CB-2"> </td>
+            <td contenteditable="true" id="MA-2"> </td>
+            <td contenteditable="true" id="MD-2"> </td>
+            <td contenteditable="true" id="Armor-2"> </td>
+            <td contenteditable="true" id="H-2"> </td>
+            <td contenteditable="true" id="Ammo-2"> </td>
+            <td contenteditable="true" id="Accuracy-2"> </td>
+            <td contenteditable="true" id="MW-2"> </td>
+            <td contenteditable="true" id="MisW-2"> </td>
+            <td contenteditable="true" id="S-2"> </td>
+            <td contenteditable="true" id="Mount-2"> </td>
+            <td contenteditable="true" id="AAC-2"> </td>
+            <td contenteditable="true" id="NAAC-2"> </td>
+            </tr>
+            <tr>
+            <td contenteditable="false" id="PU-3"> </td>
+            <td contenteditable="false" id="P-3"> </td>
+            <td contenteditable="true" id="N-3"> </td>
+            <td contenteditable="true" id="MC-3"> </td>
+            <td contenteditable="true" id="M-3"> </td>
+            <td contenteditable="true" id="CB-3"> </td>
+            <td contenteditable="true" id="MA-3"> </td>
+            <td contenteditable="true" id="MD-3"> </td>
+            <td contenteditable="true" id="Armor-3"> </td>
+            <td contenteditable="true" id="H-3"> </td>
+            <td contenteditable="true" id="Ammo-3"> </td>
+            <td contenteditable="true" id="Accuracy-3"> </td>
+            <td contenteditable="true" id="MW-3"> </td>
+            <td contenteditable="true" id="MisW-3"> </td>
+            <td contenteditable="true" id="S-3"> </td>
+            <td contenteditable="true" id="Mount-3"> </td>
+            <td contenteditable="true" id="AAC-3"> </td>
+            <td contenteditable="true" id="NAAC-3"> </td>
+            </tr>
+            <tr>
+            <td contenteditable="false" id="PU-4"> </td>
+            <td contenteditable="false" id="P-4"> </td>
+            <td contenteditable="true" id="N-4"> </td>
+            <td contenteditable="true" id="MC-4"> </td>
+            <td contenteditable="true" id="M-4"> </td>
+            <td contenteditable="true" id="CB-4"> </td>
+            <td contenteditable="true" id="MA-4"> </td>
+            <td contenteditable="true" id="MD-4"> </td>
+            <td contenteditable="true" id="Armor-4"> </td>
+            <td contenteditable="true" id="H-4"> </td>
+            <td contenteditable="true" id="Ammo-4"> </td>
+            <td contenteditable="true" id="Accuracy-4"> </td>
+            <td contenteditable="true" id="MW-4"> </td>
+            <td contenteditable="true" id="MisW-4"> </td>
+            <td contenteditable="true" id="S-4"> </td>
+            <td contenteditable="true" id="Mount-4"> </td>
+            <td contenteditable="true" id="AAC-4"> </td>
+            <td contenteditable="true" id="NAAC-4"> </td>
+            </tr>
+            <tr>
+            <td contenteditable="false" id="PU-5"> </td>
+            <td contenteditable="false" id="P-5"> </td>
+            <td contenteditable="true" id="N-5"> </td>
+            <td contenteditable="true" id="MC-5"> </td>
+            <td contenteditable="true" id="M-5"> </td>
+            <td contenteditable="true" id="CB-5"> </td>
+            <td contenteditable="true" id="MA-5"> </td>
+            <td contenteditable="true" id="MD-5"> </td>
+            <td contenteditable="true" id="Armor-5"> </td>
+            <td contenteditable="true" id="H-5"> </td>
+            <td contenteditable="true" id="Ammo-5"> </td>
+            <td contenteditable="true" id="Accuracy-5"> </td>
+            <td contenteditable="true" id="MW-5"> </td>
+            <td contenteditable="true" id="MisW-5"> </td>
+            <td contenteditable="true" id="S-5"> </td>
+            <td contenteditable="true" id="Mount-5"> </td>
+            <td contenteditable="true" id="AAC-5"> </td>
+            <td contenteditable="true" id="NAAC-5"> </td>
+            </tr>
+            <tr>
+            <td contenteditable="false" id="PU-6"> </td>
+            <td contenteditable="false" id="P-6"> </td>
+            <td contenteditable="true" id="N-6"> </td>
+            <td contenteditable="true" id="MC-6"> </td>
+            <td contenteditable="true" id="M-6"> </td>
+            <td contenteditable="true" id="CB-6"> </td>
+            <td contenteditable="true" id="MA-6"> </td>
+            <td contenteditable="true" id="MD-6"> </td>
+            <td contenteditable="true" id="Armor-6"> </td>
+            <td contenteditable="true" id="H-6"> </td>
+            <td contenteditable="true" id="Ammo-6"> </td>
+            <td contenteditable="true" id="Accuracy-6"> </td>
+            <td contenteditable="true" id="MW-6"> </td>
+            <td contenteditable="true" id="MisW-6"> </td>
+            <td contenteditable="true" id="S-6"> </td>
+            <td contenteditable="true" id="Mount-6"> </td>
+            <td contenteditable="true" id="AAC-6"> </td>
+            <td contenteditable="true" id="NAAC-6"> </td>
+            </tr>
+            <tr>
+            <td contenteditable="false" id="PU-7"> </td>
+            <td contenteditable="false" id="P-7"> </td>
+            <td contenteditable="true" id="N-7"> </td>
+            <td contenteditable="true" id="MC-7"> </td>
+            <td contenteditable="true" id="M-7"> </td>
+            <td contenteditable="true" id="CB-7"> </td>
+            <td contenteditable="true" id="MA-7"> </td>
+            <td contenteditable="true" id="MD-7"> </td>
+            <td contenteditable="true" id="Armor-7"> </td>
+            <td contenteditable="true" id="H-7"> </td>
+            <td contenteditable="true" id="Ammo-7"> </td>
+            <td contenteditable="true" id="Accuracy-7"> </td>
+            <td contenteditable="true" id="MW-7"> </td>
+            <td contenteditable="true" id="MisW-7"> </td>
+            <td contenteditable="true" id="S-7"> </td>
+            <td contenteditable="true" id="Mount-7"> </td>
+            <td contenteditable="true" id="AAC-7"> </td>
+            <td contenteditable="true" id="NAAC-7"> </td>
+            </tr>
+            <tr>
+            <td contenteditable="false" id="PU-8"> </td>
+            <td contenteditable="false" id="P-8"> </td>
+            <td contenteditable="true" id="N-8"> </td>
+            <td contenteditable="true" id="MC-8"> </td>
+            <td contenteditable="true" id="M-8"> </td>
+            <td contenteditable="true" id="CB-8"> </td>
+            <td contenteditable="true" id="MA-8"> </td>
+            <td contenteditable="true" id="MD-8"> </td>
+            <td contenteditable="true" id="Armor-8"> </td>
+            <td contenteditable="true" id="H-8"> </td>
+            <td contenteditable="true" id="Ammo-8"> </td>
+            <td contenteditable="true" id="Accuracy-8"> </td>
+            <td contenteditable="true" id="MW-8"> </td>
+            <td contenteditable="true" id="MisW-8"> </td>
+            <td contenteditable="true" id="S-8"> </td>
+            <td contenteditable="true" id="Mount-8"> </td>
+            <td contenteditable="true" id="AAC-8"> </td>
+            <td contenteditable="true" id="NAAC-8"> </td>
+            </tr>
+            <tr>
+            <td contenteditable="false" id="PU-9"> </td>
+            <td contenteditable="false" id="P-9"> </td>
+            <td contenteditable="true" id="N-9"> </td>
+            <td contenteditable="true" id="MC-9"> </td>
+            <td contenteditable="true" id="M-9"> </td>
+            <td contenteditable="true" id="CB-9"> </td>
+            <td contenteditable="true" id="MA-9"> </td>
+            <td contenteditable="true" id="MD-9"> </td>
+            <td contenteditable="true" id="Armor-9"> </td>
+            <td contenteditable="true" id="H-9"> </td>
+            <td contenteditable="true" id="Ammo-9"> </td>
+            <td contenteditable="true" id="Accuracy-9"> </td>
+            <td contenteditable="true" id="MW-9"> </td>
+            <td contenteditable="true" id="MisW-9"> </td>
+            <td contenteditable="true" id="S-9"> </td>
+            <td contenteditable="true" id="Mount-9"> </td>
+            <td contenteditable="true" id="AAC-9"> </td>
+            <td contenteditable="true" id="NAAC-9"> </td>
+            </tr>
+            <tr>
+            <td contenteditable="false" id="PU-1 "> </td>
+            <td contenteditable="false" id="P-1 "> </td>
+            <td contenteditable="true" id="N-1 "> </td>
+            <td contenteditable="true" id="MC-1 "> </td>
+            <td contenteditable="true" id="M-1 "> </td>
+            <td contenteditable="true" id="CB-1 "> </td>
+            <td contenteditable="true" id="MA-1 "> </td>
+            <td contenteditable="true" id="MD-1 "> </td>
+            <td contenteditable="true" id="Armor-1 "> </td>
+            <td contenteditable="true" id="H-1 "> </td>
+            <td contenteditable="true" id="Ammo-1 "> </td>
+            <td contenteditable="true" id="Accuracy-1 "> </td>
+            <td contenteditable="true" id="MW-1 "> </td>
+            <td contenteditable="true" id="MisW-1 "> </td>
+            <td contenteditable="true" id="S-1 "> </td>
+            <td contenteditable="true" id="Mount-1 "> </td>
+            <td contenteditable="true" id="AAC-1 "> </td>
+            <td contenteditable="true" id="NAAC-1 "> </td>
+            </tr>
+            <tr>
+            <td contenteditable="false" id="PU-11"> </td>
+            <td contenteditable="false" id="P-11"> </td>
+            <td contenteditable="true" id="N-11"> </td>
+            <td contenteditable="true" id="MC-11"> </td>
+            <td contenteditable="true" id="M-11"> </td>
+            <td contenteditable="true" id="CB-11"> </td>
+            <td contenteditable="true" id="MA-11"> </td>
+            <td contenteditable="true" id="MD-11"> </td>
+            <td contenteditable="true" id="Armor-11"> </td>
+            <td contenteditable="true" id="H-11"> </td>
+            <td contenteditable="true" id="Ammo-11"> </td>
+            <td contenteditable="true" id="Accuracy-11"> </td>
+            <td contenteditable="true" id="MW-11"> </td>
+            <td contenteditable="true" id="MisW-11"> </td>
+            <td contenteditable="true" id="S-11"> </td>
+            <td contenteditable="true" id="Mount-11"> </td>
+            <td contenteditable="true" id="AAC-11"> </td>
+            <td contenteditable="true" id="NAAC-11"> </td>
+            </tr>
+            <tr>
+            <td contenteditable="false" id="PU-12"> </td>
+            <td contenteditable="false" id="P-12"> </td>
+            <td contenteditable="true" id="N-12"> </td>
+            <td contenteditable="true" id="MC-12"> </td>
+            <td contenteditable="true" id="M-12"> </td>
+            <td contenteditable="true" id="CB-12"> </td>
+            <td contenteditable="true" id="MA-12"> </td>
+            <td contenteditable="true" id="MD-12"> </td>
+            <td contenteditable="true" id="Armor-12"> </td>
+            <td contenteditable="true" id="H-12"> </td>
+            <td contenteditable="true" id="Ammo-12"> </td>
+            <td contenteditable="true" id="Accuracy-12"> </td>
+            <td contenteditable="true" id="MW-12"> </td>
+            <td contenteditable="true" id="MisW-12"> </td>
+            <td contenteditable="true" id="S-12"> </td>
+            <td contenteditable="true" id="Mount-12"> </td>
+            <td contenteditable="true" id="AAC-12"> </td>
+            <td contenteditable="true" id="NAAC-12"> </td>
+            </tr>
+            <tr>
+            <td contenteditable="false" id="PU-13"> </td>
+            <td contenteditable="false" id="P-13"> </td>
+            <td contenteditable="true" id="N-13"> </td>
+            <td contenteditable="true" id="MC-13"> </td>
+            <td contenteditable="true" id="M-13"> </td>
+            <td contenteditable="true" id="CB-13"> </td>
+            <td contenteditable="true" id="MA-13"> </td>
+            <td contenteditable="true" id="MD-13"> </td>
+            <td contenteditable="true" id="Armor-13"> </td>
+            <td contenteditable="true" id="H-13"> </td>
+            <td contenteditable="true" id="Ammo-13"> </td>
+            <td contenteditable="true" id="Accuracy-13"> </td>
+            <td contenteditable="true" id="MW-13"> </td>
+            <td contenteditable="true" id="MisW-13"> </td>
+            <td contenteditable="true" id="S-13"> </td>
+            <td contenteditable="true" id="Mount-13"> </td>
+            <td contenteditable="true" id="AAC-13"> </td>
+            <td contenteditable="true" id="NAAC-13"> </td>
+            </tr>
+            <tr>
+            <td contenteditable="false" id="PU-14"> </td>
+            <td contenteditable="false" id="P-14"> </td>
+            <td contenteditable="true" id="N-14"> </td>
+            <td contenteditable="true" id="MC-14"> </td>
+            <td contenteditable="true" id="M-14"> </td>
+            <td contenteditable="true" id="CB-14"> </td>
+            <td contenteditable="true" id="MA-14"> </td>
+            <td contenteditable="true" id="MD-14"> </td>
+            <td contenteditable="true" id="Armor-14"> </td>
+            <td contenteditable="true" id="H-14"> </td>
+            <td contenteditable="true" id="Ammo-14"> </td>
+            <td contenteditable="true" id="Accuracy-14"> </td>
+            <td contenteditable="true" id="MW-14"> </td>
+            <td contenteditable="true" id="MisW-14"> </td>
+            <td contenteditable="true" id="S-14"> </td>
+            <td contenteditable="true" id="Mount-14"> </td>
+            <td contenteditable="true" id="AAC-14"> </td>
+            <td contenteditable="true" id="NAAC-14"> </td>
+            </tr>
+            <tr>
+            <td contenteditable="false" id="PU-15"> </td>
+            <td contenteditable="false" id="P-15"> </td>
+            <td contenteditable="true" id="N-15"> </td>
+            <td contenteditable="true" id="MC-15"> </td>
+            <td contenteditable="true" id="M-15"> </td>
+            <td contenteditable="true" id="CB-15"> </td>
+            <td contenteditable="true" id="MA-15"> </td>
+            <td contenteditable="true" id="MD-15"> </td>
+            <td contenteditable="true" id="Armor-15"> </td>
+            <td contenteditable="true" id="H-15"> </td>
+            <td contenteditable="true" id="Ammo-15"> </td>
+            <td contenteditable="true" id="Accuracy-15"> </td>
+            <td contenteditable="true" id="MW-15"> </td>
+            <td contenteditable="true" id="MisW-15"> </td>
+            <td contenteditable="true" id="S-15"> </td>
+            <td contenteditable="true" id="Mount-15"> </td>
+            <td contenteditable="true" id="AAC-15"> </td>
+            <td contenteditable="true" id="NAAC-15"> </td>
+            </tr>
+    
+    </table>
+        
+        <script src="scripts.js"></script>
+        
+    </body>
+
+</html>
