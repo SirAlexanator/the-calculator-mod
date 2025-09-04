@@ -1,4 +1,12 @@
 [
+     {
+        "Key": "none",
+        "Type": "any",
+        "Range": 0,
+        "Damage": 0,
+        "AP": 0,
+        "Target": false
+    },
     {
         "Key": "torch_25_1_0",
         "Type": "any",

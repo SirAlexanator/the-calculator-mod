@@ -267,7 +267,7 @@
         "Walk Speed": 1.4,
         "Run Speed": 5.5,
         "Charge Speed": 7.5,
-        "Type": "an",
+        "Type": "el",
         "Price": 80
     },
     {
@@ -277,7 +277,7 @@
         "Walk Speed": 1.4,
         "Run Speed": 5.5,
         "Charge Speed": 7.5,
-        "Type": "an",
+        "Type": "el",
         "Price": 60
     },
     {
