@@ -1,0 +1,56 @@
+[
+  {
+    "Shield": "none",
+    "Missile Block": 0,
+    "Shield Defence": 0,
+    "Shield Armor": 0
+  },
+  {
+    "Shield": "caetra_cavalry_10",
+    "Missile Block": 10,
+    "Shield Defence": 5,
+    "Shield Armor": 5
+  },
+  {
+    "Shield": "caetra_20",
+    "Missile Block": 20,
+    "Shield Defence": 10,
+    "Shield Armor": 10
+  },
+  {
+    "Shield": "caetra_fast_cav_25",
+    "Missile Block": 25,
+    "Shield Defence": 12,
+    "Shield Armor": 12
+  },
+  {
+    "Shield": "celtic_shock_30",
+    "Missile Block": 30,
+    "Shield Defence": 15,
+    "Shield Armor": 15
+  },
+  {
+    "Shield": "celtic_40",
+    "Missile Block": 40,
+    "Shield Defence": 20,
+    "Shield Armor": 20
+  },
+  {
+    "Shield": "hoplite_50",
+    "Missile Block": 50,
+    "Shield Defence": 25,
+    "Shield Armor": 25
+  },
+  {
+    "Shield": "tower_55",
+    "Missile Block": 55,
+    "Shield Defence": 27,
+    "Shield Armor": 27
+  },
+  {
+    "Shield": "germanic_wall_60",
+    "Missile Block": 60,
+    "Shield Defence": 30,
+    "Shield Armor": 30
+  }
+]

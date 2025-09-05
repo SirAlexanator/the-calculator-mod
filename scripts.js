@@ -1,6 +1,7 @@
 let meleeWeaponsData = [];
 let missileWeaponsData = [];
 let entityData = [];
+let shieldsData = [];
 let unitCategories = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 let ammoCost = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 let accuracyCost = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
@@ -20,13 +21,15 @@ let totalPrice = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 Promise.all([
     fetch('melee-weapons.json').then(response => response.json()),
     fetch('missile-weapons.json').then(response => response.json()),
-    fetch('entity-details.json').then(response => response.json())
+    fetch('entity-details.json').then(response => response.json()),
+    fetch('shields-details.json').then(response=> response.json())
 ])
-    .then(([meleeData, missileData, entitiesData]) => {
+    .then(([meleeData, missileData, entitiesData, shieldData]) => {
 
         meleeWeaponsData = meleeData;
         missileWeaponsData = missileData;
         entityData = entitiesData;
+        shieldsData = shieldData;
         console.log("All data loaded. Calculator ready!");
 
         const meleeWeaponInput = document.getElementById('MW-1');
@@ -47,7 +50,8 @@ function updatePrice(rowNumber){
     let price = document.getElementById(`P-${rowNumber}`);
     if(price){
     totalPrice[rowNumber-1]=(meleeAttackCost[rowNumber-1]+moraleCost[rowNumber-1]+
-        accuracyCost[rowNumber-1]+meleeWeaponCost[rowNumber-1]+hpCost[rowNumber-1]);
+        accuracyCost[rowNumber-1]+meleeWeaponCost[rowNumber-1]+hpCost[rowNumber-1]+chargeBonusCost[rowNumber-1]+
+    meleeDefenceCost[rowNumber-1]+armorCost[rowNumber-1]+missileBlockCost[rowNumber-1])*0.9;
     price.textContent = totalPrice[rowNumber-1];
     console.log("Price changed");
     }
@@ -120,10 +124,6 @@ unitCategories[rowNumber-1] = 15;
 }
 }
 
-function calcPrice(rowNumber){
-totalPrice[rowNumber-1] = meleeAttackCost[rowNumber-1];
-}
-
 function calcMeleeAttack(rowNumber){
     const meleeAttackCell = document.getElementById(`MA-${rowNumber}`);
     let meleeAttack = parseInt(meleeAttackCell.textContent)
@@ -134,7 +134,7 @@ function calcMeleeAttack(rowNumber){
     const meleeWeapon = document.getElementById(`MW-${rowNumber}`);
     const mwWeaponDetails = vlookup(meleeWeapon.value, meleeWeaponsData, 'Key');
     if(mwWeaponDetails){
-    meleeAttack += mwWeaponDetails['Damage v Inf'];
+    meleeAttack += mwWeaponDetails['Damage v Inf']*0.95;
     calcCategory(rowNumber);
     }
     let cat = unitCategories[rowNumber-1];
@@ -247,7 +247,6 @@ weaponCost = (//base weapon damage calc
     Math.max(Math.min(weaponDamage-35,5),0)*8+
     Math.max(weaponDamage-40,0)*10
 )+weaponDamage;
-    console.log(weaponCost);
 weaponCost +=(//ap damage calc
     Math.min(apWeaponDamage,5)*0+
     Math.max(Math.min(apWeaponDamage-5,5),0)*8+
@@ -255,10 +254,132 @@ weaponCost +=(//ap damage calc
     Math.max(Math.min(apWeaponDamage-15,5),0)*18+
     Math.max(apWeaponDamage-20,0)*24
 )+apWeaponDamage;
-    console.log(weaponCost);
 meleeWeaponCost[rowNumber-1]=weaponCost;
 calcCategory(rowNumber);
 updatePrice(rowNumber);
+}
+
+function calcMeleeDefense(rowNumber){
+    const melDefCell = document.getElementById(`MD-${rowNumber}`);
+    if(melDefCell.textContent==""||melDefCell.textContent==" "){
+        return;
+    }
+    const meleeDefence = melDefCell.textContent;
+    let meleeDefencePrice=0;
+    calcCategory(rowNumber);
+    const cat = unitCategories[rowNumber-1];
+    if(cat==1||cat==4||cat==5||cat==6||cat==9||cat==10||cat==12||cat==11||cat==3||cat==7||cat==8||cat==14||cat==13){
+        meleeDefencePrice=(
+        Math.min(meleeDefence, 15)*1+
+        Math.max(Math.min(meleeDefence-15,5),0)*1+
+        Math.max(Math.min(meleeDefence-20,5),0)*1+
+        Math.max(Math.min(meleeDefence-25,5),0)*1.25+
+        Math.max(Math.min(meleeDefence-30,5),0)*1.75+
+        Math.max(Math.min(meleeDefence-35,5),0)*2.75+
+        Math.max(Math.min(meleeDefence-40,5),0)*4+
+        Math.max(Math.min(meleeDefence-45,5),0)*5.25+
+        Math.max(Math.min(meleeDefence-50,5),0)*6.5+
+        Math.max(Math.min(meleeDefence-55,5),0)*8+
+        Math.max(Math.min(meleeDefence-60,5),0)*9.5+
+        Math.max(Math.min(meleeDefence-65,5),0)*12+
+        Math.max(Math.min(meleeDefence-70,5),0)*14+
+        Math.max(Math.min(meleeDefence-75,5),0)*16+
+        Math.max(Math.min(meleeDefence-80,5),0)*18+
+        Math.max(Math.min(meleeDefence-85,5),0)*20+
+        Math.max(Math.min(meleeDefence-90,5),0)*22+
+        Math.max(Math.min(meleeDefence-95,5),0)*24+
+        Math.max(meleeDefence-100,0)*26)*1.5
+    }
+    else if(cat==2){
+        meleeDefencePrice=(
+        Math.min(meleeDefence, 15)*1+
+        Math.max(Math.min(meleeDefence-15,5),0)*1+
+        Math.max(Math.min(meleeDefence-20,5),0)*1+
+        Math.max(Math.min(meleeDefence-25,5),0)*1+
+        Math.max(Math.min(meleeDefence-30,5),0)*1+
+        Math.max(Math.min(meleeDefence-35,5),0)*1+
+        Math.max(Math.min(meleeDefence-40,5),0)*1+
+        Math.max(Math.min(meleeDefence-45,5),0)*1.25+
+        Math.max(Math.min(meleeDefence-50,5),0)*1.5+
+        Math.max(Math.min(meleeDefence-55,5),0)*2.75+
+        Math.max(Math.min(meleeDefence-60,5),0)*4+
+        Math.max(Math.min(meleeDefence-65,5),0)*5.25+
+        Math.max(Math.min(meleeDefence-70,5),0)*6.5+
+        Math.max(Math.min(meleeDefence-75,5),0)*8+
+        Math.max(Math.min(meleeDefence-80,5),0)*10+
+        Math.max(Math.min(meleeDefence-85,5),0)*12+
+        Math.max(Math.min(meleeDefence-90,5),0)*14+
+        Math.max(Math.min(meleeDefence-95,5),0)*16+
+        Math.max(meleeDefence-100,0)*18)*1.5
+    }
+    if(cat==7||cat==9){
+        meleeDefencePrice *= 2;
+    }
+    if(cat==8){
+        meleeDefencePrice *=2.5;
+    }
+    meleeDefenceCost[rowNumber-1]=meleeDefencePrice;
+    updatePrice(rowNumber);
+}
+
+function calcChargeBonus(rowNumber){
+    const chgCell = document.getElementById(`CB-${rowNumber}`);
+    if(chgCell.textContent==""||chgCell.textContent==" "){
+        return;
+    }
+    calcCategory(rowNumber);
+    const chgBonus = chgCell.textContent;
+    let chgCost = 0;
+    const cat = unitCategories[rowNumber-1];
+    if(cat==1||cat==2||cat==3||cat==4||cat==5||cat==6||cat==10||cat==12||cat==14){
+        chgCost=(
+            Math.min(chgBonus, 20)*1+
+            Math.max(Math.min(chgBonus-20,5),0)*6+
+            Math.max(Math.min(chgBonus-25,5),0)*8+
+            Math.max(Math.min(chgBonus-30,5),0)*9+
+            Math.max(Math.min(chgBonus-35,5),0)*11+
+            Math.max(Math.min(chgBonus-40,5),0)*13+
+            Math.max(Math.min(chgBonus-45,5),0)*15+
+            Math.max(chgBonus-50,0)*18
+        )
+    }
+    else if(cat==7||cat==9||cat==11||cat==13){
+        chgCost=(
+            Math.min(chgBonus, 10)*1+
+            Math.max(Math.min(chgBonus-10,5),0)*1.5+
+            Math.max(Math.min(chgBonus-15,5),0)*2+
+            Math.max(Math.min(chgBonus-20,5),0)*4+
+            Math.max(Math.min(chgBonus-25,5),0)*6+
+            Math.max(Math.min(chgBonus-30,5),0)*8+
+            Math.max(Math.min(chgBonus-35,5),0)*10+
+            Math.max(Math.min(chgBonus-40,5),0)*15+
+            Math.max(Math.min(chgBonus-45,5),0)*20
+        )
+    }
+    else if(cat==8){
+        chgCost=(
+            Math.min(chgBonus, 10)*1+
+            Math.max(Math.min(chgBonus-10,5),0)*1+
+            Math.max(Math.min(chgBonus-15,5),0)*1.5+
+            Math.max(Math.min(chgBonus-20,5),0)*1.75+
+            Math.max(Math.min(chgBonus-25,5),0)*2+
+            Math.max(Math.min(chgBonus-30,5),0)*2.25+
+            Math.max(Math.min(chgBonus-35,5),0)*2.5+
+            Math.max(Math.min(chgBonus-40,5),0)*2.75+
+            Math.max(Math.min(chgBonus-45,5),0)*3.5+
+            Math.max(Math.min(chgBonus-50,5),0)*4+
+            Math.max(Math.min(chgBonus-55,5),0)*4.75+
+            Math.max(Math.min(chgBonus-60,5),0)*5.5+
+            Math.max(Math.min(chgBonus-65,5),0)*6.25+
+            Math.max(Math.min(chgBonus-70,5),0)*7+
+            Math.max(Math.min(chgBonus-75,5),0)*7.75+
+            Math.max(Math.min(chgBonus-80,5),0)*8.5+
+            Math.max(Math.min(chgBonus-85,5),0)*9.25+
+            Math.max(chgBonus-45,0)*10
+        )
+    }
+    chargeBonusCost[rowNumber-1]=chgCost;
+    updatePrice(rowNumber);
 }
 
 function calcMorale(rowNumber){
@@ -272,20 +393,20 @@ function calcMorale(rowNumber){
     moralePrice= (
         Math.min(morale,25)*1+
         Math.max(Math.min(morale-25,5),0)*1+
-        Math.max(Math.min(morale-25,5),0)*1.5+
-        Math.max(Math.min(morale-25,5),0)*2+
-        Math.max(Math.min(morale-25,5),0)*3+
-        Math.max(Math.min(morale-25,5),0)*3+
-        Math.max(Math.min(morale-25,5),0)*4+
-        Math.max(Math.min(morale-25,5),0)*4+
-        Math.max(Math.min(morale-25,5),0)*5+
-        Math.max(Math.min(morale-25,5),0)*5+
-        Math.max(Math.min(morale-25,5),0)*6+
-        Math.max(Math.min(morale-25,5),0)*7+
-        Math.max(Math.min(morale-25,5),0)*7.25+
-        Math.max(Math.min(morale-25,5),0)*8.25+
-        Math.max(Math.min(morale-25,5),0)*9.25+
-        Math.max(Math.min(morale-25,5),0)*10.25+
+        Math.max(Math.min(morale-30,5),0)*1.5+
+        Math.max(Math.min(morale-35,5),0)*2+
+        Math.max(Math.min(morale-40,5),0)*3+
+        Math.max(Math.min(morale-45,5),0)*3+
+        Math.max(Math.min(morale-50,5),0)*4+
+        Math.max(Math.min(morale-55,5),0)*4+
+        Math.max(Math.min(morale-60,5),0)*5+
+        Math.max(Math.min(morale-65,5),0)*5+
+        Math.max(Math.min(morale-70,5),0)*6+
+        Math.max(Math.min(morale-75,5),0)*7+
+        Math.max(Math.min(morale-80,5),0)*7.25+
+        Math.max(Math.min(morale-85,5),0)*8.25+
+        Math.max(Math.min(morale-90,5),0)*9.25+
+        Math.max(Math.min(morale-95,5),0)*10.25+
         Math.max(morale-100,0)*11.25
     );
     if(cat==7){
@@ -310,9 +431,117 @@ accuracyCost[rowNumber-1]=accuracyPrice;
 updatePrice(rowNumber);
 }
 
+function calcArmor(rowNumber){
+    const armorCell = document.getElementById(`Armor-${rowNumber}`);
+    if(armorCell.textContent.trim() == ""){
+        return;
+    }
+    armor=armorCell.textContent;
+    let armorPrice = 0;
+    calcCategory(rowNumber);
+    const cat = unitCategories[rowNumber-1];
+    if(cat==1||cat==2||cat==3||cat==6||cat==7||cat==8||cat==10||cat==13){
+        armorPrice = (
+            Math.min(armor, 10)*0.5+
+            Math.max(Math.min(armor-10,5),0)*.75+
+            Math.max(Math.min(armor-15,5),0)*1+
+            Math.max(Math.min(armor-20,5),0)*1.25+
+            Math.max(Math.min(armor-25,5),0)*1.5+
+            Math.max(Math.min(armor-30,5),0)*1.75+
+            Math.max(Math.min(armor-35,5),0)*2+
+            Math.max(Math.min(armor-40,5),0)*2.25+
+            Math.max(Math.min(armor-45,5),0)*2.5+
+            Math.max(Math.min(armor-50,5),0)*2.75+
+            Math.max(Math.min(armor-55,5),0)*3+
+            Math.max(Math.min(armor-60,5),0)*3.25+
+            Math.max(Math.min(armor-65,5),0)*3.5+
+            Math.max(Math.min(armor-70,5),0)*3.75+
+            Math.max(Math.min(armor-75,5),0)*4+
+            Math.max(Math.min(armor-80,5),0)*4.25+
+            Math.max(Math.min(armor-85,5),0)*4.5+
+            Math.max(Math.min(armor-90,5),0)*5+
+            Math.max(Math.min(armor-95,5),0)*5.5+
+            Math.max(Math.min(armor-100,5),0)*6+
+            Math.max(Math.min(armor-105,5),0)*6.5+
+            Math.max(Math.min(armor-110,5),0)*7+
+            Math.max(Math.min(armor-115,5),0)*7.5+
+            Math.max(Math.min(armor-120,5),0)*8+
+            Math.max(Math.min(armor-125,5),0)*8.5+
+            Math.max(armor-130,0)*9
+        )
+    }
+    else if(cat==4||cat==9||cat==11||cat==12){
+        armorPrice = (
+            Math.min(armor, 10)*0+
+            Math.max(Math.min(armor-10,5),0)*5+
+            Math.max(Math.min(armor-15,5),0)*6+
+            Math.max(Math.min(armor-20,5),0)*7+
+            Math.max(Math.min(armor-25,5),0)*8+
+            Math.max(Math.min(armor-30,5),0)*9+
+            Math.max(Math.min(armor-35,5),0)*10+
+            Math.max(armor-40,0)*15
+        )
+    }
+    else if(cat==5||cat==14){
+                armorPrice = (
+            Math.min(armor, 10)*2+
+            Math.max(Math.min(armor-10,5),0)*3+
+            Math.max(Math.min(armor-15,5),0)*4+
+            Math.max(Math.min(armor-20,5),0)*5+
+            Math.max(Math.min(armor-25,5),0)*6+
+            Math.max(Math.min(armor-30,5),0)*7+
+            Math.max(Math.min(armor-35,5),0)*8+
+            Math.max(armor-40,0)*10
+        )
+    }
+    if(cat==7||cat==8||cat==9){
+        armorPrice *=2;
+    }
+    armorCost[rowNumber-1]=armorPrice;
+    console.log(armorPrice);
+    updatePrice(rowNumber);
+}
+
+function calcMissileBlock(rowNumber){
+    const shieldCell = document.getElementById(`S-${rowNumber}`);
+    const shieldDetails = vlookup(shieldCell.value,shieldsData,'Shield');
+    const missileBlock = shieldDetails['Missile Block'];
+    calcCategory(rowNumber);
+    const cat = unitCategories[rowNumber-1];
+    let missileBlockPrice = 0;
+    if(missileBlock <=20)
+        missileBlockPrice=missileBlock*1.25;
+    else if(missileBlock<=30)
+        missileBlockPrice-missileBlock*1.66;
+    else if(missileBlock<=40)
+        missileBlockPrice=missileBlock*2;
+    else if(missileBlock<=50)
+        missileBlockPrice=missileBlock*2.2;
+    else if(missileBlock<=55)
+        missileBlockPrice=missileBlock*2.9;
+    else if(missileBlock>55)
+        missileBlockPrice=missileBlock*3.33;
+    missileBlockPrice*=1.25;
+    if(cat==4||cat==12||cat==14||cat==11||cat==0)
+        missileBlockPrice*=6;
+    if(cat==6)
+        missileBlockPrice*=1.1;
+    if(cat==7)
+        missileBlockPrice*=2;
+    if(cat==8)
+        missileBlockPrice*=3.33;
+    if(cat==5)
+        missileBlockPrice*=1.5;
+    if(cat==5||cat==6)
+        missileBlockPrice-=50;
+    missileBlockCost[rowNumber-1]=missileBlockPrice;
+    updatePrice(rowNumber);
+}
+
 function vlookup(valueToFind, dataArray, key) {
     return dataArray.find(item => item[key] === valueToFind);
 }
+
 function startCalculator(){
     updatePrice();
     const priceInput = document.getElementById('P-1');
@@ -321,25 +550,45 @@ function startCalculator(){
     const accuracyInput = document.getElementById(`Accuracy-1`);
     const meleeWeaponInput = document.getElementById('MW-1');
     const hpInput = document.getElementById('H-1');
+    const chgInput = document.getElementById(`CB-1`);
+    const melDefInput = document.getElementById('MD-1');
+    const armorInput = document.getElementById('Armor-1');
+    const shieldInput = document.getElementById('S-1');
     meleeAttackInput.addEventListener('input', () => {
     calcMeleeAttack(1);
-    console.log("Melee Attack calculation called");
+    console.log("Melee Attack calculation called:" + meleeAttackCost[0]);
     });
     moraleInput.addEventListener('input', () => {
     calcMorale(1);
-    console.log("Morale Attack calculation called");
+    console.log("Morale Attack calculation called:"+ moraleCost[0]);
     });
         accuracyInput.addEventListener('input', () => {
     calcAccuracy(1);
-    console.log("Accuracy Attack calculation called");
+    console.log("Accuracy Attack calculation called:" + accuracyCost[0]);
     });
     meleeWeaponInput.addEventListener('input',() =>{
         calcMeleeWeapon(1);
         calcMeleeAttack(1);
-        console.log("Melee weapon calculation called");
+        console.log("Melee weapon calculation called:"+meleeWeaponCost[0]);
     });
         hpInput.addEventListener('input',() =>{
             calcHp(1);
-        console.log("Hp calculation called");
+        console.log("Hp calculation called:" +hpCost[0]);
+    });
+    chgInput.addEventListener('input', () => {
+        calcChargeBonus(1);
+        console.log("Charge Bonus Calculation called:"+chargeBonusCost[0]);
+    });
+        melDefInput.addEventListener('input', () => {
+        calcMeleeDefense(1);
+        console.log("Melee Defense Calculation called:"+meleeDefenceCost[0]);
+    });
+        armorInput.addEventListener('input', () => {
+        calcArmor(1);
+        console.log("Armor Calculation called"+armorCost[0]);
+    });
+        shieldInput.addEventListener('input', () => {
+        calcMissileBlock(1);
+        console.log("Missile Block Calculation called:"+missileBlockCost[0]);
     });
 }
