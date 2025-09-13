@@ -538,6 +538,103 @@ function calcMissileBlock(rowNumber){
     updatePrice(rowNumber);
 }
 
+function calcAmmo(rowNumber){
+    const ammoCell = document.getElementById(`Ammo-${rowNumber}`);
+    if(ammoCell.textContent.trim()==""){
+        ammoCost[rowNumber-1]=0;
+        return;
+    }
+    let ammo = ammoCell.textContent;
+    const misWeaponCell = document.getElementById(`MisW-${rowNumber}`);
+    if(misWeaponCell.value == 'none'){
+        ammoCost[rowNumber-1];
+        return;
+    }
+    misWeaponDetails = vlookup(misWeaponCell.value,missileWeaponsData,'Key');
+    const damage = misWeaponDetails['Damage'];
+    const apDamage = misWeaponDetails['Ap'];
+    const range = misWeaponDetails['Range'];
+    const artCell = document.getElementById(`AAC-${rowNumber}`);
+    if(artCell.value != 'None'){
+    const artDetails = vlookup(artCell.value,entityData,'Entity');
+    const standardAmmo = artDetails['Standard Ammo'];
+    const pricePerAmmo = artDetails['Price Per Ammo'];
+    }
+    calcCategory(rowNumber);
+    const cat = unitCategories[rowNumber-1];
+    let ammoPrice = 0;
+    if(cat==4||(cat==9&&misWeaponDetails['Type']=="arr")){
+    ammo = (
+        Math.min(ammo,15)+
+        Math.max(ammo-15,0)*2
+    );
+    ammoPrice =(
+        damage*0.36+apDamage
+    );
+    if(range<=125)
+        ammoPrice*=0.7;
+    }
+    if(misWeaponCell.value=="arrow_long_150_31_4")
+        ammoPrice*=0.93;
+    else if(cat==5||(cat==9&&misWeaponDetails['Type'=="sli"])||cat==11||cat==13){
+        ammo=(
+            Math.max(ammo,25)+
+            Math.max(ammo-25,0)*2
+        );
+        ammoPrice=(
+            damage*0.33+apDamage
+        );
+        if(misWeaponCell.value=="sling_stone_150_16_4")
+            ammoPrice*=0.65;
+    }
+    else if(cat==6||cat==14||(cat==9&&(misWeaponDetails['Type']=="pel"||misWeaponDetails['Type']=="any"))){
+        ammo=(
+        Math.max(ammo,7)+
+        Math.max(ammo-7,0)*2+
+        Math.max(ammo-10)*2
+        );
+        ammoPrice=(
+            damage*0.4+apDamage
+        )*0.8;
+        if(cat==14)
+            ammoPrice*=0.44;
+    }
+    else if(cat==1||cat==2||cat==3||cat==10||cat==7||cat==8){
+        ammo=(
+            Math.max(ammo,2)+
+            Math.max(ammo-2,0)*2
+        );
+        if(misWeaponCell.value == 'javelin_wooden_80_20_9')
+            ammoPrice= ammo*28;
+        else if(misWeaponCell.value =="javelin_prec_40_20_12")
+            ammoPrice = ammo*24;
+        else if(misWeaponCell.value == "pilum_normal_40_20_10")
+            ammoPrice = ammo*20;
+        else if(misWeaponCell.value =="stone_hand_75_5_1")
+            ammoPrice = ammo*2;
+        else if(misWeaponCell.value == "torch_25_1_0")
+            ammoPrice = ammo*1;
+        else if(misWeaponCell.vlue=="javelin_fire_80_7_1")
+            ammoPrice = ammo*4;
+        else if(misWeaponCell.value == "javelin_poison_40_15_8")
+            ammoPrice = ammo*20;
+    }
+    else if(cat==12){
+        ammo=(
+            Math.max(ammo,standardAmmo)+
+            Math.max(ammo-standardAmmo,0)*2
+        );
+        ammo*= document.getElementById(`NAAC-${rowNumber}`);
+        ammoPrice = ammo*pricePerAmmo;
+    }
+    ammoCost[rowNumber-1]=ammoPrice;
+    updatePrice(rowNumber);
+}
+
+function calcEntity(rowNumber){
+    
+}
+
 function vlookup(valueToFind, dataArray, key) {
     return dataArray.find(item => item[key] === valueToFind);
 }
@@ -554,6 +651,9 @@ function startCalculator(){
     const melDefInput = document.getElementById('MD-1');
     const armorInput = document.getElementById('Armor-1');
     const shieldInput = document.getElementById('S-1');
+    const ammoInput = document.getElementById('Ammo-1');
+    const misWeaponInput = document.getElementById('MisW-1');
+
     meleeAttackInput.addEventListener('input', () => {
     calcMeleeAttack(1);
     console.log("Melee Attack calculation called:" + meleeAttackCost[0]);
@@ -590,5 +690,13 @@ function startCalculator(){
         shieldInput.addEventListener('input', () => {
         calcMissileBlock(1);
         console.log("Missile Block Calculation called:"+missileBlockCost[0]);
+    });
+        ammoInput.addEventListener('input', () => {
+        calcAmmo(1);
+        console.log("Ammo Calculation called:"+ammoCost[0]);
+    });
+        misWeaponInput.addEventListener('input', () => {
+        calcAmmo(1);
+        console.log("Ammo Calculation called:"+ ammoCost[0]);
     });
 }
