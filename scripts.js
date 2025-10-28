@@ -700,3 +700,301 @@ function startCalculator(){
         console.log("Ammo Calculation called:"+ ammoCost[0]);
     });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    // ------------------------------------
+    // MAIN TAB NAVIGATION
+    // ------------------------------------
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const pages = document.querySelectorAll("main");
+  
+    tabButtons.forEach(button => {
+      button.addEventListener("click", e => {
+        e.preventDefault();
+  
+        const tab = button.dataset.tab;
+        const targetPage = document.getElementById(tab);
+  
+        if (!targetPage) {
+          console.warn(`No page found for tab: ${tab}`);
+          return;
+        }
+  
+        // Remove active class from all pages and buttons
+        pages.forEach(main => main.classList.remove("active"));
+        tabButtons.forEach(btn => btn.classList.remove("active"));
+  
+        // Activate the selected tab and button
+        targetPage.classList.add("active");
+        button.classList.add("active");
+      });
+    });
+  
+    // ------------------------------------
+    // DROPDOWN MENU LINKS
+    // ------------------------------------
+    document.querySelectorAll('.dropdown-content a').forEach(link => {
+        link.addEventListener("click", e => {
+          e.preventDefault();
+      
+          const targetId = link.getAttribute("href").replace("#", "");
+          const section = document.getElementById(targetId);
+          if (!section) return;
+      
+          // Hide all pages first
+          document.querySelectorAll("main").forEach(m => m.classList.remove("active"));
+          document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+      
+          // Developer dropdown behavior
+          if (section.closest("main")?.id === "developer") {
+            document.getElementById("developer").classList.add("active");
+            document.querySelector('[data-tab="developer"]').classList.add("active");
+      
+            document.querySelectorAll(".dev-section").forEach(s => s.classList.remove("active"));
+            section.classList.add("active");
+          }
+      
+          // Information dropdown behavior
+          else if (section.closest("main")?.id === "information") {
+            document.getElementById("information").classList.add("active");
+            document.querySelector('[data-tab="information"]').classList.add("active");
+      
+            document.querySelectorAll(".info-section").forEach(s => s.classList.remove("active"));
+            section.classList.add("active");
+          }
+      
+          section.scrollIntoView({ behavior: "smooth" });
+        });
+      });
+  
+      document.querySelectorAll('.info-links a').forEach(link => {
+        link.addEventListener('click', e => {
+          e.preventDefault();
+          const targetId = link.getAttribute('href').replace('#', '');
+          const section = document.getElementById(targetId);
+      
+          // Switch to Information page
+          document.querySelectorAll('main').forEach(m => m.classList.remove('active'));
+          document.getElementById('information').classList.add('active');
+      
+          // Highlight Information tab
+          document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+          document.querySelector('[data-tab="information"]').classList.add('active');
+      
+          // Show the correct info section
+          document.querySelectorAll('.info-section').forEach(sec => sec.classList.remove('active'));
+          if (section) section.classList.add('active');
+      
+          section.scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+
+    // ------------------------------------s
+    // DEVELOPER VIEW TOGGLE
+    // ------------------------------------
+    const toggleViewBtn = document.getElementById("toggleViewBtn");
+    const userView = document.getElementById("userView");
+    const devView = document.getElementById("developerView");
+    const backBtn = document.getElementById("backToUserBtn");
+  
+    if (toggleViewBtn && userView && devView && backBtn) {
+      toggleViewBtn.addEventListener("click", () => {
+        userView.classList.add("hidden");
+        devView.classList.remove("hidden");
+      });
+  
+      backBtn.addEventListener("click", () => {
+        devView.classList.add("hidden");
+        userView.classList.remove("hidden");
+      });
+    }
+  
+    // ------------------------------------
+    // INFO PAGE SUB-TABS
+    // ------------------------------------
+    document.querySelectorAll(".info-tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".info-tab").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        // You could dynamically change info content here if needed
+      });
+    });
+  
+    // ------------------------------------
+    // PLACEHOLDER BUTTONS
+    // ------------------------------------
+    const exportUnitsBtn = document.getElementById("exportUnitsBtn");
+    const importUnitsBtn = document.getElementById("importUnitsBtn");
+    const addUnitBtn = document.getElementById("addUnitBtn");
+
+    function showSection(sectionId) {
+        // Remove active class from all pages and buttons
+        document.querySelectorAll("main").forEach(main => main.classList.remove("active"));
+        document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+      
+        // Activate the target section and its tab button (if exists)
+        const targetPage = document.getElementById(sectionId);
+        if (targetPage) targetPage.classList.add("active");
+      
+        const relatedTab = document.querySelector(`[data-tab="${sectionId}"]`);
+        if (relatedTab) relatedTab.classList.add("active");
+      }
+
+    document.getElementById('toDeveloperBtn').addEventListener('click', () => {
+        showSection('developer');
+      });
+      
+      document.getElementById('toFactionBtn').addEventListener('click', () => {
+        showSection('faction');
+      });
+      
+  
+    if (exportUnitsBtn) exportUnitsBtn.addEventListener("click", () => alert("Exporting units..."));
+    if (importUnitsBtn) importUnitsBtn.addEventListener("click", () => alert("Importing units..."));
+    if (addUnitBtn) addUnitBtn.addEventListener("click", () => alert("Unit added!"));
+  });
+
+  (function initUnitTable() {
+    // lists used in dropdowns
+    const factions = ["", "Roman Empire", "Carthage", "Greek City States"];
+    const weapons = ["", "Dagger", "Gladius", "Celtic Longsword", "Spear", "Warsword"];
+  
+    // helper to build a select element HTML string
+    function buildSelect(className, optionsArray) {
+      let html = `<select class="${className}">`;
+      html += `<option value="">—</option>`;
+      optionsArray.forEach(opt => {
+        html += `<option value="${opt}">${opt}</option>`;
+      });
+      html += `</select>`;
+      return html;
+    }
+  
+    const tbody = document.getElementById("unitTbody");
+    if (!tbody) {
+      console.warn("No #unitTbody found — please add <tbody id='unitTbody'></tbody> to your unit table.");
+      return;
+    }
+  
+    // create 15 rows
+    const rows = [];
+    for (let i = 0; i < 15; i++) {
+      const rowHtml = `
+        <tr data-row="${i+1}">
+          <td>${i+1}</td>
+          <td>${buildSelect("faction-select", factions)}</td>
+          <td><input class="cell-input name-input" type="text" /></td>
+          <td><input class="cell-input mancount-input" type="number" min="0" /></td>
+          <td>${buildSelect("weapon-select", weapons)}</td>
+          <td><input class="cell-input armor-input" type="text" /></td>
+          <td><input class="cell-input speed-input" type="number" min="0" /></td>
+          <td><input class="cell-input morale-input" type="number" min="0" /></td>
+          <td><input class="cell-input price-input" type="number" min="0" step="1" /></td>
+          <td><input class="cell-input points-input" type="number" min="0" step="1" /></td>
+        </tr>`;
+      rows.push(rowHtml);
+    }
+    tbody.innerHTML = rows.join("");
+  
+    // UX: enforce numeric constraints and trim text on blur via event delegation
+    tbody.addEventListener("input", (e) => {
+      const target = e.target;
+      if (!target) return;
+      if (target.matches('input[type="number"]')) {
+        const val = target.value;
+        if (val === "") return;
+        const n = Number(val);
+        if (isNaN(n) || n < 0) target.value = Math.max(0, Math.round(Math.abs(n) || 0));
+      }
+    });
+  
+    tbody.addEventListener("blur", (e) => {
+      const t = e.target;
+      if (t && t.matches('input[type="text"]')) {
+        t.value = t.value.trim();
+      }
+    }, true);
+  
+    // ---------- Clear button ----------
+    const clearUnitsBtn = document.getElementById("clearUnitsBtn");
+    if (clearUnitsBtn) {
+      clearUnitsBtn.addEventListener("click", () => {
+        if (!confirm("Clear all unit entries in the table?")) return;
+        tbody.querySelectorAll("tr").forEach(row => {
+          row.querySelectorAll("input").forEach(inp => inp.value = "");
+          row.querySelectorAll("select").forEach(sel => sel.selectedIndex = 0);
+        });
+      });
+    }
+  
+    // ---------- Export to JSON ----------
+    const exportBtn = document.getElementById("exportUnitsBtn");
+    if (exportBtn) {
+      exportBtn.addEventListener("click", () => {
+        const data = [];
+        tbody.querySelectorAll("tr").forEach(row => {
+          const r = {
+            index: Number(row.dataset.row),
+            faction: row.querySelector(".faction-select").value || "",
+            name: row.querySelector(".name-input").value || "",
+            manCount: row.querySelector(".mancount-input").value || "",
+            meleeWeapon: row.querySelector(".weapon-select").value || "",
+            armor: row.querySelector(".armor-input").value || "",
+            speed: row.querySelector(".speed-input").value || "",
+            morale: row.querySelector(".morale-input").value || "",
+            price: row.querySelector(".price-input").value || "",
+            points: row.querySelector(".points-input").value || ""
+          };
+          data.push(r);
+        });
+  
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "units.json";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      });
+    }
+  
+    // ---------- Import from JSON ----------
+    const importBtn = document.getElementById("importUnitsBtn");
+    if (importBtn) {
+      importBtn.addEventListener("click", () => {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "application/json";
+        input.onchange = () => {
+          const file = input.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = () => {
+            try {
+              const arr = JSON.parse(reader.result);
+              if (!Array.isArray(arr)) throw new Error("Invalid JSON format (expected an array).");
+              arr.slice(0,15).forEach((r, idx) => {
+                const row = tbody.querySelector(`tr[data-row="${idx+1}"]`);
+                if (!row) return;
+                row.querySelector(".faction-select").value = r.faction || "";
+                row.querySelector(".name-input").value = r.name || "";
+                row.querySelector(".mancount-input").value = r.manCount || "";
+                row.querySelector(".weapon-select").value = r.meleeWeapon || "";
+                row.querySelector(".armor-input").value = r.armor || "";
+                row.querySelector(".speed-input").value = r.speed || "";
+                row.querySelector(".morale-input").value = r.morale || "";
+                row.querySelector(".price-input").value = r.price || "";
+                row.querySelector(".points-input").value = r.points || "";
+              });
+            } catch (err) {
+              alert("Failed to import JSON: " + err.message);
+            }
+          };
+          reader.readAsText(file);
+        };
+        input.click();
+      });
+    }
+  })();
