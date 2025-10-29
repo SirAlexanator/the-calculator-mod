@@ -47,13 +47,14 @@ main.active{
     display: block;
 }
 
-.card{
-    background: #fcf8f2;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    max-width: 1100px;
-    margin: 0 auto;
+.card {
+  background: #fcf8f2;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  width: 95%;            /* Much wider */
+  max-width: 1400px;     /* Allows large tables */
+  margin: 0 auto;
 }
 
 .navbar{
@@ -79,14 +80,6 @@ main.active{
     padding: 2rem;
 }
 
-.card{
-    background: #fcf8fc;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    width: 80%;
-    max-width: 1000px;
-}
 
 h1 {
     text-align: center;
@@ -188,66 +181,63 @@ select {
     display: none;
 }
 
-/* Dropdown container */
 .dropdown {
-    position: relative;
-    display: inline-block;
-  }
-  
-  /* Dropdown trigger button */
-  .dropdown-btn {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    padding: 0.5rem 1rem;
-  }
-  
-  /* Dropdown content box (hidden by default) */
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #fffdf8;
-    min-width: 200px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    z-index: 20;
-    margin-top: 0.25rem;
-    flex-direction: column;
-  }
-  
-  /* Dropdown links */
-  .dropdown-content a {
-    color: #3b2f23;
-    padding: 0.75rem 1rem;
-    display: block;
-    text-decoration: none;
-    font-weight: 500;
-  }
-  
-  /* Hover effects */
-  .dropdown-content a:hover {
-    background-color: #f1e6d2;
-  }
-  
-  /* Show dropdown when hovering over the container */
-  .dropdown:hover .dropdown-content {
-    display: block;
-  }
-  
-  /* Optional: style the main button when open */
-  .dropdown:hover > .dropdown-btn {
-    text-decoration: underline;
-  }
-  
-  /* Keeps dropdown aligned nicely in the nav */
-  .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 10px 15px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #fffdf8;
+  min-width: 200px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  z-index: 1000;
+  top: 100%; /* directly below button */
+  left: 0;
+  overflow: hidden;
+}
+
+/* Fix flickering by keeping it open while hovering either the button or content */
+.dropdown:hover .dropdown-content,
+.dropdown-content:hover {
+  display: block;
+}
+
+.dropdown-content a {
+  color: #3b2f23;
+  padding: 0.75rem 1rem;
+  display: block;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1e6d2;
+}
+
+/* Optional hover highlight on button */
+.dropdown:hover > .dropdown-btn {
+  text-decoration: underline;
+}
+
+/* Keep nav items aligned */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
   
   .dev-section,
 .info-section {

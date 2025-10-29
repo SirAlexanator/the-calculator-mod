@@ -959,6 +959,64 @@ document.addEventListener("DOMContentLoaded", () => {
         URL.revokeObjectURL(url);
       });
     }
+
+    // ------------------------------------
+// FACTION PAGE BUTTONS
+// ------------------------------------
+const saveFactionBtn = document.getElementById("saveFactionBtn");
+const exportFactionsBtn = document.getElementById("exportFactionsBtn");
+const importFactionsBtn = document.getElementById("importFactionsBtn");
+const clearFactionsBtn = document.getElementById("clearFactionsBtn");
+
+if (saveFactionBtn) {
+  saveFactionBtn.addEventListener("click", () => {
+    alert("Faction saved! (You can later hook this up to localStorage or export logic.)");
+  });
+}
+
+if (exportFactionsBtn) {
+  exportFactionsBtn.addEventListener("click", () => {
+    alert("Exporting factions... (implement export logic here)");
+  });
+}
+
+if (importFactionsBtn) {
+  importFactionsBtn.addEventListener("click", () => {
+    alert("Importing factions... (implement import logic here)");
+  });
+}
+
+if (clearFactionsBtn) {
+  clearFactionsBtn.addEventListener("click", () => {
+    if (confirm("Clear all factions?")) {
+      document.getElementById("factionList").innerHTML = "";
+    }
+  });
+}
+// ------------------------------------
+// COLOR PICKER PREVIEWS
+// ------------------------------------
+const colorInputs = document.querySelectorAll(".color-pickers input[type='color']");
+
+colorInputs.forEach(input => {
+  const preview = document.createElement("span");
+  preview.className = "color-preview";
+  preview.style.display = "inline-block";
+  preview.style.width = "20px";
+  preview.style.height = "20px";
+  preview.style.border = "1px solid #ccc";
+  preview.style.borderRadius = "4px";
+  preview.style.marginLeft = "8px";
+  preview.style.verticalAlign = "middle";
+  preview.style.backgroundColor = input.value;
+
+  input.insertAdjacentElement("afterend", preview);
+
+  input.addEventListener("input", () => {
+    preview.style.backgroundColor = input.value;
+  });
+});
+
   
     // ---------- Import from JSON ----------
     const importBtn = document.getElementById("importUnitsBtn");
