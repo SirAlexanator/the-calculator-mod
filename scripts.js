@@ -17,126 +17,189 @@ let mountCost = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 let animalEngineCost = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 let abilityCost = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 let totalPrice = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-
-Promise.all([
-    fetch('melee-weapons.json').then(response => response.json()),
-    fetch('missile-weapons.json').then(response => response.json()),
-    fetch('entity-details.json').then(response => response.json()),
-    fetch('shields-details.json').then(response=> response.json())
-])
-    .then(([meleeData, missileData, entitiesData, shieldData]) => {
-
-        meleeWeaponsData = meleeData;
-        missileWeaponsData = missileData;
-        entityData = entitiesData;
-        shieldsData = shieldData;
-        console.log("All data loaded. Calculator ready!");
-
-        const meleeWeaponInput = document.getElementById('MW-1');
-        if (meleeWeaponInput) {
-            meleeWeaponInput.addEventListener('input', () => {
-                calcCategory(1);
-            });
-        }
-        startCalculator();
-
-    })
-    .catch(error => {
-        console.error('Failed to load necessary data:', error);
-    });
-
-
+const MAX_ROWS = 15;
+const ALL_INPUT_PREFIXES = [
+    "N", "MC", "M", "CB", "MA", "MD", "Armor", "H", "Ammo", 
+    "Accuracy", "MW", "MisW", "S", "Mount", "AAC", "NAAC"
+];
+// Array of prefixes for SELECT elements
+const SELECT_PREFIXES = ["MW", "MisW", "S", "Mount", "AAC"];
 function updatePrice(rowNumber){
     let price = document.getElementById(`P-${rowNumber}`);
     if(price){
     totalPrice[rowNumber-1]=(meleeAttackCost[rowNumber-1]+moraleCost[rowNumber-1]+
         accuracyCost[rowNumber-1]+meleeWeaponCost[rowNumber-1]+hpCost[rowNumber-1]+chargeBonusCost[rowNumber-1]+
     meleeDefenceCost[rowNumber-1]+armorCost[rowNumber-1]+missileBlockCost[rowNumber-1])*0.9;
-    price.textContent = totalPrice[rowNumber-1];
+    price.textContent = Math.round(totalPrice[rowNumber-1]/10)*10;
     console.log("Price changed");
     }
+}
+
+function calcPrice(rowNumber){
+    calcCategory(rowNumber);
+    calcMeleeAttack(rowNumber);
+    calcHp(rowNumber);
+    calcMeleeWeapon(rowNumber);
+    calcMeleeDefense(rowNumber);
+    calcChargeBonus(rowNumber);
+    calcMorale(rowNumber);
+    calcAccuracy(rowNumber);
+    calcArmor(rowNumber);
+    calcMissileBlock(rowNumber);
+    calcAmmo(rowNumber);
 }
 
 //Melee In =1, Spear Inf = 2, Pike Inf =3, Archer =4, Slinger =5, Pelt =6, Mel Cav = 7, Shk Cav = 8
 //MisCav = 9, Animal = 10, Chariot = 11, Arty = 12, Elepant = 13, Gun = 14
 function calcCategory(rowNumber) {
-    const chargeBonus = document.getElementById(`CB-${rowNumber}`);
-    const ammo = document.getElementById(`Ammo-${rowNumber}`);
-    const meleeWeapon = document.getElementById(`MW-${rowNumber}`);
-    const missileWeapon = document.getElementById(`MisW-${rowNumber}`);
-    const mount = document.getElementById(`Mount-${rowNumber}`);
-    const animalArtilleryChariot = document.getElementById(`AAC-${rowNumber}`);
-    const mwWeaponDetails = vlookup(meleeWeapon.value, meleeWeaponsData, 'Key');
-    const misWeaponDetails = vlookup(missileWeapon.value, missileWeaponsData, 'Key')
-    let entityDetails = vlookup('none',entityData,'Entity');
-    if (mount.value != 'none') {
-        entityDetails = vlookup(mount.value, entityData, 'Entity');
+    const index = rowNumber - 1;
+
+    // --- 1. Safely get element references ---
+    const chargeBonusElement = document.getElementById(`CB-${rowNumber}`);
+    const ammoElement = document.getElementById(`Ammo-${rowNumber}`);
+    const meleeWeaponElement = document.getElementById(`MW-${rowNumber}`);
+    const missileWeaponElement = document.getElementById(`MisW-${rowNumber}`);
+    const mountElement = document.getElementById(`Mount-${rowNumber}`);
+    const animalArtilleryChariotElement = document.getElementById(`AAC-${rowNumber}`);
+
+    // --- 2. Safely extract values from elements (CRITICAL FIXES HERE) ---
+    // If the element is null, default its value to '0' or 'none' to prevent crashing on .textContent or .value access.
+    const chargeBonusValue = parseInt(chargeBonusElement ? chargeBonusElement.textContent : '0') || 0;
+    const ammoContent = ammoElement ? ammoElement.textContent.trim() : ''; // Used for text content checks
+    const ammoValue = parseInt(ammoContent) || 0;
+
+    // Fix for SELECT elements (MW, MisW, Mount, AAC) which read .value
+    const meleeWeaponValue = meleeWeaponElement ? meleeWeaponElement.value : 'none';
+    const missileWeaponValue = missileWeaponElement ? missileWeaponElement.value : 'none';
+    const mountValue = mountElement ? mountElement.value : 'none';
+    const aacValue = animalArtilleryChariotElement ? animalArtilleryChariotElement.value : 'none';
+
+    // --- 3. Perform Lookups ---
+    const mwWeaponDetails = vlookup(meleeWeaponValue, meleeWeaponsData, 'Key');
+    const misWeaponDetails = vlookup(missileWeaponValue, missileWeaponsData, 'Key');
+    
+    // Determine entity details (default to 'none' entity for lookup)
+    let entityDetails = vlookup('none', entityData, 'Entity');
+    if (mountValue !== 'none') {
+        entityDetails = vlookup(mountValue, entityData, 'Entity');
     }
-    else if(animalArtilleryChariot.value != 'none') {
-        entityDetails = vlookup(animalArtilleryChariot.value, entityData, 'Entity');
+    else if(aacValue !== 'none') {
+        entityDetails = vlookup(aacValue, entityData, 'Entity');
     }
 
-//Melee Infantry Check
- if ((mwWeaponDetails['Unit Type'] == 'mel') && (ammo.value <= 5|| ammo.textContent==""|| ammo.textContent==" " || (missileWeapon.value == 'torch_25_1_0' || missileWeapon.value == 'stone_hand_75_5_1')) && (mount.value == 'none') && (animalArtilleryChariot.value == 'none') && (misWeaponDetails['Type'] == 'any')) {
-unitCategories[rowNumber-1] = 1;
-}//Spear Infantry Check
-else if((mwWeaponDetails['Unit Type'] == 'spr'||mwWeaponDetails['Unit Type'] =='shk') && (ammo.value <= 5|| ammo.textContent==""|| ammo.textContent==" " || (missileWeapon.value == 'torch_25_1_0' || missileWeapon.value == 'stone_hand_75_5_1')) && (mount.value == 'none') && (animalArtilleryChariot.value == 'none') && (misWeaponDetails['Type'] == 'any')){
-unitCategories[rowNumber-1] = 2;
-}//Pike Infantry Check
-else if((mwWeaponDetails['Unit Type'] == 'pik') && (ammo.value <= 5|| ammo.textContent==""|| ammo.textContent==" " || (missileWeapon.value == 'torch_25_1_0' || missileWeapon.value == 'stone_hand_75_5_1')) && (mount.value == 'none') && (animalArtilleryChariot.value == 'none') && (misWeaponDetails['Type'] == 'any')){
-unitCategories[rowNumber-1] = 3;
-}//Archer
-else if((misWeaponDetails['Unit Type']=='arr')&&(animalArtilleryChariot.value=='none'&&mount.value=='none')){
-unitCategories[rowNumber-1] = 4;
-}//Slinger
-else if((misWeaponDetails['Unit Type']=='sli')&&(animalArtilleryChariot.value=='none'&&mount.value=='none')){
-unitCategories[rowNumber-1] = 5;
-}//Peltast
-else if((misWeaponDetails['Unit Type']=='pel'||(misWeaponDetails['Unit Type']=='any'&&ammo.value>5)&&(missileWeapon.value != 'torch_25_1_0' && missileWeapon.value != 'stone_hand_75_5_1'))&&(animalArtilleryChariot.value=='none'&&mount.value=='none')){
-unitCategories[rowNumber-1] = 6;
-}//Melee Cav
-else if((chargeBonus<=50)&&(((ammo.value <= 5|| ammo.textContent==""|| ammo.textContent==" ") && misWeaponDetails['Type'] == 'any') || (missileWeapon.value == 'torch_25_1_0' || missileWeapon.value == 'stone_hand_75_5_1'))&&(mountDetails['Entity']=='mt')&&(mwWeaponDetails['Unit Type']!='shk')){
-unitCategories[rowNumber-1] = 7;
-}//Shk Cav
-else if((((ammo.value <= 5|| ammo.textContent==""|| ammo.textContent==" ") && misWeaponDetails['Type'] == 'any') || (missileWeapon.value == 'torch_25_1_0' || missileWeapon.value == 'stone_hand_75_5_1'))&&(mountDetails['Entity']=='mt')&&(mwWeaponDetails['Unit Type']=='shk')){
-unitCategories[rowNumber-1] = 8;
-}//MisCav
-else if((ammo.value>5||misWeaponDetails['Type'] != 'any')&&(mountDetails['Entity']=='mt')){
- unitCategories[rowNumber-1] = 9;
-}//Animals
-else if(entityDetails['Type'] == 'an'){
-unitCategories[rowNumber-1] = 10;
-}//Chariot
-else if(entityDetails['Type'] == 'cht'){
-unitCategories[rowNumber-1] = 11;
-}//Arty
-else if(entityDetails['Type'] == 'arty'){
-unitCategories[rowNumber-1] = 12;
-}//Chariot
-else if(entityDetails['Type'] == 'cht'){
-unitCategories[rowNumber-1] = 13;
-}//Elephant
-else if(entityDetails['Type'] == 'el'){
-unitCategories[rowNumber-1] = 14;
-}//Gun
-else if(misWeaponDetails['Unit Type' == 'gun']){
-unitCategories[rowNumber-1] = 15;
-}
+    // --- 4. CATEGORY CHECK LOGIC (with safety checks for lookups) ---
+    unitCategories[index] = 0; // Default to 0 or 'unclassified'
+
+    // Alias for less typing and clearer conditions
+    const isMeleeWeapon = mwWeaponDetails && mwWeaponDetails['Unit Type'];
+    const isMissileWeapon = misWeaponDetails && misWeaponDetails['Unit Type'];
+    const isMissileType = misWeaponDetails && misWeaponDetails['Type'];
+    const isEntity = entityDetails && entityDetails['Entity'];
+    const isEntityType = entityDetails && entityDetails['Type'];
+    
+    const isAmmoLow = ammoValue <= 5 || ammoContent === "" || ammoContent === " ";
+    const isTorchOrStone = missileWeaponValue === 'torch_25_1_0' || missileWeaponValue === 'stone_hand_75_5_1';
+    const isMountNone = mountValue === 'none';
+    const isAACNone = aacValue === 'none';
+
+    // Melee Infantry Check (1)
+    if (isMeleeWeapon === 'mel' && (isAmmoLow || isTorchOrStone) && isMountNone && isAACNone && isMissileType === 'any') {
+        unitCategories[index] = 1;
+    } 
+    // Spear Infantry Check (2)
+    else if ((isMeleeWeapon === 'spr' || isMeleeWeapon === 'shk') && (isAmmoLow || isTorchOrStone) && isMountNone && isAACNone && isMissileType === 'any') {
+        unitCategories[index] = 2;
+    }
+    // Pike Infantry Check (3)
+    else if (isMeleeWeapon === 'pik' && (isAmmoLow || isTorchOrStone) && isMountNone && isAACNone && isMissileType === 'any') {
+        unitCategories[index] = 3;
+    }
+    // Archer (4)
+    else if (isMissileWeapon === 'arr' && isAACNone && isMountNone) {
+        unitCategories[index] = 4;
+    }
+    // Slinger (5)
+    else if (isMissileWeapon === 'sli' && isAACNone && isMountNone) {
+        unitCategories[index] = 5;
+    }
+    // Peltast / Javelin (6)
+    else if ((isMissileWeapon === 'pel' || (isMissileType === 'any' && ammoValue > 5) && !isTorchOrStone) && isAACNone && isMountNone) {
+        unitCategories[index] = 6;
+    }
+    // Melee Cav (7)
+    else if (chargeBonusValue <= 50 && ((isAmmoLow && isMissileType === 'any') || isTorchOrStone) && isEntity === 'mt' && isMeleeWeapon !== 'shk') {
+        unitCategories[index] = 7;
+    }
+    // Shock Cav (8)
+    else if (((isAmmoLow && isMissileType === 'any') || isTorchOrStone) && isEntity === 'mt' && isMeleeWeapon === 'shk') {
+        unitCategories[index] = 8;
+    }
+    // Missile Cav (9)
+    else if ((ammoValue > 5 || isMissileType !== 'any') && isEntity === 'mt') {
+        unitCategories[index] = 9;
+    }
+    // Animals (10)
+    else if (isEntityType === 'an') {
+        unitCategories[index] = 10;
+    }
+    // Chariot (11) - Check 1
+    else if (isEntityType === 'cht') {
+        unitCategories[index] = 11;
+    }
+    // Arty (12)
+    else if (isEntityType === 'arty') {
+        unitCategories[index] = 12;
+    }
+    // Chariot (13) - Check 2 (Keeping original structure, but this is likely redundant)
+    else if (isEntityType === 'cht') { 
+        unitCategories[index] = 13;
+    }
+    // Elephant (14)
+    else if (isEntityType === 'el') {
+        unitCategories[index] = 14;
+    }
+    // Gun (15)
+    else if (isMissileWeapon === 'gun') {
+        unitCategories[index] = 15;
+    }
+
+    updatePrice(rowNumber); 
 }
 
-function calcMeleeAttack(rowNumber){
+// --- MELEE ATTACK CALCULATION FUNCTION (FIXED) ---
+function calcMeleeAttack(rowNumber) {
+    // 1. Safely retrieve element references
     const meleeAttackCell = document.getElementById(`MA-${rowNumber}`);
-    let meleeAttack = parseInt(meleeAttackCell.textContent)
-    let meleeAttackPrice = 0;
-    if(meleeAttackCell.textContent===" "||meleeAttackCell.textContent===""){
+    const meleeWeapon = document.getElementById(`MW-${rowNumber}`);
+
+    // CRITICAL FIX: If either element is null (row does not exist), exit gracefully.
+    if (!meleeAttackCell || !meleeWeapon) {
         return;
     }
-    const meleeWeapon = document.getElementById(`MW-${rowNumber}`);
-    const mwWeaponDetails = vlookup(meleeWeapon.value, meleeWeaponsData, 'Key');
-    if(mwWeaponDetails){
-    meleeAttack += mwWeaponDetails['Damage v Inf']*0.95;
-    calcCategory(rowNumber);
+    
+    const maTextContent = meleeAttackCell.textContent.trim();
+
+    // Check for empty or space-only content before parsing
+    if (maTextContent === "") {
+        return;
     }
+
+    // 2. Safely parse the base MA value
+    let meleeAttack = parseInt(maTextContent) || 0; // Use || 0 to default if parsing fails unexpectedly
+    let meleeAttackPrice = 0;
+
+    // 3. Get Melee Weapon Details safely
+    const mwWeaponDetails = vlookup(meleeWeapon.value, meleeWeaponsData, 'Key');
+    
+    if(mwWeaponDetails) {
+        // Ensure 'Damage v Inf' exists and is a number before calculation
+        const damageVInf = parseFloat(mwWeaponDetails['Damage v Inf']) || 0;
+        meleeAttack += damageVInf * 0.95;
+        // Re-calculate category if the weapon detail affects it
+        calcCategory(rowNumber);
+    }
+
+    // 4. Perform Price Calculation (Original Logic)
     let cat = unitCategories[rowNumber-1];
     meleeAttackPrice = (
         Math.min(meleeAttack,15)*1+
@@ -159,24 +222,44 @@ function calcMeleeAttack(rowNumber){
         Math.max(Math.min(meleeAttack-95,5),0)*28+
         Math.max(meleeAttack-100,0)*30
     )*1.5*1.07;
+    
     if(cat == 7){
         meleeAttackPrice = meleeAttackPrice*1.8 - 100;
     }
-    totalPrice[rowNumber-1] = meleeAttackPrice;
+
+    // 5. Store and Update
     meleeAttackCost[rowNumber-1] = meleeAttackPrice;
+    // NOTE: Do not set totalPrice here directly, it should be calculated in updatePrice
+    // totalPrice[rowNumber-1] = meleeAttackPrice; // Removed this line, as updatePrice handles the final sum.
     updatePrice(rowNumber);
 }
 
 function calcHp(rowNumber){
     const hpCell = document.getElementById(`H-${rowNumber}`);
-    const hp = hpCell.textContent;
-    if(hpCell.textContent===" "||hpCell.textContent===""){
+
+    // CRITICAL FIX: Secure against null element references.
+    if (!hpCell) {
+        return; 
+    }
+
+    const hpText = hpCell.textContent;
+
+    // Check for empty or space-only content
+    if(hpText.trim() === ""){
         return;
     }
+
+    // Convert the text content to a number for calculations
+    const hp = parseInt(hpText) || 0; 
+    
     let hpPrice = 0;
+    
+    // Ensure category is updated before using it
+    // Assuming calcCategory and unitCategories are globally defined
     calcCategory(rowNumber);
     const cat = unitCategories[rowNumber-1];
-    console.log(cat);
+    console.log(`Row ${rowNumber} Category: ${cat}`); // Logging for clarity
+
     if(cat==1||cat==2||cat==3||cat==10){
         hpPrice=(
         Math.min(hp,40)*.123+
@@ -211,7 +294,7 @@ function calcHp(rowNumber){
         Math.max(Math.min(hp-95,5),0)*32.75+
         Math.max(hp-100,0)*37)
     }
-        else if(cat==7||cat==8||cat==9){
+    else if(cat==7||cat==8||cat==9){
         hpPrice=(
         Math.min(hp,70)*.1+
         Math.max(Math.min(hp-70,5),0)*10+
@@ -227,47 +310,94 @@ function calcHp(rowNumber){
         Math.max(Math.min(hp-120,5),0)*44+
         Math.max(hp-125,0)*50)
     }
+    
+    // Store the price
     hpCost[rowNumber-1] = hpPrice;
-    console.log(hpPrice);
+    console.log(`Calculated HP Price: ${hpPrice}`);
+    
+    // Update the total price for the row
     updatePrice(rowNumber);
 }
 
-function calcMeleeWeapon(rowNumber){
-const WeaponCell = document.getElementById(`MW-${rowNumber}`);
-const mwWeaponDetails = vlookup(WeaponCell.value, meleeWeaponsData, 'Key');
-const weaponDamage = mwWeaponDetails['Damage']+mwWeaponDetails['Damage v Inf']*0.95;
-const apWeaponDamage = mwWeaponDetails['Ap Damage'];
-let weaponCost = 0;
-weaponCost = (//base weapon damage calc
-    Math.min(weaponDamage,15)*0+
-    Math.max(Math.min(weaponDamage-15,5),0)*2+
-    Math.max(Math.min(weaponDamage-20,5),0)*4+
-    Math.max(Math.min(weaponDamage-25,5),0)*6+
-    Math.max(Math.min(weaponDamage-30,5),0)*6+
-    Math.max(Math.min(weaponDamage-35,5),0)*8+
-    Math.max(weaponDamage-40,0)*10
-)+weaponDamage;
-weaponCost +=(//ap damage calc
-    Math.min(apWeaponDamage,5)*0+
-    Math.max(Math.min(apWeaponDamage-5,5),0)*8+
-    Math.max(Math.min(apWeaponDamage-10,5),0)*12+
-    Math.max(Math.min(apWeaponDamage-15,5),0)*18+
-    Math.max(apWeaponDamage-20,0)*24
-)+apWeaponDamage;
-meleeWeaponCost[rowNumber-1]=weaponCost;
-calcCategory(rowNumber);
-updatePrice(rowNumber);
+function calcMeleeWeapon(rowNumber) {
+    const WeaponCell = document.getElementById(`MW-${rowNumber}`);
+
+    // CRITICAL FIX 1: Check if the element exists before accessing its properties.
+    if (!WeaponCell) {
+        return; 
+    }
+
+    // Assuming vlookup, meleeWeaponsData, and other calculation functions are available globally.
+    const mwWeaponDetails = vlookup(WeaponCell.value, meleeWeaponsData, 'Key');
+    
+    // CRITICAL FIX 2: Check if the lookup returned valid details.
+    if (!mwWeaponDetails) {
+        // If the weapon is not found (e.g., 'none' or invalid key), reset cost and exit.
+        meleeWeaponCost[rowNumber - 1] = 0;
+        calcCategory(rowNumber);
+        updatePrice(rowNumber);
+        return;
+    }
+
+    // Safely parse properties, defaulting to 0 if they don't exist in the data structure.
+    const baseDamage = parseFloat(mwWeaponDetails['Damage']) || 0;
+    const infantryDamage = parseFloat(mwWeaponDetails['Damage v Inf']) || 0;
+    const apWeaponDamage = parseFloat(mwWeaponDetails['Ap Damage']) || 0;
+
+    // Perform calculations using the parsed numeric values
+    const weaponDamage = baseDamage + infantryDamage * 0.95;
+    
+    let weaponCost = 0;
+
+    weaponCost = (//base weapon damage calc
+        Math.min(weaponDamage,15)*0+
+        Math.max(Math.min(weaponDamage-15,5),0)*2+
+        Math.max(Math.min(weaponDamage-20,5),0)*4+
+        Math.max(Math.min(weaponDamage-25,5),0)*6+
+        Math.max(Math.min(weaponDamage-30,5),0)*6+
+        Math.max(Math.min(weaponDamage-35,5),0)*8+
+        Math.max(weaponDamage-40,0)*10
+    )+weaponDamage;
+
+    weaponCost +=(//ap damage calc
+        Math.min(apWeaponDamage,5)*0+
+        Math.max(Math.min(apWeaponDamage-5,5),0)*8+
+        Math.max(Math.min(apWeaponDamage-10,5),0)*12+
+        Math.max(Math.min(apWeaponDamage-15,5),0)*18+
+        Math.max(apWeaponDamage-20,0)*24
+    )+apWeaponDamage;
+    
+    meleeWeaponCost[rowNumber-1] = weaponCost;
+    calcCategory(rowNumber);
+    updatePrice(rowNumber);
 }
+
 
 function calcMeleeDefense(rowNumber){
     const melDefCell = document.getElementById(`MD-${rowNumber}`);
-    if(melDefCell.textContent==""||melDefCell.textContent==" "){
+
+    // CRITICAL FIX 1: Check if the element exists before accessing its properties.
+    if (!melDefCell) {
         return;
     }
-    const meleeDefence = melDefCell.textContent;
+
+    const meleeDefenceText = melDefCell.textContent;
+
+    // Check for empty or space-only content
+    if(meleeDefenceText.trim() === ""){
+        return;
+    }
+    
+    // Convert the text content to an integer. The calculation logic relies on numeric input.
+    const meleeDefence = parseInt(meleeDefenceText) || 0; 
+
     let meleeDefencePrice=0;
+    
+    // Assuming calcCategory and unitCategories are globally defined
     calcCategory(rowNumber);
     const cat = unitCategories[rowNumber-1];
+    
+    // Category 1: Most unit types
     if(cat==1||cat==4||cat==5||cat==6||cat==9||cat==10||cat==12||cat==11||cat==3||cat==7||cat==8||cat==14||cat==13){
         meleeDefencePrice=(
         Math.min(meleeDefence, 15)*1+
@@ -290,6 +420,7 @@ function calcMeleeDefense(rowNumber){
         Math.max(Math.min(meleeDefence-95,5),0)*24+
         Math.max(meleeDefence-100,0)*26)*1.5
     }
+    // Category 2: Specific unit type
     else if(cat==2){
         meleeDefencePrice=(
         Math.min(meleeDefence, 15)*1+
@@ -312,25 +443,44 @@ function calcMeleeDefense(rowNumber){
         Math.max(Math.min(meleeDefence-95,5),0)*16+
         Math.max(meleeDefence-100,0)*18)*1.5
     }
+
+    // Apply category multipliers
     if(cat==7||cat==9){
         meleeDefencePrice *= 2;
     }
     if(cat==8){
         meleeDefencePrice *=2.5;
     }
+    
+    // Store and update
     meleeDefenceCost[rowNumber-1]=meleeDefencePrice;
     updatePrice(rowNumber);
 }
 
+
 function calcChargeBonus(rowNumber){
     const chgCell = document.getElementById(`CB-${rowNumber}`);
-    if(chgCell.textContent==""||chgCell.textContent==" "){
+    
+    // CRITICAL FIX 1: Check if the element exists before accessing its properties.
+    if (!chgCell) {
         return;
     }
+    
+    const chgBonusText = chgCell.textContent;
+
+    // Check for empty or space-only content
+    if(chgBonusText.trim() === ""){
+        return;
+    }
+    
+    // Convert the text content to an integer. The calculation logic relies on numeric input.
+    const chgBonus = parseInt(chgBonusText) || 0; 
+    
     calcCategory(rowNumber);
-    const chgBonus = chgCell.textContent;
     let chgCost = 0;
     const cat = unitCategories[rowNumber-1];
+    
+    // Category 1: Standard units (1, 2, 3, 4, 5, 6, 10, 12, 14)
     if(cat==1||cat==2||cat==3||cat==4||cat==5||cat==6||cat==10||cat==12||cat==14){
         chgCost=(
             Math.min(chgBonus, 20)*1+
@@ -343,6 +493,7 @@ function calcChargeBonus(rowNumber){
             Math.max(chgBonus-50,0)*18
         )
     }
+    // Category 2: Specialized units (7, 9, 11, 13)
     else if(cat==7||cat==9||cat==11||cat==13){
         chgCost=(
             Math.min(chgBonus, 10)*1+
@@ -356,6 +507,7 @@ function calcChargeBonus(rowNumber){
             Math.max(Math.min(chgBonus-45,5),0)*20
         )
     }
+    // Category 3: Elite or unique unit (8)
     else if(cat==8){
         chgCost=(
             Math.min(chgBonus, 10)*1+
@@ -378,19 +530,35 @@ function calcChargeBonus(rowNumber){
             Math.max(chgBonus-45,0)*10
         )
     }
+    
     chargeBonusCost[rowNumber-1]=chgCost;
     updatePrice(rowNumber);
 }
 
 function calcMorale(rowNumber){
     const moraleCell = document.getElementById(`M-${rowNumber}`);
-    const morale = moraleCell.textContent;
-        if(moraleCell.textContent===" "||moraleCell.textContent===""){
+    
+    // CRITICAL FIX 1: Check if the element exists.
+    if (!moraleCell) {
         return;
     }
+    
+    const moraleText = moraleCell.textContent;
+
+    // Check for empty or space-only content
+    if(moraleText.trim() === ""){
+        return;
+    }
+    
+    // Convert to number, defaulting to 0 if parsing fails.
+    const morale = parseInt(moraleText) || 0; 
+
     let moralePrice = 0;
-    cat = unitCategories[rowNumber-1];
-    moralePrice= (
+    
+    // Assuming unitCategories is globally defined and populated
+    const cat = unitCategories[rowNumber-1];
+    
+    moralePrice = (
         Math.min(morale,25)*1+
         Math.max(Math.min(morale-25,5),0)*1+
         Math.max(Math.min(morale-30,5),0)*1.5+
@@ -409,37 +577,75 @@ function calcMorale(rowNumber){
         Math.max(Math.min(morale-95,5),0)*10.25+
         Math.max(morale-100,0)*11.25
     );
+    
     if(cat==7){
         moralePrice*=2;
     }
+    
+    // Assuming moraleCost is globally defined
     moraleCost[rowNumber-1]=moralePrice;
+    
     console.log("Morale Cost for unit " + rowNumber + " is:" + moralePrice);
+    
+    // Assuming updatePrice is globally defined
     updatePrice(rowNumber);
 }
 
 function calcAccuracy(rowNumber){
-const accuracyCell = document.getElementById(`Accuracy-${rowNumber}`);
-const accuracy = accuracyCell.textContent;
-        if(accuracyCell.textContent===" "||accuracyCell.textContent===""){
+    const accuracyCell = document.getElementById(`Accuracy-${rowNumber}`);
+    
+    // CRITICAL FIX 1: Check if the element exists.
+    if (!accuracyCell) {
         return;
     }
-let accuracyPrice = 0;
-if(accuracy>5){
-    accuracyPrice= (accuracy-5)*5;
-}
-accuracyCost[rowNumber-1]=accuracyPrice;
-updatePrice(rowNumber);
+    
+    const accuracyText = accuracyCell.textContent;
+
+    // Check for empty or space-only content
+    if(accuracyText.trim() === ""){
+        return;
+    }
+    
+    // Convert to number, defaulting to 0 if parsing fails.
+    const accuracy = parseInt(accuracyText) || 0;
+
+    let accuracyPrice = 0;
+    
+    if(accuracy > 5){
+        accuracyPrice = (accuracy - 5) * 5;
+    }
+    
+    // Assuming accuracyCost is globally defined
+    accuracyCost[rowNumber-1] = accuracyPrice;
+    
+    // Assuming updatePrice is globally defined
+    updatePrice(rowNumber);
 }
 
 function calcArmor(rowNumber){
     const armorCell = document.getElementById(`Armor-${rowNumber}`);
-    if(armorCell.textContent.trim() == ""){
+    
+    // CRITICAL FIX 1: Check if the element exists.
+    if (!armorCell) {
         return;
     }
-    armor=armorCell.textContent;
+    
+    const armorText = armorCell.textContent;
+    
+    // Check for empty or space-only content
+    if(armorText.trim() === ""){
+        return;
+    }
+    
+    // Convert to number, defaulting to 0 if parsing fails.
+    const armor = parseInt(armorText) || 0; 
     let armorPrice = 0;
+    
+    // Assuming calcCategory and unitCategories are globally defined
     calcCategory(rowNumber);
     const cat = unitCategories[rowNumber-1];
+    
+    // Category 1
     if(cat==1||cat==2||cat==3||cat==6||cat==7||cat==8||cat==10||cat==13){
         armorPrice = (
             Math.min(armor, 10)*0.5+
@@ -470,6 +676,7 @@ function calcArmor(rowNumber){
             Math.max(armor-130,0)*9
         )
     }
+    // Category 2
     else if(cat==4||cat==9||cat==11||cat==12){
         armorPrice = (
             Math.min(armor, 10)*0+
@@ -482,8 +689,9 @@ function calcArmor(rowNumber){
             Math.max(armor-40,0)*15
         )
     }
+    // Category 3
     else if(cat==5||cat==14){
-                armorPrice = (
+        armorPrice = (
             Math.min(armor, 10)*2+
             Math.max(Math.min(armor-10,5),0)*3+
             Math.max(Math.min(armor-15,5),0)*4+
@@ -494,90 +702,166 @@ function calcArmor(rowNumber){
             Math.max(armor-40,0)*10
         )
     }
+    
+    // Apply category multipliers
     if(cat==7||cat==8||cat==9){
         armorPrice *=2;
     }
+    
+    // Assuming armorCost is globally defined
     armorCost[rowNumber-1]=armorPrice;
+    
     console.log(armorPrice);
+    
+    // Assuming updatePrice is globally defined
     updatePrice(rowNumber);
 }
 
 function calcMissileBlock(rowNumber){
     const shieldCell = document.getElementById(`S-${rowNumber}`);
-    const shieldDetails = vlookup(shieldCell.value,shieldsData,'Shield');
-    const missileBlock = shieldDetails['Missile Block'];
+
+    // CRITICAL FIX 1: Check if the element exists.
+    if (!shieldCell) {
+        return;
+    }
+    
+    // Assuming shieldCell is a <select> element (based on shieldCell.value)
+    // The previous logic did not check if the vlookup data was available, 
+    // which is the most critical security point here.
+    
+    // Assuming vlookup, shieldsData are globally defined
+    const shieldDetails = vlookup(shieldCell.value, shieldsData, 'Shield');
+    
+    // CRITICAL FIX 2: Check if vlookup returned valid details or if 'Missile Block' exists.
+    const missileBlock = (shieldDetails && shieldDetails['Missile Block']) ? parseInt(shieldDetails['Missile Block']) : 0;
+    
+    if (missileBlock === 0) {
+        // Even if the shield is 'None' or data is missing, reset cost to 0 and exit.
+        missileBlockCost[rowNumber-1] = 0;
+        updatePrice(rowNumber);
+        return;
+    }
+
     calcCategory(rowNumber);
     const cat = unitCategories[rowNumber-1];
     let missileBlockPrice = 0;
-    if(missileBlock <=20)
-        missileBlockPrice=missileBlock*1.25;
-    else if(missileBlock<=30)
-        missileBlockPrice-missileBlock*1.66;
-    else if(missileBlock<=40)
-        missileBlockPrice=missileBlock*2;
-    else if(missileBlock<=50)
-        missileBlockPrice=missileBlock*2.2;
-    else if(missileBlock<=55)
-        missileBlockPrice=missileBlock*2.9;
-    else if(missileBlock>55)
-        missileBlockPrice=missileBlock*3.33;
-    missileBlockPrice*=1.25;
+    
+    // Tiered pricing logic
+    if(missileBlock <= 20)
+        missileBlockPrice = missileBlock * 1.25;
+    else if(missileBlock <= 30)
+        // Correcting likely typo: was missileBlockPrice-missileBlock*1.66; should be =
+        missileBlockPrice = missileBlock * 1.66; 
+    else if(missileBlock <= 40)
+        missileBlockPrice = missileBlock * 2;
+    else if(missileBlock <= 50)
+        missileBlockPrice = missileBlock * 2.2;
+    else if(missileBlock <= 55)
+        missileBlockPrice = missileBlock * 2.9;
+    else if(missileBlock > 55)
+        missileBlockPrice = missileBlock * 3.33;
+        
+    missileBlockPrice *= 1.25;
+    
+    // Apply category multipliers
     if(cat==4||cat==12||cat==14||cat==11||cat==0)
-        missileBlockPrice*=6;
+        missileBlockPrice *= 6;
     if(cat==6)
-        missileBlockPrice*=1.1;
+        missileBlockPrice *= 1.1;
     if(cat==7)
-        missileBlockPrice*=2;
+        missileBlockPrice *= 2;
     if(cat==8)
-        missileBlockPrice*=3.33;
+        missileBlockPrice *= 3.33;
     if(cat==5)
-        missileBlockPrice*=1.5;
+        missileBlockPrice *= 1.5;
+        
+    // Apply final cost reduction/adjustment
     if(cat==5||cat==6)
-        missileBlockPrice-=50;
+        missileBlockPrice -= 50;
+        
+    // Store and update
+    // Assuming missileBlockCost and updatePrice are globally defined
     missileBlockCost[rowNumber-1]=missileBlockPrice;
     updatePrice(rowNumber);
 }
 
 function calcAmmo(rowNumber){
     const ammoCell = document.getElementById(`Ammo-${rowNumber}`);
-    if(ammoCell.textContent.trim()==""){
-        ammoCost[rowNumber-1]=0;
-        return;
-    }
-    let ammo = ammoCell.textContent;
     const misWeaponCell = document.getElementById(`MisW-${rowNumber}`);
-    if(misWeaponCell.value == 'none'){
-        ammoCost[rowNumber-1];
+    const artCell = document.getElementById(`AAC-${rowNumber}`);
+    const naacCell = document.getElementById(`NAAC-${rowNumber}`); // Added check for element needed in category 12
+
+    // CRITICAL FIX 1: Check if the primary input elements exist.
+    if (!ammoCell || !misWeaponCell) {
         return;
     }
-    misWeaponDetails = vlookup(misWeaponCell.value,missileWeaponsData,'Key');
-    const damage = misWeaponDetails['Damage'];
-    const apDamage = misWeaponDetails['Ap'];
-    const range = misWeaponDetails['Range'];
-    const artCell = document.getElementById(`AAC-${rowNumber}`);
-    if(artCell.value != 'None'){
-    const artDetails = vlookup(artCell.value,entityData,'Entity');
-    const standardAmmo = artDetails['Standard Ammo'];
-    const pricePerAmmo = artDetails['Price Per Ammo'];
+    
+    // Check for empty or space-only content for ammo input
+    if(ammoCell.textContent.trim() === ""){
+        ammoCost[rowNumber-1] = 0; // Assuming ammoCost is global
+        return;
     }
+    
+    // Convert ammo input to number, defaulting to 0 if parsing fails.
+    let ammo = parseInt(ammoCell.textContent) || 0; 
+    
+    // Check if a missile weapon is selected
+    if(misWeaponCell.value === 'none' || ammo === 0){
+        // Ensure this line is setting the cost and returning, as the original logic intended.
+        ammoCost[rowNumber-1] = 0;
+        return;
+    }
+    
+    // Assuming vlookup, missileWeaponsData, entityData, calcCategory, unitCategories are global
+    const misWeaponDetails = vlookup(misWeaponCell.value, missileWeaponsData, 'Key');
+    
+    // CRITICAL FIX 2: Check if missile weapon details were successfully found.
+    if (!misWeaponDetails) {
+        ammoCost[rowNumber-1] = 0;
+        return;
+    }
+    
+    const damage = parseInt(misWeaponDetails['Damage']) || 0;
+    const apDamage = parseInt(misWeaponDetails['Ap']) || 0;
+    const range = parseInt(misWeaponDetails['Range']) || 0;
+    
+    let standardAmmo = 0;
+    let pricePerAmmo = 0;
+    
+    if(artCell && artCell.value !== 'None'){
+        const artDetails = vlookup(artCell.value, entityData, 'Entity');
+        // CRITICAL FIX 3: Check if artillery details were successfully found.
+        if (artDetails) {
+            standardAmmo = parseInt(artDetails['Standard Ammo']) || 0;
+            pricePerAmmo = parseFloat(artDetails['Price Per Ammo']) || 0;
+        }
+    }
+    
     calcCategory(rowNumber);
     const cat = unitCategories[rowNumber-1];
     let ammoPrice = 0;
-    if(cat==4||(cat==9&&misWeaponDetails['Type']=="arr")){
-    ammo = (
-        Math.min(ammo,15)+
-        Math.max(ammo-15,0)*2
-    );
-    ammoPrice =(
-        damage*0.36+apDamage
-    );
-    if(range<=125)
-        ammoPrice*=0.7;
+    
+    // Category 1 (archers)
+    if(cat==4||(cat==9 && misWeaponDetails['Type']=="arr")){
+        ammo = (
+            Math.min(ammo,15)+
+            Math.max(ammo-15,0)*2
+        );
+        ammoPrice =(
+            damage*0.36+apDamage
+        );
+        if(range<=125)
+            ammoPrice*=0.7;
+            
+        if(misWeaponCell.value=="arrow_long_150_31_4")
+            ammoPrice*=0.93;
     }
-    if(misWeaponCell.value=="arrow_long_150_31_4")
-        ammoPrice*=0.93;
-    else if(cat==5||(cat==9&&misWeaponDetails['Type'=="sli"])||cat==11||cat==13){
+    // Category 2 (slingers/specialized missile)
+    else if(cat==5||(cat==9 && misWeaponDetails['Type']=="sli")||cat==11||cat==13){
         ammo=(
+            // Original logic used Math.max(ammo, 25) which seems suspicious for ammo cost calculation
+            // Assuming the intent was Math.min or a different base logic. Sticking to the structure but
+            // ensuring calculation uses the numeric `ammo` variable.
             Math.max(ammo,25)+
             Math.max(ammo-25,0)*2
         );
@@ -587,11 +871,12 @@ function calcAmmo(rowNumber){
         if(misWeaponCell.value=="sling_stone_150_16_4")
             ammoPrice*=0.65;
     }
+    // Category 3 (Peltasts/Javelins, etc)
     else if(cat==6||cat==14||(cat==9&&(misWeaponDetails['Type']=="pel"||misWeaponDetails['Type']=="any"))){
         ammo=(
-        Math.max(ammo,7)+
-        Math.max(ammo-7,0)*2+
-        Math.max(ammo-10)*2
+            Math.max(ammo,7)+
+            Math.max(ammo-7,0)*2+
+            Math.max(ammo-10, 0)*2 // Corrected second argument for Math.max
         );
         ammoPrice=(
             damage*0.4+apDamage
@@ -599,11 +884,14 @@ function calcAmmo(rowNumber){
         if(cat==14)
             ammoPrice*=0.44;
     }
+    // Category 4 (Hand-thrown/Misc)
     else if(cat==1||cat==2||cat==3||cat==10||cat==7||cat==8){
         ammo=(
             Math.max(ammo,2)+
             Math.max(ammo-2,0)*2
         );
+        
+        // This set of specific checks suggests special cost rules for these weapon types.
         if(misWeaponCell.value == 'javelin_wooden_80_20_9')
             ammoPrice= ammo*28;
         else if(misWeaponCell.value =="javelin_prec_40_20_12")
@@ -614,22 +902,33 @@ function calcAmmo(rowNumber){
             ammoPrice = ammo*2;
         else if(misWeaponCell.value == "torch_25_1_0")
             ammoPrice = ammo*1;
-        else if(misWeaponCell.vlue=="javelin_fire_80_7_1")
+        // CRITICAL FIX 4: Corrected typo in original code (vlue vs value)
+        else if(misWeaponCell.value=="javelin_fire_80_7_1")
             ammoPrice = ammo*4;
         else if(misWeaponCell.value == "javelin_poison_40_15_8")
             ammoPrice = ammo*20;
     }
+    // Category 5 (Artillery)
     else if(cat==12){
         ammo=(
             Math.max(ammo,standardAmmo)+
             Math.max(ammo-standardAmmo,0)*2
         );
-        ammo*= document.getElementById(`NAAC-${rowNumber}`);
+        
+        let naacValue = 1;
+        if (naacCell) {
+            naacValue = parseInt(naacCell.textContent) || 1;
+        }
+        
+        ammo*= naacValue; // Used the secured naacValue
         ammoPrice = ammo*pricePerAmmo;
     }
+    
+    // Store and update
     ammoCost[rowNumber-1]=ammoPrice;
     updatePrice(rowNumber);
 }
+
 
 /*function calcEntity(rowNumber){
     if(unitCategories[rowNumber-1]==){
@@ -644,66 +943,101 @@ function vlookup(valueToFind, dataArray, key) {
 }
 
 function startCalculator(){
-    updatePrice();
-    const priceInput = document.getElementById('P-1');
-    const meleeAttackInput = document.getElementById('MA-1');
-    const moraleInput=document.getElementById('M-1');
-    const accuracyInput = document.getElementById(`Accuracy-1`);
-    const meleeWeaponInput = document.getElementById('MW-1');
-    const hpInput = document.getElementById('H-1');
-    const chgInput = document.getElementById(`CB-1`);
-    const melDefInput = document.getElementById('MD-1');
-    const armorInput = document.getElementById('Armor-1');
-    const shieldInput = document.getElementById('S-1');
-    const ammoInput = document.getElementById('Ammo-1');
-    const misWeaponInput = document.getElementById('MisW-1');
+const calcMap = {
+        "MA": calcMeleeAttack,
+        "M": calcMorale,
+        "Accuracy": calcAccuracy,
+        "MW": calcMeleeWeapon,
+        "H": calcHp,
+        "CB": calcChargeBonus,
+        "MD": calcMeleeDefense,
+        "Armor": calcArmor,
+        "S": calcMissileBlock, // Shield
+        "Ammo": calcAmmo,
+        "MisW": calcAmmo // Both Ammo and Missile Weapon updates often affect Ammo cost
+        // Add other calculation functions here as they are implemented
+    };
 
-    meleeAttackInput.addEventListener('input', () => {
-    calcMeleeAttack(1);
-    console.log("Melee Attack calculation called:" + meleeAttackCost[0]);
-    });
-    moraleInput.addEventListener('input', () => {
-    calcMorale(1);
-    console.log("Morale Attack calculation called:"+ moraleCost[0]);
-    });
-        accuracyInput.addEventListener('input', () => {
-    calcAccuracy(1);
-    console.log("Accuracy Attack calculation called:" + accuracyCost[0]);
-    });
-    meleeWeaponInput.addEventListener('input',() =>{
-        calcMeleeWeapon(1);
-        calcMeleeAttack(1);
-        console.log("Melee weapon calculation called:"+meleeWeaponCost[0]);
-    });
-        hpInput.addEventListener('input',() =>{
-            calcHp(1);
-        console.log("Hp calculation called:" +hpCost[0]);
-    });
-    chgInput.addEventListener('input', () => {
-        calcChargeBonus(1);
-        console.log("Charge Bonus Calculation called:"+chargeBonusCost[0]);
-    });
-        melDefInput.addEventListener('input', () => {
-        calcMeleeDefense(1);
-        console.log("Melee Defense Calculation called:"+meleeDefenceCost[0]);
-    });
-        armorInput.addEventListener('input', () => {
-        calcArmor(1);
-        console.log("Armor Calculation called"+armorCost[0]);
-    });
-        shieldInput.addEventListener('input', () => {
-        calcMissileBlock(1);
-        console.log("Missile Block Calculation called:"+missileBlockCost[0]);
-    });
-        ammoInput.addEventListener('input', () => {
-        calcAmmo(1);
-        console.log("Ammo Calculation called:"+ammoCost[0]);
-    });
-        misWeaponInput.addEventListener('input', () => {
-        calcAmmo(1);
-        console.log("Ammo Calculation called:"+ ammoCost[0]);
-    });
+    // Loop through all 15 rows
+    for (let i = 1; i <= MAX_ROWS; i++) {
+        const row = document.getElementById(`row-${i}`);
+        if (!row) continue; // Skip if the row doesn't exist
+
+        // Attach event listeners for each input in the row
+        ALL_INPUT_PREFIXES.forEach(prefix => {
+            const element = document.getElementById(`${prefix}-${i}`);
+            if (element) {
+                // Determine which calculation function to use
+                // Default to updatePrice if no specific function is mapped
+                const calcFunction = calcMap[prefix] || updatePrice;
+                
+                // Bind the row number to the function for proper execution
+                const boundCalc = calcFunction.bind(null, i); 
+
+                // Determine event type (input for contenteditable, change for select)
+                const eventType = SELECT_PREFIXES.includes(prefix) ? 'change' : 'input';
+                
+                element.addEventListener(eventType, boundCalc);
+
+                // Ensure initial price is calculated on load for this row
+                if (prefix === "N" && i === 1) { // Only call once per row (e.g., when setting up Unit Name 'N')
+                    updatePrice(i); 
+                }
+            }
+        });
+    }
 }
+
+function populateTable(units) {
+
+    // Clear existing data (optional, but good practice before importing new data)
+    for (let i = 1; i <= 15; i++) {
+        ALL_INPUT_PREFIXES.forEach(prefix => {
+            const element = document.getElementById(`${prefix}-${i}`);
+            if (element) {
+                if (SELECT_PREFIXES.includes(prefix)) {
+                    element.value = 'none'; // Set select to default 'none' option
+                } else {
+                    element.textContent = ''; // Clear editable TD
+                }
+            }
+        });
+    }
+
+    // Iterate through the imported units and the maximum allowed rows
+    for (let i = 0; i < Math.min(units.length, 15); i++) {
+        const rowNumber = i + 1;
+        const unit = units[i];
+
+        // Iterate through the input keys we defined
+        ALL_INPUT_PREFIXES.forEach(key => {
+            if (unit.hasOwnProperty(key)) {
+                const elementId = `${key}-${rowNumber}`;
+                const element = document.getElementById(elementId);
+
+                if (element) {
+                    const valueToSet = unit[key];
+
+                    if (SELECT_PREFIXES.includes(key)) {
+                        // For select elements, set the value property
+                        element.value = valueToSet;
+                    } else {
+                        // For contenteditable TDs, set the textContent
+                        element.textContent = valueToSet;
+                    }
+                    
+                    // Manually trigger the change/input event to run calculator logic
+                    const event = new Event('input', { bubbles: true }); // Use input for generic trigger
+                    element.dispatchEvent(event);
+                }
+            }
+        });
+    }
+    for(let i = 1; i <= MAX_ROWS; i++){
+        calcPrice();
+    }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     // ------------------------------------
     // MAIN TAB NAVIGATION
@@ -829,175 +1163,136 @@ document.addEventListener("DOMContentLoaded", () => {
     const exportUnitsBtn = document.getElementById("exportUnitsBtn");
     const importUnitsBtn = document.getElementById("importUnitsBtn");
     const addUnitBtn = document.getElementById("addUnitBtn");
+    // Wrap your code inside this block
+    const exportButton = document.getElementById('exportUnitsBtn');
 
-    function showSection(sectionId) {
-        // Remove active class from all pages and buttons
-        document.querySelectorAll("main").forEach(main => main.classList.remove("active"));
-        document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-      
-        // Activate the target section and its tab button (if exists)
-        const targetPage = document.getElementById(sectionId);
-        if (targetPage) targetPage.classList.add("active");
-      
-        const relatedTab = document.querySelector(`[data-tab="${sectionId}"]`);
-        if (relatedTab) relatedTab.classList.add("active");
-      }
+    if (!exportButton) {
+        console.error("Export Button (id='exportUnitsBtn') was NOT found in the DOM.");
+    } else {
+        exportButton.addEventListener('click', function() {
+            const rows = [];
 
-    document.getElementById('toDeveloperBtn').addEventListener('click', () => {
-        showSection('developer');
-      });
-      
-      document.getElementById('toFactionBtn').addEventListener('click', () => {
-        showSection('faction');
-      });
-      
-  
-    if (exportUnitsBtn) exportUnitsBtn.addEventListener("click", () => alert("Exporting units..."));
-    if (importUnitsBtn) importUnitsBtn.addEventListener("click", () => alert("Importing units..."));
-    if (addUnitBtn) addUnitBtn.addEventListener("click", () => alert("Unit added!"));
-  });
-/*
-  (function initUnitTable() {
-    // lists used in dropdowns
-    const factions = ["", "Roman Empire", "Carthage", "Greek City States"];
-    const weapons = ["", "Dagger", "Gladius", "Celtic Longsword", "Spear", "Warsword"];
-  
-    // helper to build a select element HTML string
-    function buildSelect(className, optionsArray) {
-      let html = `<select class="${className}">`;
-      html += `<option value="">—</option>`;
-      optionsArray.forEach(opt => {
-        html += `<option value="${opt}">${opt}</option>`;
-      });
-      html += `</select>`;
-      return html;
-    }
-  
-    const tbody = document.getElementById("unitTbody");
-    if (!tbody) {
-      console.warn("No #unitTbody found — please add <tbody id='unitTbody'></tbody> to your unit table.");
-      return;
-    }*/
-  /*
-    // create 15 rows
-    const rows = [];
-    for (let i = 0; i < 15; i++) {
-      const rowHtml = `
-        <tr data-row="${i+1}">
-          <td>${i+1}</td>
-          <td>${buildSelect("faction-select", factions)}</td>
-          <td><input class="cell-input name-input" type="text" /></td>
-          <td><input class="cell-input mancount-input" type="number" min="0" /></td>
-          <td>${buildSelect("weapon-select", weapons)}</td>
-          <td><input class="cell-input armor-input" type="text" /></td>
-          <td><input class="cell-input speed-input" type="number" min="0" /></td>
-          <td><input class="cell-input morale-input" type="number" min="0" /></td>
-          <td><input class="cell-input price-input" type="number" min="0" step="1" /></td>
-          <td><input class="cell-input points-input" type="number" min="0" step="1" /></td>
-        </tr>`;
-      rows.push(rowHtml);
-    }
-    tbody.innerHTML = rows.join("");
-  */
-    // UX: enforce numeric constraints and trim text on blur via event delegation
-    tbody.addEventListener("input", (e) => {
-      const target = e.target;
-      if (!target) return;
-      if (target.matches('input[type="number"]')) {
-        const val = target.value;
-        if (val === "") return;
-        const n = Number(val);
-        if (isNaN(n) || n < 0) target.value = Math.max(0, Math.round(Math.abs(n) || 0));
-      }
-    });
-  
-    tbody.addEventListener("blur", (e) => {
-      const t = e.target;
-      if (t && t.matches('input[type="text"]')) {
-        t.value = t.value.trim();
-      }
-    }, true);
-  
-   /* // ---------- Clear button ----------
-    const clearUnitsBtn = document.getElementById("clearUnitsBtn");
-    if (clearUnitsBtn) {
-      clearUnitsBtn.addEventListener("click", () => {
-        if (!confirm("Clear all unit entries in the table?")) return;
-        tbody.querySelectorAll("tr").forEach(row => {
-          row.querySelectorAll("input").forEach(inp => inp.value = "");
-          row.querySelectorAll("select").forEach(sel => sel.selectedIndex = 0);
-        });
-      });
-    }
-  */
-    // ---------- Export to JSON ----------
-    const exportBtn = document.getElementById("exportUnitsBtn");
-    if (exportBtn) {
-      exportBtn.addEventListener("click", () => {
-        const data = [];
-        tbody.querySelectorAll("tr").forEach(row => {
-          const r = {
-            index: Number(row.dataset.row),
-            faction: row.querySelector(".faction-select").value || "",
-            name: row.querySelector(".name-input").value || "",
-            manCount: row.querySelector(".mancount-input").value || "",
-            meleeWeapon: row.querySelector(".weapon-select").value || "",
-            armor: row.querySelector(".armor-input").value || "",
-            speed: row.querySelector(".speed-input").value || "",
-            morale: row.querySelector(".morale-input").value || "",
-            price: row.querySelector(".price-input").value || "",
-            points: row.querySelector(".points-input").value || ""
-          };
-          data.push(r);
-        });
-  
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "units.json";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-      });
-    }
-  
-    // ---------- Import from JSON ----------
-    const importBtn = document.getElementById("importUnitsBtn");
-    if (importBtn) {
-      importBtn.addEventListener("click", () => {
-        const input = document.createElement("input");
-        input.type = "file";
-        input.accept = "application/json";
-        input.onchange = () => {
-          const file = input.files[0];
-          if (!file) return;
-          const reader = new FileReader();
-          reader.onload = () => {
-            try {
-              const arr = JSON.parse(reader.result);
-              if (!Array.isArray(arr)) throw new Error("Invalid JSON format (expected an array).");
-              arr.slice(0,15).forEach((r, idx) => {
-                const row = tbody.querySelector(`tr[data-row="${idx+1}"]`);
-                if (!row) return;
-                row.querySelector(".faction-select").value = r.faction || "";
-                row.querySelector(".name-input").value = r.name || "";
-                row.querySelector(".mancount-input").value = r.manCount || "";
-                row.querySelector(".weapon-select").value = r.meleeWeapon || "";
-                row.querySelector(".armor-input").value = r.armor || "";
-                row.querySelector(".speed-input").value = r.speed || "";
-                row.querySelector(".morale-input").value = r.morale || "";
-                row.querySelector(".price-input").value = r.price || "";
-                row.querySelector(".points-input").value = r.points || "";
-              });
-            } catch (err) {
-              alert("Failed to import JSON: " + err.message);
+            // Iterate through rows 1 to MAX_ROWS (or until a row doesn't exist)
+            for (let i = 1; i <= MAX_ROWS; i++) {
+                const rowElement = document.getElementById(`row-${i}`);
+                if (!rowElement) continue;
+
+                const rowObject = {};
+                
+                // Loop through all input/select prefixes and retrieve their values
+                ALL_INPUT_PREFIXES.forEach(prefix => {
+                    const element = document.getElementById(`${prefix}-${i}`);
+                    if (element) {
+                        let cellValue;
+                        if (SELECT_PREFIXES.includes(prefix)) {
+                            // Get the value of the <select> element
+                            cellValue = element.value;
+                        } else {
+                            // Get the text content of the contenteditable <td>
+                            // Use trim() to clean up whitespace
+                            cellValue = element.textContent.trim();
+                        }
+
+                        // Store the value, using the prefix as the JSON key
+                        rowObject[prefix] = cellValue;
+                    }
+                });
+                
+                // *** FIX: Unconditionally push the row object, regardless of whether it's empty or not. ***
+                rows.push(rowObject);
             }
-          };
-          reader.readAsText(file);
-        };
-        input.click();
-      });
+
+            // 4. HALT if no data (This should only fail if the HTML table structure is missing)
+            if (rows.length === 0) {
+                alert("Critical Error: No rows were found in the table to export.");
+                return;
+            }
+
+            // 5. Convert array of objects to JSON string (formatted nicely)
+            const jsonString = JSON.stringify(rows, null, 2);
+
+            // 6. DOWNLOAD IMPLEMENTATION
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const tempLink = document.createElement('a'); 
+            tempLink.href = url;
+            tempLink.download = 'unit_data_export.json';
+            tempLink.style.display = 'none';
+
+            document.body.appendChild(tempLink);
+            tempLink.click();
+            
+            // Clean up temporary link
+            setTimeout(() => {
+                document.body.removeChild(tempLink);
+                URL.revokeObjectURL(url); 
+            }, 100); 
+
+            alert('Units successfully exported and download initiated!');
+        });
     }
-  /*})()*/;
+
+   const importButton = document.getElementById('importUnitsBtn');
+    const fileInput = document.getElementById('fileInput');
+
+    if (importButton && fileInput) {
+        fileInput.accept = ".json"; // Ensure only JSON files are selectable
+        fileInput.style.display = 'none'; // Keep the file input hidden
+
+        // Trigger the file input when the import button is clicked
+        importButton.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    populateTable(importedData);
+                    alert(`Successfully imported ${importedData.length} units!`);
+                } catch (error) {
+                    console.error('Error parsing JSON:', error);
+                    alert('Error: Could not read or parse the JSON file. Ensure it is a valid JSON array.');
+                } finally {
+                    // Reset file input value to allow importing the same file again
+                    event.target.value = ''; 
+                }
+            };
+            reader.readAsText(file);
+        });
+    } else {
+        console.warn("Import functionality setup elements (button/input) not found in HTML. Import is disabled.");
+    }
+
+
+    Promise.all([
+    fetch('melee-weapons.json').then(response => response.json()),
+    fetch('missile-weapons.json').then(response => response.json()),
+    fetch('entity-details.json').then(response => response.json()),
+    fetch('shields-details.json').then(response=> response.json())
+])
+    .then(([meleeData, missileData, entitiesData, shieldData]) => {
+
+        meleeWeaponsData = meleeData;
+        missileWeaponsData = missileData;
+        entityData = entitiesData;
+        shieldsData = shieldData;
+        console.log("All data loaded. Calculator ready!");
+
+        const meleeWeaponInput = document.getElementById('MW-1');
+        if (meleeWeaponInput) {
+            meleeWeaponInput.addEventListener('input', () => {
+                calcCategory(1);
+            });
+        }
+        startCalculator();
+
+    })
+    .catch(error => {
+        console.error('Failed to load necessary data:', error);
+    });
+
+});

@@ -96,15 +96,18 @@
   
       <div class="btn-row">
         <button type="button" class="submit" id="exportUnitsBtn">Export Units</button>
-        <button type="button" class="submit" id="importUnitsBtn">Import Units</button>
+        <a id="downloadLink" style="display: none;">Download Link</a>
+        <button type="button" class="submit" id="importUnitsBtn">Import Units:</button>
+                <input type="file" id="fileInput" accept=".json" style="display: none;">
         <button type="button" class="submit danger" id="clearUnitsBtn">Clear All</button>
         <button type = "button" class=" submit" id = "toDeveloperBtn"> Go To Developer</button>
         <button type = "button" class=" submit" id = "toFactionBtn"> Go To Faction</button>
       </div>
   
       <div class="table-wrapper">
-        <table id="the-calc unitTable">
-        <tr>
+        <table id="the-calc">
+            <thead>
+        <tr id="row-0">
             <th id="total-points-usage">Points Usage 0/34</th>
             <th>Price</th>
             <th>Name</th>
@@ -124,8 +127,9 @@
             <th>Animal/Artillery/Chariot</th>
             <th>Number of Animals/Artillery</th>
         </tr>
+        </thead>
         <tbody id="unitTbody">
-        <tr>
+        <tr id="row-1">
             <td contenteditable="false" id="PU-1"> </td>
             <td contenteditable="false" id="P-1"> </td>
             <td contenteditable="true" id="N-1"> </td>
@@ -288,7 +292,7 @@
             </td>
             <td contenteditable="true" id="NAAC-1"> </td>
         </tr>
-       <tr>
+       <tr id="row-2">
             <td contenteditable="false" id="PU-2"> </td>
             <td contenteditable="false" id="P-2"> </td>
             <td contenteditable="true" id="N-2"> </td>
@@ -451,7 +455,7 @@
             </td>
             <td contenteditable="true" id="NAAC-2"> </td>
         </tr>
-<tr>
+<tr id="row-3">
             <td contenteditable="false" id="PU-3"> </td>
             <td contenteditable="false" id="P-3"> </td>
             <td contenteditable="true" id="N-3"> </td>
@@ -614,7 +618,7 @@
             </td>
             <td contenteditable="true" id="NAAC-3"> </td>
         </tr>
-<tr>
+<tr id="row-4">
             <td contenteditable="false" id="PU-4"> </td>
             <td contenteditable="false" id="P-4"> </td>
             <td contenteditable="true" id="N-4"> </td>
@@ -777,7 +781,7 @@
             </td>
             <td contenteditable="true" id="NAAC-4"> </td>
         </tr>
-<tr>
+<tr id="row-5">
             <td contenteditable="false" id="PU-5"> </td>
             <td contenteditable="false" id="P-5"> </td>
             <td contenteditable="true" id="N-5"> </td>
@@ -940,7 +944,7 @@
             </td>
             <td contenteditable="true" id="NAAC-5"> </td>
         </tr>
-<tr>
+<tr id="row-6">
             <td contenteditable="false" id="PU-6"> </td>
             <td contenteditable="false" id="P-6"> </td>
             <td contenteditable="true" id="N-6"> </td>
@@ -1102,7 +1106,8 @@
                 </select>
             </td>
             <td contenteditable="true" id="NAAC-6"> </td>
-        </tr><tr>
+        </tr>
+<tr id="row-7">
             <td contenteditable="false" id="PU-7"> </td>
             <td contenteditable="false" id="P-7"> </td>
             <td contenteditable="true" id="N-7"> </td>
@@ -1265,7 +1270,7 @@
             </td>
             <td contenteditable="true" id="NAAC-7"> </td>
         </tr>
-<tr>
+<tr id="row-8">
             <td contenteditable="false" id="PU-8"> </td>
             <td contenteditable="false" id="P-8"> </td>
             <td contenteditable="true" id="N-8"> </td>
@@ -1428,7 +1433,7 @@
             </td>
             <td contenteditable="true" id="NAAC-8"> </td>
         </tr>
-<tr>
+<tr id="row-9">
             <td contenteditable="false" id="PU-9"> </td>
             <td contenteditable="false" id="P-9"> </td>
             <td contenteditable="true" id="N-9"> </td>
@@ -1591,7 +1596,7 @@
             </td>
             <td contenteditable="true" id="NAAC-9"> </td>
         </tr>
-<tr>
+<tr id="row-10">
             <td contenteditable="false" id="PU-10"> </td>
             <td contenteditable="false" id="P-10"> </td>
             <td contenteditable="true" id="N-10"> </td>
@@ -1754,7 +1759,7 @@
             </td>
             <td contenteditable="true" id="NAAC-10"> </td>
         </tr>
-<tr>
+<tr id="row-11">
             <td contenteditable="false" id="PU-11"> </td>
             <td contenteditable="false" id="P-11"> </td>
             <td contenteditable="true" id="N-11"> </td>
@@ -1917,7 +1922,7 @@
             </td>
             <td contenteditable="true" id="NAAC-11"> </td>
         </tr>
-<tr>
+<tr id="row-12">
             <td contenteditable="false" id="PU-12"> </td>
             <td contenteditable="false" id="P-12"> </td>
             <td contenteditable="true" id="N-12"> </td>
@@ -2080,7 +2085,7 @@
             </td>
             <td contenteditable="true" id="NAAC-12"> </td>
         </tr>
-<tr>
+<tr id="row-13">
             <td contenteditable="false" id="PU-13"> </td>
             <td contenteditable="false" id="P-13"> </td>
             <td contenteditable="true" id="N-13"> </td>
@@ -2243,7 +2248,7 @@
             </td>
             <td contenteditable="true" id="NAAC-13"> </td>
         </tr>
-<tr>
+<tr id="row-14">
             <td contenteditable="false" id="PU-14"> </td>
             <td contenteditable="false" id="P-14"> </td>
             <td contenteditable="true" id="N-14"> </td>
@@ -2406,7 +2411,7 @@
             </td>
             <td contenteditable="true" id="NAAC-14"> </td>
         </tr>
-<tr>
+<tr id="row-15">
             <td contenteditable="false" id="PU-15"> </td>
             <td contenteditable="false" id="P-15"> </td>
             <td contenteditable="true" id="N-15"> </td>
