@@ -233,7 +233,7 @@
     },
     {
         "Key": "chu-ko-nu_135_15_5",
-        "Type": "pel",
+        "Type": "sli",
         "Range": 135,
         "Damage": 15,
         "AP": 5,

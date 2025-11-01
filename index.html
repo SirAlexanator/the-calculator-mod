@@ -14,7 +14,7 @@
 <body>
 
     <nav class="navbar">
-    <h1>The Mod Calculator</h1>
+    <h1>The Calculator Mod</h1>
     <div class="nav-links">
       <button class="tab-btn active" data-tab="faction">Faction</button>
       <button class="tab-btn" data-tab="unit">Unit</button>
@@ -77,14 +77,11 @@
       </div>
   
       <div class="btn-row">
-        <button class="submit" id="saveFactionBtn">Save Faction</button>
         <button class="submit" id="exportFactionsBtn">Export Factions</button>
         <button class="submit" id="importFactionsBtn">Import Factions</button>
         <button class="submit danger" id="clearFactionsBtn">Clear All</button>
       </div>
   
-      <h3>Existing Factions</h3>
-      <ul id="factionList" class="faction-list"></ul>
     </div>
   </section>
 </main>
@@ -102,6 +99,9 @@
         <button type="button" class="submit danger" id="clearUnitsBtn">Clear All</button>
         <button type = "button" class=" submit" id = "toDeveloperBtn"> Go To Developer</button>
         <button type = "button" class=" submit" id = "toFactionBtn"> Go To Faction</button>
+        <button id="toggleSelectMode" class="mode-btn">Switch to Select Mode</button>
+
+
       </div>
   
       <div class="table-wrapper">
@@ -2577,8 +2577,8 @@
 </tbody>
     </table>
       </div>
-  
-      <h3>Information Links</h3>
+
+      <!-- <h3>Information Links</h3>
       <ul class="info-links">
         <li><a href="#weapons">Weapons</a></li>
         <li><a href="#shields">Shields</a></li>
@@ -2587,7 +2587,7 @@
         <li><a href="#artillery">Artillery</a></li>
         <li><a href="#chariots">Chariots</a></li>
       </ul>
-    </div>
+    </div> -->
   </main>
   
 
@@ -2638,16 +2638,292 @@
     <div class="card">
       <h2>Information Reference</h2>
 
-      <section id="weapons" class = "info-section active"><h3>Weapons</h3><p>Details about all melee and ranged weapons...</p></section>
-      <section id="shields" class = "info-section"><h3>Shields</h3><p>Shield types and their properties...</p></section>
-      <section id="mounts" class = "info-section"><h3>Mounts</h3><p>Information about horses, camels, etc...</p></section>
-      <section id="animals" class = "info-section"><h3>Animals</h3><p>Elephants and other animals used in battle...</p></section>
-      <section id="artillery" class = "info-section"><h3>Artillery</h3><p>Ballista, catapults, trebuchets...</p></section>
-      <section id="chariots" class = "info-section"><h3>Chariots</h3><p>Chariot types and stats...</p></section>
+      <section id="weapons" class = "info-section active"><h3>Weapons</h3><table border="1" cellpadding="6" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Damage</th>
+      <th>AP Damage</th>
+      <th>Damage v Inf</th>
+      <th>Bonus v Cav</th>
+      <th>Bonus v Elephant</th>
+      <th>Two Handed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>balkan_sword_25_10</td><td>25</td><td>10</td><td>0</td><td>0</td><td>0</td><td></td></tr>
+    <tr><td>celtic_longsword_36_4</td><td>36</td><td>4</td><td>0</td><td>0</td><td>0</td><td></td></tr>
+    <tr><td>celtic_longsword_bonus_infantry_20_5_15</td><td>20</td><td>5</td><td>15</td><td>0</td><td>0</td><td></td></tr>
+    <tr><td>celtic_longsword_elite_40_5</td><td>40</td><td>5</td><td>0</td><td>0</td><td>0</td><td></td></tr>
+    <tr><td>celtic_spear_anti_cav_15_7_25</td><td>15</td><td>7</td><td>0</td><td>25</td><td>0</td><td></td></tr>
+    <tr><td>celtic_spear_cav_20_7_10</td><td>20</td><td>7</td><td>0</td><td>10</td><td>10</td><td></td></tr>
+    <tr><td>celtic_spear_elite_24_6_15</td><td>24</td><td>6</td><td>0</td><td>15</td><td>15</td><td></td></tr>
+    <tr><td>claymore_30_20</td><td>30</td><td>20</td><td>0</td><td>0</td><td>0</td><td>✅</td></tr>
+    <tr><td>club_6_9_10</td><td>6</td><td>9</td><td>10</td><td>0</td><td>0</td><td></td></tr>
+    <tr><td>dagger_10_2</td><td>10</td><td>2</td><td>0</td><td>0</td><td>0</td><td></td></tr>
+    <tr><td>dirk_25_4</td><td>25</td><td>4</td><td>0</td><td>0</td><td>0</td><td></td></tr>
+    <tr><td>eastern_axe_16_10</td><td>16</td><td>10</td><td>0</td><td>0</td><td>0</td><td></td></tr>
+    <tr><td>eastern_axe_elite_20_12</td><td>20</td><td>12</td><td>0</td><td>0</td><td>0</td><td></td></tr>
+    <tr><td>eastern_sword_elite_34_4</td><td>34</td><td>4</td><td>0</td><td>0</td><td>0</td><td></td></tr>
+    <tr><td>falcata_20_5</td><td>20</td><td>5</td><td>0</td><td>40</td><td>0</td><td></td></tr>
+    <tr><td>falcata_elite_36_5</td><td>36</td><td>5</td><td>0</td><td>0</td><td>0</td><td></td></tr>
+    <tr><td>falx_32_8</td><td>32</td><td>8</td><td>0</td><td>0</td><td>0</td><td>✅</td></tr>
+    <tr><td>falx_25_14_15</td><td>25</td><td>14</td><td>0</td><td>15</td><td>15</td><td>✅</td></tr>
+    <tr><td>generic_sword_30_4</td><td>30</td><td>4</td><td>0</td><td>0</td><td>0</td><td></td></tr>
+    <tr><td>gladius_elite_34_5</td><td>34</td><td>5</td><td>0</td><td>0</td><td>0</td><td></td></tr>
+    <tr><td>gladius_elite_cav_36_5</td><td>36</td><td>5</td><td>0</td><td>0</td><td>0</td><td></td></tr>
+    <tr><td>hoplite_spear_20_6_15</td><td>20</td><td>6</td><td>0</td><td>15</td><td>0</td><td></td></tr>
+    <tr><td>hoplite_spear_cav_20_6_10</td><td>20</td><td>6</td><td>0</td><td>10</td><td>10</td><td></td></tr>
+    <tr><td>hoplite_spear_elite_22_8_15</td><td>22</td><td>8</td><td>0</td><td>15</td><td>0</td><td></td></tr>
+    <tr><td>horse_hewer_15_10_25</td><td>15</td><td>10</td><td>0</td><td>25</td><td>20</td><td></td></tr>
+    <tr><td>kopis_30_6</td><td>30</td><td>6</td><td>0</td><td>0</td><td>0</td><td></td></tr>
+    <tr><td>kopis_cav_32_6</td><td>32</td><td>6</td><td>0</td><td>0</td><td>0</td><td></td></tr>
+    <tr><td>lance_14_11_10</td><td>14</td><td>11</td><td>0</td><td>10</td><td>10</td><td>✅</td></tr>
+    <tr><td>lance_elite_15_12_10</td><td>15</td><td>12</td><td>0</td><td>10</td><td>10</td><td>✅</td></tr>
+    <tr><td>pike_20_4</td><td>20</td><td>4</td><td>0</td><td>0</td><td>0</td><td>✅</td></tr>
+    <tr><td>pike_elite_24_4</td><td>24</td><td>4</td><td>0</td><td>0</td><td>0</td><td>✅</td></tr>
+    <tr><td>pike_levy_16_4</td><td>16</td><td>4</td><td>0</td><td>0</td><td>0</td><td>✅</td></tr>
+    <tr><td>rhomphaia_30_15_20</td><td>30</td><td>15</td><td>0</td><td>20</td><td>20</td><td>✅</td></tr>
+    <tr><td>shortsword_20_4</td><td>20</td><td>4</td><td>0</td><td>0</td><td>0</td><td></td></tr>
+    <tr><td>shotel_23_12</td><td>23</td><td>12</td><td>0</td><td>0</td><td>0</td><td></td></tr>
+    <tr><td>spear_20_5_20</td><td>20</td><td>5</td><td>0</td><td>20</td><td>20</td><td></td></tr>
+    <tr><td>spear_anti_cav_15_5_30</td><td>15</td><td>5</td><td>0</td><td>30</td><td>30</td><td></td></tr>
+    <tr><td>spear_cav_20_5_15</td><td>20</td><td>5</td><td>0</td><td>15</td><td>15</td><td></td></tr>
+    <tr><td>spear_cav_elite_24_5_15</td><td>24</td><td>5</td><td>0</td><td>15</td><td>15</td><td></td></tr>
+    <tr><td>spear_elite_24_5_20</td><td>24</td><td>5</td><td>0</td><td>20</td><td>20</td><td></td></tr>
+    <tr><td>warsword_40_15</td><td>40</td><td>15</td><td>0</td><td>0</td><td>0</td><td>✅</td></tr>
+    <tr><td>long_axe_20_24</td><td>20</td><td>24</td><td>0</td><td>0</td><td>0</td><td>✅</td></tr>
+  </tbody>
+</table>
+</section>
+      <section id="shields" class = "info-section"><h3>Shields</h3><table border="1" cellpadding="6" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Shield</th>
+      <th>Missile Block</th>
+      <th>Shield Defence</th>
+      <th>Shield Armor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>none</td><td>0</td><td>0</td><td>0</td></tr>
+    <tr><td>caetra_cavalry_10</td><td>10</td><td>5</td><td>5</td></tr>
+    <tr><td>caetra_20</td><td>20</td><td>10</td><td>10</td></tr>
+    <tr><td>caetra_fast_cav_25</td><td>25</td><td>12</td><td>12</td></tr>
+    <tr><td>celtic_shock_30</td><td>30</td><td>15</td><td>15</td></tr>
+    <tr><td>celtic_40</td><td>40</td><td>20</td><td>20</td></tr>
+    <tr><td>hoplite_50</td><td>50</td><td>25</td><td>25</td></tr>
+    <tr><td>tower_55</td><td>55</td><td>27</td><td>27</td></tr>
+    <tr><td>germanic_wall_60</td><td>60</td><td>30</td><td>30</td></tr>
+  </tbody>
+</table>
+</section>
+      <section id="mounts" class = "info-section"><h3>Mounts</h3><table border="1" cellpadding="6" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Mount</th>
+      <th>HP</th>
+      <th>Mass</th>
+      <th>Walk Speed</th>
+      <th>Run Speed</th>
+      <th>Charge Speed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>rome_camel</td><td>40</td><td>450</td><td>1.85</td><td>7.25</td><td>12</td></tr>
+    <tr><td>rome_camel_cataphract</td><td>55</td><td>750</td><td>1.65</td><td>6.5</td><td>11</td></tr>
+    <tr><td>rome_horse_heavy</td><td>35</td><td>600</td><td>1.5</td><td>8</td><td>11</td></tr>
+    <tr><td>rome_horse_heavy_missile</td><td>30</td><td>600</td><td>1.5</td><td>8</td><td>11</td></tr>
+    <tr><td>rome_horse_heavy_shock</td><td>30</td><td>700</td><td>1.5</td><td>8</td><td>11</td></tr>
+    <tr><td>rome_horse_light</td><td>25</td><td>200</td><td>1.8</td><td>10</td><td>12</td></tr>
+    <tr><td>rome_horse_light_missile</td><td>20</td><td>200</td><td>1.8</td><td>9</td><td>12</td></tr>
+    <tr><td>rome_horse_light_shock</td><td>20</td><td>300</td><td>1.8</td><td>10</td><td>12</td></tr>
+    <tr><td>rome_horse_medium</td><td>25</td><td>400</td><td>1.65</td><td>9</td><td>11</td></tr>
+    <tr><td>rome_horse_medium_missile</td><td>20</td><td>400</td><td>1.65</td><td>9</td><td>11</td></tr>
+    <tr><td>rome_horse_medium_shock</td><td>20</td><td>500</td><td>1.65</td><td>9</td><td>11</td></tr>
+    <tr><td>rome_horse_numidian_heavy</td><td>35</td><td>600</td><td>1.7</td><td>8.5</td><td>11</td></tr>
+    <tr><td>rome_horse_numidian_heavy</td><td>35</td><td>700</td><td>1.7</td><td>8.5</td><td>11</td></tr>
+    <tr><td>rome_horse_numidian_light</td><td>20</td><td>150</td><td>2</td><td>12.5</td><td>13</td></tr>
+    <tr><td>rome_horse_numidian_medii</td><td>25</td><td>400</td><td>1.8</td><td>10</td><td>11</td></tr>
+    <tr><td>rome_horse_numidian_medii</td><td>25</td><td>500</td><td>1.8</td><td>10</td><td>11</td></tr>
+    <tr><td>rome_horse_super_heavy</td><td>55</td><td>1100</td><td>1.2</td><td>6</td><td>10</td></tr>
+    <tr><td>rome_horse_venetian_light</td><td>40</td><td>150</td><td>2.2</td><td>14</td><td>15</td></tr>
+    <tr><td>rome_horse_very_heavy</td><td>40</td><td>700</td><td>1.35</td><td>7</td><td>11</td></tr>
+    <tr><td>rome_horse_very_heavy_mis</td><td>35</td><td>700</td><td>1.35</td><td>7</td><td>11</td></tr>
+    <tr><td>rome_horse_very_heavy_sho</td><td>35</td><td>800</td><td>1.35</td><td>7</td><td>11</td></tr>
+    <tr><td>rome_horse_very_light</td><td>20</td><td>150</td><td>1.95</td><td>12</td><td>12</td></tr>
+    <tr><td>rome_horse_very_light_mis</td><td>20</td><td>150</td><td>1.95</td><td>10</td><td>12</td></tr>
+    <tr><td>rome_horse_very_light_shoc</td><td>20</td><td>250</td><td>1.95</td><td>12</td><td>12</td></tr>
+  </tbody>
+</table>
+</section>
+      <section id="animals" class = "info-section"><h3>Animals</h3><table border="1">
+  <tr>
+    <th>Animal</th>
+    <th>HP</th>
+    <th>Mass</th>
+    <th>Walk Speed</th>
+    <th>Run Speed</th>
+    <th>Charge Speed</th>
+    <th>Price</th>
+  </tr>
+  <tr>
+    <td>indian_armoured_elephant</td>
+    <td>1150</td>
+    <td>3350</td>
+    <td>1.4</td>
+    <td>5.5</td>
+    <td>7.5</td>
+    <td>80</td>
+  </tr>
+  <tr>
+    <td>indian_elephant</td>
+    <td>950</td>
+    <td>3100</td>
+    <td>1.4</td>
+    <td>5.5</td>
+    <td>7.5</td>
+    <td>60</td>
+  </tr>
+  <tr>
+    <td>boar</td>
+    <td>30</td>
+    <td>90</td>
+    <td>1.75</td>
+    <td>4</td>
+    <td>9</td>
+    <td>5</td>
+  </tr>
+  <tr>
+    <td>molossian_dog</td>
+    <td>20</td>
+    <td>40</td>
+    <td>2.6</td>
+    <td>8</td>
+    <td>10</td>
+    <td>2</td>
+  </tr>
+  <tr>
+    <td>wardog</td>
+    <td>20</td>
+    <td>40</td>
+    <td>2.6</td>
+    <td>9</td>
+    <td>12.5</td>
+    <td>3</td>
+  </tr>
+</table>
+</section>
+      <section id="artillery" class = "info-section"><h3>Artillery</h3><table border="1">
+  <tr>
+    <th>Artillery</th>
+    <th>Standard Ammo</th>
+    <th>Price per Ammo</th>
+    <th>Price per Piece</th>
+  </tr>
+  <tr>
+    <td>ballista_medium</td>
+    <td>15</td>
+    <td>25</td>
+    <td>50</td>
+  </tr>
+  <tr>
+    <td>beehive_thrower</td>
+    <td>15</td>
+    <td>25</td>
+    <td>60</td>
+  </tr>
+  <tr>
+    <td>cheiroballistra</td>
+    <td>40</td>
+    <td>7</td>
+    <td>30</td>
+  </tr>
+  <tr>
+    <td>onager</td>
+    <td>15</td>
+    <td>35</td>
+    <td>50</td>
+  </tr>
+  <tr>
+    <td>onager_large</td>
+    <td>15</td>
+    <td>40</td>
+    <td>100</td>
+  </tr>
+  <tr>
+    <td>polybolos</td>
+    <td>60</td>
+    <td>3</td>
+    <td>15</td>
+  </tr>
+  <tr>
+    <td>scorpio</td>
+    <td>70</td>
+    <td>6</td>
+    <td>22</td>
+  </tr>
+  <tr>
+    <td>scorpion_pot_thrower</td>
+    <td>30</td>
+    <td>6</td>
+    <td>22</td>
+  </tr>
+  <tr>
+    <td>snake_pot_thrower</td>
+    <td>15</td>
+    <td>6</td>
+    <td>22</td>
+  </tr>
+  <tr>
+    <td>trebuchet</td>
+    <td>15</td>
+    <td>30</td>
+    <td>80</td>
+  </tr>
+</table>
+</section>
+      <section id="chariots" class = "info-section"><h3>Chariots</h3><table border="1">
+  <tr>
+    <th>Chariot</th>
+    <th>HP</th>
+    <th>Mass</th>
+    <th>Walk Speed</th>
+    <th>Run Speed</th>
+    <th>Charge Speed</th>
+    <th>Price</th>
+  </tr>
+  <tr>
+    <td>rome_chariot_celtic</td>
+    <td>150</td>
+    <td>1500</td>
+    <td>1.7</td>
+    <td>8</td>
+    <td>10</td>
+    <td>40</td>
+  </tr>
+  <tr>
+    <td>rome_chariot_generic</td>
+    <td>200</td>
+    <td>2000</td>
+    <td>2.2</td>
+    <td>7.5</td>
+    <td>11</td>
+    <td>45</td>
+  </tr>
+  <tr>
+    <td>rome_chariot_scythed</td>
+    <td>250</td>
+    <td>2500</td>
+    <td>1.65</td>
+    <td>7</td>
+    <td>10</td>
+    <td>50</td>
+  </tr>
+</table>
+</section>
     </div>
   </main>
-
-    
     <script src="scripts.js"></script>
 
 </body>
