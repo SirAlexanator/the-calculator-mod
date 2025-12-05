@@ -6,16 +6,71 @@ h1 {
     font-weight: normal;
 }
 
-th {
-    font-weight: normal;
-    border-left: 1px solid black;
-    border-right: 1px solid black;
-    margin: 5px;
+h2{
+    color: #4b3621;
+    margin-bottom: 1rem;
+}
+
+h3{
+    margin-top: 2rem;
+    color: #5b4226;
+}
+
+.form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.grid-2, .grid-3 {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.5rem
+}
+
+.grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    color: #4e3b2a;
+}
+
+input, select {
+    padding: 0.5rem;
+    border: 1px solid #d2b48c;
+    border-radius: 6px;
+    background-color: #fffefb;
+}
+
+input:focus, select:focus{
+    outline: none;
+    border-color: #a67c52;
+    box-shadow: 0 0 3px #a67c52;
+}
+
+button.submit{
+    background: #8b6b45;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
 }
 
 table {
-    border: 1px solid black;
+    width: 100%;
     border-collapse: collapse;
+    margin-top: 1.5rem;
+    background: #fffdf8;
 }
 
 

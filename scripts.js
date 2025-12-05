@@ -1858,7 +1858,7 @@ document.addEventListener("DOMContentLoaded", () => {
           document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
       
           // Developer dropdown behavior
-          if (section.closest("main")?.id == "developer") {
+          if (section.closest("main")?.id === "developer") {
             document.getElementById("developer").classList.add("active");
             document.querySelector('[data-tab="developer"]').classList.add("active");
       
@@ -1867,7 +1867,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
       
           // Information dropdown behavior
-          else if (section.closest("main")?.id == "information") {
+          else if (section.closest("main")?.id === "information") {
             document.getElementById("information").classList.add("active");
             document.querySelector('[data-tab="information"]').classList.add("active");
       
@@ -1938,136 +1938,221 @@ document.addEventListener("DOMContentLoaded", () => {
     const exportUnitsBtn = document.getElementById("exportUnitsBtn");
     const importUnitsBtn = document.getElementById("importUnitsBtn");
     const addUnitBtn = document.getElementById("addUnitBtn");
-    // Wrap your code inside this block
-    const exportButton = document.getElementById('exportUnitsBtn');
+});
+// ------------------------------------
+// NAVIGATION: Show/Hide Sections
+// ------------------------------------
+function showSection(sectionId) {
+    document.querySelectorAll("main").forEach(main => main.classList.remove("active"));
+    document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+  
+    const targetPage = document.getElementById(sectionId);
+    if (targetPage) targetPage.classList.add("active");
+  
+    const relatedTab = document.querySelector(`[data-tab="${sectionId}"]`);
+    if (relatedTab) relatedTab.classList.add("active");
+}
 
-    if (!exportButton) {
-        console.error("Export Button (id='exportUnitsBtn') was NOT found in the DOM.");
-    } else {
-        exportButton.addEventListener('click', function() {
-            const rows = [];
-
-            // Iterate through rows 1 to MAX_ROWS (or until a row doesn't exist)
-            for (let i = 1; i <= MAX_ROWS; i++) {
-                const rowElement = document.getElementById(`row-${i}`);
-                if (!rowElement) continue;
-
-                const rowObject = {};
-                
-                // Loop through all input/select prefixes and retrieve their values
-                ALL_INPUT_PREFIXES.forEach(prefix => {
-                    const element = document.getElementById(`${prefix}-${i}`);
-                    if (element) {
-                        let cellValue;
-                        if (SELECT_PREFIXES.includes(prefix)) {
-                            // Get the value of the <select> element
-                            cellValue = element.value;
-                        } else {
-                            // Get the text content of the contenteditable <td>
-                            // Use trim() to clean up whitespace
-                            cellValue = element.textContent.trim();
-                        }
-
-                        // Store the value, using the prefix as the JSON key
-                        rowObject[prefix] = cellValue;
-                    }
-                });
-                
-                // *** FIX: Unconditionally push the row object, regardless of whether it's empty or not. ***
-                rows.push(rowObject);
-            }
-
-            // 4. HALT if no data (This should only fail if the HTML table structure is missing)
-            if (rows.length == 0) {
-                alert("Critical Error: No rows were found in the table to export.");
-                return;
-            }
-
-            // 5. Convert array of objects to JSON string (formatted nicely)
-            const jsonString = JSON.stringify(rows, null, 2);
-
-            // 6. DOWNLOAD IMPLEMENTATION
-            const blob = new Blob([jsonString], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-
-            const tempLink = document.createElement('a'); 
-            tempLink.href = url;
-            tempLink.download = 'unit_data_export.json';
-            tempLink.style.display = 'none';
-
-            document.body.appendChild(tempLink);
-            tempLink.click();
-            
-            // Clean up temporary link
-            setTimeout(() => {
-                document.body.removeChild(tempLink);
-                URL.revokeObjectURL(url); 
-            }, 100); 
-
-            alert('Units successfully exported and download initiated!');
-        });
-    }
-const toggleBtn = document.getElementById('toggleSelectMode');
-let selectMode = false;
-
-toggleBtn.addEventListener('click', () => {
-  selectMode = !selectMode;
-  const rows = document.querySelectorAll('#the-calc tr');
-
-  rows.forEach(row => {
-    const cells = row.querySelectorAll('td, th');
-    cells.forEach((cell, i) => {
-      if (i < 2) {
-        // First two columns: never editable, never selectable
-        cell.setAttribute('contenteditable', 'false');
-        cell.classList.add('no-select');
-      } else {
-        // Other columns toggle editable state
-        cell.setAttribute('contenteditable', selectMode ? 'false' : 'true');
-        cell.classList.toggle('no-select', false);
-      }
-    });
-  });
-
-  toggleBtn.textContent = selectMode
-    ? 'Switch to Edit Mode'
-    : 'Switch to Select Mode';
+document.getElementById('toDeveloperBtn')?.addEventListener('click', () => {
+    showSection('developer');
 });
 
-   const importButton = document.getElementById('importUnitsBtn');
-    const fileInput = document.getElementById('fileInput');
- 
-    if (importButton && fileInput) {
-        fileInput.accept = ".json"; // Ensure only JSON files are selectable
-        fileInput.style.display = 'none'; // Keep the file input hidden
+document.getElementById('toFactionBtn')?.addEventListener('click', () => {
+    showSection('faction');
+});
 
-        // Trigger the file input when the import button is clicked
-        importButton.addEventListener('click', () => fileInput.click());
+// ------------------------------------
+// EXPORT UNITS (for existing table)
+// ------------------------------------
+const exportButton = document.getElementById('exportUnitsBtn');
 
-        fileInput.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
+if (exportButton) {
+    exportButton.addEventListener('click', function() {
+        const rows = [];
+        const MAX_ROWS = 15;
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const importedData = JSON.parse(e.target.result);
-                    populateTable(importedData);
-                } catch (error) {
-                    console.error('Error parsing JSON:', error);
-                    alert('Error: Could not read or parse the JSON file. Ensure it is a valid JSON array.');
-                } finally {
-                    // Reset file input value to allow importing the same file again
-                    event.target.value = ''; 
-                }
+        for (let i = 1; i <= MAX_ROWS; i++) {
+            const rowElement = document.getElementById(`row-${i}`);
+            if (!rowElement) continue;
+
+            const rowObject = {
+                pointsUsage: document.getElementById(`PU-${i}`)?.textContent.trim() || "",
+                price: document.getElementById(`P-${i}`)?.textContent.trim() || "",
+                name: document.getElementById(`N-${i}`)?.textContent.trim() || "",
+                manCount: document.getElementById(`MC-${i}`)?.textContent.trim() || "",
+                morale: document.getElementById(`M-${i}`)?.textContent.trim() || "",
+                chargeBonus: document.getElementById(`CB-${i}`)?.textContent.trim() || "",
+                meleeAttack: document.getElementById(`MA-${i}`)?.textContent.trim() || "",
+                meleeDefense: document.getElementById(`MD-${i}`)?.textContent.trim() || "",
+                armor: document.getElementById(`Armor-${i}`)?.textContent.trim() || "",
+                hp: document.getElementById(`H-${i}`)?.textContent.trim() || "",
+                ammo: document.getElementById(`Ammo-${i}`)?.textContent.trim() || "",
+                accuracy: document.getElementById(`Accuracy-${i}`)?.textContent.trim() || "",
+                meleeWeapon: document.getElementById(`MW-${i}`)?.value || "",
+                missileWeapon: document.getElementById(`MisW-${i}`)?.value || "",
+                shield: document.getElementById(`S-${i}`)?.value || "",
+                mount: document.getElementById(`Mount-${i}`)?.value || "",
+                animalArtilleryChariot: document.getElementById(`AAC-${i}`)?.value || "",
+                numberOfAAC: document.getElementById(`NAAC-${i}`)?.textContent.trim() || ""
             };
-            reader.readAsText(file);
-        });
-    } else {
-        console.warn("Import functionality setup elements (button/input) not found in HTML. Import is disabled.");
-    }
+            
+            rows.push(rowObject);
+        }
 
-    const colorInputs = document.querySelectorAll(".color-pickers input[type='color']");
+        if (rows.length == 0) {
+            alert("Critical Error: No rows were found in the table to export.");
+            return;
+        }
+
+        const jsonString = JSON.stringify(rows, null, 2);
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+
+        const tempLink = document.createElement('a'); 
+        tempLink.href = url;
+        tempLink.download = 'unit_data_export.json';
+        tempLink.style.display = 'none';
+
+        document.body.appendChild(tempLink);
+        tempLink.click();
+        
+        setTimeout(() => {
+            document.body.removeChild(tempLink);
+            URL.revokeObjectURL(url); 
+        }, 100); 
+
+        alert('Units successfully exported and download initiated!');
+    });
+}
+
+// ------------------------------------
+// TOGGLE SELECT/EDIT MODE
+// ------------------------------------
+const toggleBtn = document.getElementById('toggleSelectMode');
+if (toggleBtn) {
+    let selectMode = false;
+
+    toggleBtn.addEventListener('click', () => {
+        selectMode = !selectMode;
+        const rows = document.querySelectorAll('#the-calc tr');
+
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td, th');
+            cells.forEach((cell, i) => {
+                if (i < 2) {
+                    cell.setAttribute('contenteditable', 'false');
+                    cell.classList.add('no-select');
+                } else {
+                    cell.setAttribute('contenteditable', selectMode ? 'false' : 'true');
+                    cell.classList.toggle('no-select', false);
+                }
+            });
+        });
+
+        toggleBtn.textContent = selectMode
+            ? 'Switch to Edit Mode'
+            : 'Switch to Select Mode';
+    });
+}
+
+// ------------------------------------
+// IMPORT UNITS
+// ------------------------------------
+const importButton = document.getElementById('importUnitsBtn');
+const fileInput = document.getElementById('fileInput');
+
+if (importButton && fileInput) {
+    fileInput.accept = ".json";
+    fileInput.style.display = 'none';
+
+    importButton.addEventListener('click', () => fileInput.click());
+
+    fileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const importedData = JSON.parse(e.target.result);
+                // You'll need to implement populateTable function
+                populateTable(importedData);
+            } catch (error) {
+                console.error('Error parsing JSON:', error);
+                alert('Error: Could not read or parse the JSON file. Ensure it is a valid JSON array.');
+            } finally {
+                event.target.value = ''; 
+            }
+        };
+        reader.readAsText(file);
+    });
+} else {
+    console.warn("Import functionality setup elements (button/input) not found in HTML. Import is disabled.");
+}
+
+// ------------------------------------
+// CLEAR UNITS BUTTON
+// ------------------------------------
+const clearUnitsBtn = document.getElementById("clearUnitsBtn");
+if (clearUnitsBtn) {
+    clearUnitsBtn.addEventListener("click", () => {
+        if (!confirm("Clear all unit entries in the table?")) return;
+        
+        for (let i = 1; i <= 15; i++) {
+            // Clear contenteditable cells
+            ['N', 'MC', 'M', 'CB', 'MA', 'MD', 'Armor', 'H', 'Ammo', 'Accuracy', 'NAAC'].forEach(prefix => {
+                const el = document.getElementById(`${prefix}-${i}`);
+                if (el) el.textContent = '';
+            });
+            
+            // Reset selects
+            ['MW', 'MisW', 'S', 'Mount', 'AAC'].forEach(prefix => {
+                const el = document.getElementById(`${prefix}-${i}`);
+                if (el) el.selectedIndex = 0;
+            });
+        }
+    });
+}
+
+// ------------------------------------
+// FACTION PAGE BUTTONS
+// ------------------------------------
+const saveFactionBtn = document.getElementById("saveFactionBtn");
+const exportFactionsBtn = document.getElementById("exportFactionsBtn");
+const importFactionsBtn = document.getElementById("importFactionsBtn");
+const clearFactionsBtn = document.getElementById("clearFactionsBtn");
+
+if (saveFactionBtn) {
+    saveFactionBtn.addEventListener("click", () => {
+        alert("Faction saved! (You can later hook this up to localStorage or export logic.)");
+    });
+}
+
+if (exportFactionsBtn) {
+    exportFactionsBtn.addEventListener("click", () => {
+        alert("Exporting factions... (implement export logic here)");
+    });
+}
+
+if (importFactionsBtn) {
+    importFactionsBtn.addEventListener("click", () => {
+        alert("Importing factions... (implement import logic here)");
+    });
+}
+
+if (clearFactionsBtn) {
+    clearFactionsBtn.addEventListener("click", () => {
+        if (confirm("Clear all factions?")) {
+            document.getElementById("factionList").innerHTML = "";
+        }
+    });
+}
+
+// ------------------------------------
+// COLOR PICKER PREVIEWS
+// ------------------------------------
+const colorInputs = document.querySelectorAll(".color-pickers input[type='color']");
+// ... rest of color picker code
 
 colorInputs.forEach(input => {
   const preview = document.createElement("span");
@@ -2088,37 +2173,37 @@ colorInputs.forEach(input => {
   });
 });
 
-
-    Promise.all([
+// =============================
+// DATA LOADING
+// =============================
+Promise.all([
     fetch('melee-weapons.json').then(response => response.json()),
     fetch('missile-weapons.json').then(response => response.json()),
     fetch('entity-details.json').then(response => response.json()),
     fetch('shields-details.json').then(response=> response.json())
 ])
-    .then(([meleeData, missileData, entitiesData, shieldData]) => {
+.then(([meleeData, missileData, entitiesData, shieldData]) => {
+    meleeWeaponsData = meleeData;
+    missileWeaponsData = missileData;
+    entityData = entitiesData;
+    shieldsData = shieldData;
+    console.log("All data loaded. Calculator ready!");
 
-        meleeWeaponsData = meleeData;
-        missileWeaponsData = missileData;
-        entityData = entitiesData;
-        shieldsData = shieldData;
-        console.log("All data loaded. Calculator ready!");
-
-        const meleeWeaponInput = document.getElementById('MW-1');
-        if (meleeWeaponInput) {
-            meleeWeaponInput.addEventListener('input', () => {
-                calcCategory(1);
-            });
-        }
-        startCalculator();
-
-    })
-    .catch(error => {
-        console.error('Failed to load necessary data:', error);
-    });
-
+    const meleeWeaponInput = document.getElementById('MW-1');
+    if (meleeWeaponInput) {
+        meleeWeaponInput.addEventListener('input', () => {
+            calcCategory(1);
+        });
+    }
+    startCalculator();
+})
+.catch(error => {
+    console.error('Failed to load necessary data:', error);
 });
 
-// Initialize Clerk
+// =============================
+// CLERK AUTHENTICATION
+// =============================
 window.addEventListener("load", async () => {
     const clerk = window.Clerk;
     await clerk.load();
@@ -2130,25 +2215,15 @@ window.addEventListener("load", async () => {
         signedInDiv.style.display = "block";  
         clerk.mountUserButton(userButton);
     } else {
-        signedInDiv.style.display = "block"; // nav stays visible
+        signedInDiv.style.display = "block";
     }
 
     const signInLink = document.getElementById("openSignIn");
     if (signInLink) {
         signInLink.onclick = () => {
-            // Don't hide the nav
-            clerk.openSignIn({ redirectUrl: "/" }); // Opens a modal sign-in
+            clerk.openSignIn({ redirectUrl: "/" });
         };
     }
-
-    emailBtn.onclick = () => {
-        const factionData = generateFactionString(); // You create this function
-
-        createFactionFile(factionData);  // downloads copy/paste file
-        openEmail(factionData);          
-      };
-
-      
 });
 
 // =============================
@@ -2156,19 +2231,17 @@ window.addEventListener("load", async () => {
 // =============================
 const exportCSVButton = document.getElementById('exportCSVBtn');
 
-if (!exportCSVButton) {
-    console.error("CSV Export Button (id='exportCSVBtn') was NOT found in the DOM.");
-} else {
+if (exportCSVButton) {
     exportCSVButton.addEventListener('click', function() {
         const rows = [];
+        const MAX_ROWS = 15;
 
-        // Collect all row data (same pattern as your JSON exporter)
         for (let i = 1; i <= MAX_ROWS; i++) {
             const rowElement = document.getElementById(`row-${i}`);
             if (!rowElement) continue;
 
             const rowObject = {};
-
+            
             ALL_INPUT_PREFIXES.forEach(prefix => {
                 const element = document.getElementById(`${prefix}-${i}`);
                 if (element) {
@@ -2178,7 +2251,6 @@ if (!exportCSVButton) {
                     } else {
                         cellValue = element.textContent.trim();
                     }
-
                     rowObject[prefix] = cellValue;
                 }
             });
@@ -2191,19 +2263,16 @@ if (!exportCSVButton) {
             return;
         }
 
-        // Convert to CSV
         function convertToCSV(objArray) {
             const headers = Object.keys(objArray[0]);
             const csvRows = [];
 
-            // header row
             csvRows.push(headers.join(','));
 
-            // data rows
             objArray.forEach(row => {
                 const values = headers.map(h => {
                     const val = row[h] ?? "";
-                    return `"${val.replace(/"/g, '""')}"`; // escape double quotes
+                    return `"${val.replace(/"/g, '""')}"`;
                 });
                 csvRows.push(values.join(','));
             });
@@ -2212,8 +2281,6 @@ if (!exportCSVButton) {
         }
 
         const csvString = convertToCSV(rows);
-
-        // Make file download
         const blob = new Blob([csvString], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
 
@@ -2234,53 +2301,50 @@ if (!exportCSVButton) {
     });
 }
 
-
-
-  
-  // Open email draft
+// =============================
+// EMAIL SUBMISSION
+// =============================
 function openEmailDraft(factionData) {
     const recipient = "example@example.com";
     const subject = "Faction Data Submission";
   
     const body =
-      "Here is my faction data:\n\n" +
-      factionData +
-      "\n\n(Attached file downloaded automatically.)";
+        "Here is my faction data:\n\n" +
+        factionData +
+        "\n\n(Attached file downloaded automatically.)";
   
-    // Open email client
     window.location.href =
-      "mailto:" +
-      recipient +
-      "?subject=" +
-      encodeURIComponent(subject) +
-      "&body=" +
-      encodeURIComponent(body);
-  }
-  
-  // Master function for button
-  function handleFactionSubmission() {
+        "mailto:" +
+        recipient +
+        "?subject=" +
+        encodeURIComponent(subject) +
+        "&body=" +
+        encodeURIComponent(body);
+}
+
+function handleFactionSubmission() {
     const data = generateFactionData();
   
     downloadFactionFile(data);
     openEmailDraft(data);
   
     setTimeout(() => {
-      alert("Email draft opened! Your faction file was downloaded.");
+        alert("Email draft opened! Your faction file was downloaded.");
     }, 600);
-  }
-  
-  const emailBtn = document.getElementById("emailBtn");
-  if (emailBtn) {
-      emailBtn.addEventListener("click", handleFactionSubmission);
-  }
-  
+}
 
+const emailBtn = document.getElementById("emailBtn");
+if (emailBtn) {
+    emailBtn.addEventListener("click", handleFactionSubmission);
+}
 
-  if (typeof module !== "undefined") {
+// =============================
+// MODULE EXPORTS (for testing)
+// =============================
+if (typeof module !== "undefined") {
     module.exports = {
         vlookup,
         updatePrice,
         calcPrice
     };
 }
-
