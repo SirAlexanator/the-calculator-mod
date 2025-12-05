@@ -22,7 +22,7 @@
 
 <div id="sign-in"></div>
    <!-- Signed-in content -->
-<div id="signedIn" style="display: none;">
+<div id="signedIn" style="display: block;">
     <nav class="navbar">
       <h1>The Calculator Mod</h1>
   
@@ -67,46 +67,7 @@
   </div>
   
  
- 
 
-
-  <!-- Faction -->
-
-
-<main id="faction" class ="active">
-  <section class="page active">
-    <div class="card">
-      <h2>Faction Manager</h2>
-  
-      <div class="form-grid">
-        <label>
-          Faction Name
-          <input type="text" id="factionName" placeholder="Enter faction name">
-        </label>
-  
-        <label>
-          Faction Banner
-          <input type="file" id="factionImage" accept="image/*">
-        </label>
-      </div>
-  
-      <h3>Faction Colors</h3>
-      <div class="grid-4 color-pickers">
-        <label>Primary <input type="color" id="colorPrimary"></label>
-        <label>Secondary <input type="color" id="colorSecondary"></label>
-        <label>Tertiary <input type="color" id="colorTertiary"></label>
-        <label>Unit Card <input type="color" id="colorUnitCard"></label>
-      </div>
-  
-      <div class="btn-row">
-        <button class="submit" id="exportFactionsBtn">Export Factions</button>
-        <button class="submit" id="importFactionsBtn">Import Factions</button>
-        <button class="submit danger" id="clearFactionsBtn">Clear All</button>
-      </div>
-  
-    </div>
-  </section>
-</main>
 
   <!-- Unit -->
   <main id="unit">
@@ -3093,6 +3054,6 @@
     </div>
   </main>
 
-  <script src="scripts.js"></script>
+
 </body>
 </html>

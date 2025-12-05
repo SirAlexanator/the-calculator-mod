@@ -1768,6 +1768,27 @@ const priceInput2 = document.getElementById('P-2');
     });
 }
 
+const JSON_TO_PREFIX = {
+    name: "N",
+    manCount: "MC",
+    morale: "M",
+    chargeBonus: "CB",
+    meleeAttack: "MA",
+    meleeDefense: "MD",
+    armor: "Armor",
+    hp: "H",
+    ammo: "Ammo",
+    accuracy: "Accuracy",
+    meleeWeapon: "MW",
+    missileWeapon: "MisW",
+    shield: "S",
+    mount: "Mount",
+    animalArtilleryChariot: "AAC",
+    numberOfAAC: "NAAC",
+    price: "P",
+    pointsUsage: "PU"
+};
+
 function populateTable(units) {
 
     // Clear existing data (optional, but good practice before importing new data)
@@ -1789,26 +1810,29 @@ function populateTable(units) {
         const rowNumber = i + 1;
         const unit = units[i];
 
-        // Iterate through the input keys we defined
-        ALL_INPUT_PREFIXES.forEach(key => {
-            if (unit.hasOwnProperty(key)) {
-                const elementId = `${key}-${rowNumber}`;
-                const element = document.getElementById(elementId);
+        Object.keys(unit).forEach(key => {
 
-                if (element) {
-                    const valueToSet = unit[key];
+            const prefix = JSON_TO_PREFIX[key];
+            if (!prefix) return;
 
-                    if (SELECT_PREFIXES.includes(key)) {
-                        // For select elements, set the value property
-                        element.value = valueToSet;
-                    } else {
-                        // For contenteditable TDs, set the textContent
-                        element.textContent = valueToSet;
-                    }
-                }
+            const element = document.getElementById(`${prefix}-${rowNumber}`);
+            if (!element) return;
+
+            const value = unit[key];
+
+            if (SELECT_PREFIXES.includes(prefix)) {
+                element.value = value;
+            } else {
+                element.textContent = value;
             }
         });
-        calcPrice(rowNumber);
+
+        setTimeout(() => {
+            calcPrice(rowNumber);
+            updateUnitPoints(rowNumber); // if you have this
+        }, 0);
+        
+
     }
 }
 
@@ -2114,39 +2138,260 @@ if (clearUnitsBtn) {
     });
 }
 
-// ------------------------------------
-// FACTION PAGE BUTTONS
-// ------------------------------------
-const saveFactionBtn = document.getElementById("saveFactionBtn");
-const exportFactionsBtn = document.getElementById("exportFactionsBtn");
-const importFactionsBtn = document.getElementById("importFactionsBtn");
-const clearFactionsBtn = document.getElementById("clearFactionsBtn");
+// =============================
+// FACTION MANAGER - SAVE/LOAD SYSTEM
+// =============================
 
-if (saveFactionBtn) {
-    saveFactionBtn.addEventListener("click", () => {
-        alert("Faction saved! (You can later hook this up to localStorage or export logic.)");
+/**
+ * Save current faction to localStorage
+ */
+function saveFaction() {
+    // Get faction data
+    const factionName = document.getElementById('factionName')?.value.trim();
+    
+    if (!factionName) {
+        alert('Please enter a faction name before saving!');
+        return;
+    }
+    
+    const factionData = {
+        name: factionName,
+        colors: {
+            primary: document.getElementById('colorPrimary')?.value || '#000000',
+            secondary: document.getElementById('colorSecondary')?.value || '#000000',
+            tertiary: document.getElementById('colorTertiary')?.value || '#000000',
+            unitCard: document.getElementById('colorUnitCard')?.value || '#000000',
+        },
+        units: getAllUnitsData(), // Get all 15 units
+        savedAt: new Date().toISOString(),
+    };
+    
+    // Get existing factions from localStorage
+    const savedFactions = JSON.parse(localStorage.getItem('savedFactions') || '{}');
+    
+    // Save this faction (using name as key)
+    savedFactions[factionName] = factionData;
+    
+    localStorage.setItem('savedFactions', JSON.stringify(savedFactions));
+    
+    alert(`✅ Faction "${factionName}" saved successfully!`);
+    
+    // Update the faction list display
+    displaySavedFactions();
+}
+
+/**
+ * Load a faction from localStorage
+ */
+function loadFaction(factionName) {
+    const savedFactions = JSON.parse(localStorage.getItem('savedFactions') || '{}');
+    const faction = savedFactions[factionName];
+    
+    if (!faction) {
+        alert(`Faction "${factionName}" not found!`);
+        return;
+    }
+    
+    // Load faction name and colors
+    document.getElementById('factionName').value = faction.name;
+    document.getElementById('colorPrimary').value = faction.colors.primary;
+    document.getElementById('colorSecondary').value = faction.colors.secondary;
+    document.getElementById('colorTertiary').value = faction.colors.tertiary;
+    document.getElementById('colorUnitCard').value = faction.colors.unitCard;
+    
+    // Load units data
+    if (faction.units && Array.isArray(faction.units)) {
+        faction.units.forEach((unit, index) => {
+            const rowNumber = index + 1;
+            if (rowNumber <= 15) {
+                // Load stats
+                document.getElementById(`MA-${rowNumber}`).textContent = unit.meleeAttack || '';
+                document.getElementById(`MD-${rowNumber}`).textContent = unit.meleeDefense || '';
+                document.getElementById(`M-${rowNumber}`).textContent = unit.morale || '';
+                document.getElementById(`CB-${rowNumber}`).textContent = unit.chargeBonus || '';
+                document.getElementById(`Armor-${rowNumber}`).textContent = unit.armor || '';
+                document.getElementById(`H-${rowNumber}`).textContent = unit.hp || '';
+                document.getElementById(`Accuracy-${rowNumber}`).textContent = unit.accuracy || '';
+                
+                // Load equipment
+                document.getElementById(`MW-${rowNumber}`).value = unit.meleeWeapon || 'dagger_10_2';
+                document.getElementById(`S-${rowNumber}`).value = unit.shield || 'none';
+                document.getElementById(`Mount-${rowNumber}`).value = unit.mount || 'none';
+                
+                // Recalculate price and points for this unit
+                calcPrice(rowNumber);
+                updateUnitPoints(rowNumber);
+            }
+        });
+    }
+    
+    alert(`✅ Faction "${factionName}" loaded successfully!`);
+}
+
+/**
+ * Delete a faction from localStorage
+ */
+function deleteFaction(factionName) {
+    if (!confirm(`Are you sure you want to delete faction "${factionName}"?`)) {
+        return;
+    }
+    
+    const savedFactions = JSON.parse(localStorage.getItem('savedFactions') || '{}');
+    delete savedFactions[factionName];
+    localStorage.setItem('savedFactions', JSON.stringify(savedFactions));
+    
+    alert(`✅ Faction "${factionName}" deleted!`);
+    displaySavedFactions();
+}
+
+/**
+ * Display saved factions in the UI
+ */
+function displaySavedFactions() {
+    const savedFactions = JSON.parse(localStorage.getItem('savedFactions') || '{}');
+    const factionList = document.getElementById('factionList');
+    
+    if (!factionList) {
+        console.warn('factionList element not found');
+        return;
+    }
+    
+    // Clear existing list
+    factionList.innerHTML = '';
+    
+    const factionNames = Object.keys(savedFactions);
+    
+    if (factionNames.length === 0) {
+        factionList.innerHTML = '<li style="color: #888; font-style: italic;">No saved factions yet</li>';
+        return;
+    }
+    
+    // Create list items for each faction
+    factionNames.forEach(name => {
+        const faction = savedFactions[name];
+        const li = document.createElement('li');
+        li.className = 'faction-item';
+        li.style.cssText = `
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            background: #f8f5f0;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        `;
+        
+        // Faction name and date
+        const info = document.createElement('div');
+        const savedDate = new Date(faction.savedAt).toLocaleDateString();
+        info.innerHTML = `
+            <strong>${name}</strong><br>
+            <small style="color: #666;">Saved: ${savedDate}</small>
+        `;
+        
+        // Buttons
+        const buttons = document.createElement('div');
+        buttons.style.cssText = 'display: flex; gap: 0.5rem;';
+        
+        const loadBtn = document.createElement('button');
+        loadBtn.textContent = 'Load';
+        loadBtn.className = 'submit';
+        loadBtn.style.cssText = 'padding: 0.4rem 0.8rem; font-size: 0.9rem;';
+        loadBtn.onclick = () => loadFaction(name);
+        
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.className = 'submit danger';
+        deleteBtn.style.cssText = 'padding: 0.4rem 0.8rem; font-size: 0.9rem;';
+        deleteBtn.onclick = () => deleteFaction(name);
+        
+        buttons.appendChild(loadBtn);
+        buttons.appendChild(deleteBtn);
+        
+        li.appendChild(info);
+        li.appendChild(buttons);
+        factionList.appendChild(li);
     });
 }
 
+// =============================
+// INITIALIZE FACTION MANAGER
+// =============================
+
+// Update the Save Faction button
+const saveFactionBtn = document.getElementById("saveFactionBtn");
+if (saveFactionBtn) {
+    // Remove old event listener by replacing the button
+    const newSaveFactionBtn = saveFactionBtn.cloneNode(true);
+    saveFactionBtn.parentNode.replaceChild(newSaveFactionBtn, saveFactionBtn);
+    
+    newSaveFactionBtn.addEventListener("click", saveFaction);
+}
+
+// Update Export/Import buttons (keep the alerts for now, or implement later)
+const exportFactionsBtn = document.getElementById("exportFactionsBtn");
 if (exportFactionsBtn) {
     exportFactionsBtn.addEventListener("click", () => {
-        alert("Exporting factions... (implement export logic here)");
+        const savedFactions = localStorage.getItem('savedFactions');
+        if (!savedFactions || savedFactions === '{}') {
+            alert('No factions to export!');
+            return;
+        }
+        
+        // Download as JSON file
+        const blob = new Blob([savedFactions], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'factions_export.json';
+        a.click();
+        URL.revokeObjectURL(url);
     });
 }
 
+const importFactionsBtn = document.getElementById("importFactionsBtn");
 if (importFactionsBtn) {
     importFactionsBtn.addEventListener("click", () => {
-        alert("Importing factions... (implement import logic here)");
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'application/json';
+        input.onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    const imported = JSON.parse(event.target.result);
+                    localStorage.setItem('savedFactions', JSON.stringify(imported));
+                    alert('✅ Factions imported successfully!');
+                    displaySavedFactions();
+                } catch (err) {
+                    alert('❌ Error importing factions: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+        };
+        input.click();
     });
 }
 
 if (clearFactionsBtn) {
     clearFactionsBtn.addEventListener("click", () => {
-        if (confirm("Clear all factions?")) {
-            document.getElementById("factionList").innerHTML = "";
+        if (confirm("Clear all saved factions? This cannot be undone!")) {
+            localStorage.removeItem('savedFactions');
+            displaySavedFactions();
+            alert('✅ All factions cleared!');
         }
     });
 }
+
+
+
+
+// Load and display saved factions on page load
+displaySavedFactions();
+
 
 // ------------------------------------
 // COLOR PICKER PREVIEWS
@@ -2196,6 +2441,7 @@ Promise.all([
         });
     }
     startCalculator();
+    initializePointsSystem();
 })
 .catch(error => {
     console.error('Failed to load necessary data:', error);
@@ -2348,3 +2594,208 @@ if (typeof module !== "undefined") {
         calcPrice
     };
 }
+
+// =============================
+// POINTS CALCULATION SYSTEM
+// =============================
+
+/**
+ * Get all unit data from the table
+ */
+function getAllUnitsData() {
+    const units = [];
+    
+    for (let i = 1; i <= 15; i++) {
+        const unit = {
+            meleeAttack: document.getElementById(`MA-${i}`)?.textContent.trim() || '0',
+            meleeDefense: document.getElementById(`MD-${i}`)?.textContent.trim() || '0',
+            morale: document.getElementById(`M-${i}`)?.textContent.trim() || '0',
+            chargeBonus: document.getElementById(`CB-${i}`)?.textContent.trim() || '0',
+            armor: document.getElementById(`Armor-${i}`)?.textContent.trim() || '0',
+            hp: document.getElementById(`H-${i}`)?.textContent.trim() || '0',
+            accuracy: document.getElementById(`Accuracy-${i}`)?.textContent.trim() || '0',
+            meleeWeapon: document.getElementById(`MW-${i}`)?.value || 'dagger_10_2',
+            shield: document.getElementById(`S-${i}`)?.value || 'none',
+            mount: document.getElementById(`Mount-${i}`)?.value || 'none',
+        };
+        units.push(unit);
+    }
+    
+    return units;
+}
+
+
+// =============================
+// POINTS CALCULATION LOOKUP TABLES
+// =============================
+
+const WEAPON_VALUES = {
+    'dagger_10_2': 5,
+    'shortsword_20_4': 10,
+    'gladius_elite_34_5': 20,
+    'celtic_longsword_36_4': 22,
+    'warsword_40_15': 30,
+    'spear_20_5_20': 15,
+    'pike_20_4': 12,
+    'lance_14_11_10': 18,
+};
+
+const SHIELD_VALUES = {
+    'none': 0,
+    'caetra_cavalry_10': 5,
+    'caetra_20': 8,
+    'celtic_shock_30': 12,
+    'celtic_40': 15,
+    'hoplite_50': 18,
+    'tower_55': 20,
+    'germanic_wall_60': 22,
+};
+
+const MOUNT_VALUES = {
+    'none': 0,
+    'rome_horse_light': 15,
+    'rome_horse_medium': 20,
+    'rome_horse_heavy': 25,
+    'rome_horse_very_heavy': 30,
+    'rome_camel': 20,
+};
+
+function calcUnitPoints(unit) {
+    const meleeAttack = parseFloat(unit.meleeAttack) || 0;
+    const meleeDefense = parseFloat(unit.meleeDefense) || 0;
+    const morale = parseFloat(unit.morale) || 0;
+    const chargeBonus = parseFloat(unit.chargeBonus) || 0;
+    const armor = parseFloat(unit.armor) || 0;
+    const hp = parseFloat(unit.hp) || 0;
+    const accuracy = parseFloat(unit.accuracy) || 0;
+    
+    const weaponKey = unit.meleeWeapon || 'dagger_10_2';
+    const weaponValue = WEAPON_VALUES[weaponKey] || 10;
+    
+    const shieldKey = unit.shield || 'none';
+    const shieldValue = SHIELD_VALUES[shieldKey] || 0;
+    
+    const mountKey = unit.mount || 'none';
+    const mountValue = MOUNT_VALUES[mountKey] || 0;
+    
+    const rawPoints = (
+        (meleeAttack * 0.15) +
+        (meleeDefense * 0.15) +
+        (morale * 0.1) +
+        (chargeBonus * 0.2) +
+        (armor * 0.05) +
+        (hp * 0.01) +
+        (accuracy * 0.1) +
+        weaponValue +
+        shieldValue +
+        mountValue
+    ) / 10;
+    
+    return Math.floor((rawPoints * 10) / 10);
+}
+
+function calcTotalPoints(units) {
+    const total = units.reduce((sum, unit) => {
+        return sum + calcUnitPoints(unit);
+    }, 0);
+    
+    return Math.round(total * 10) / 10;
+}
+
+/**
+ * Update individual unit points display
+ */
+function updateUnitPoints(rowNumber) {
+    const unit = {
+        meleeAttack: document.getElementById(`MA-${rowNumber}`)?.textContent.trim() || '0',
+        meleeDefense: document.getElementById(`MD-${rowNumber}`)?.textContent.trim() || '0',
+        morale: document.getElementById(`M-${rowNumber}`)?.textContent.trim() || '0',
+        chargeBonus: document.getElementById(`CB-${rowNumber}`)?.textContent.trim() || '0',
+        armor: document.getElementById(`Armor-${rowNumber}`)?.textContent.trim() || '0',
+        hp: document.getElementById(`H-${rowNumber}`)?.textContent.trim() || '0',
+        accuracy: document.getElementById(`Accuracy-${rowNumber}`)?.textContent.trim() || '0',
+        meleeWeapon: document.getElementById(`MW-${rowNumber}`)?.value || 'dagger_10_2',
+        shield: document.getElementById(`S-${rowNumber}`)?.value || 'none',
+        mount: document.getElementById(`Mount-${rowNumber}`)?.value || 'none',
+    };
+    
+    // Calculate points for this unit
+    const points = calcUnitPoints(unit);
+    
+    // Update the PU (Points Usage) cell for this row
+    const pointsCell = document.getElementById(`PU-${rowNumber}`);
+    if (pointsCell) {
+        pointsCell.textContent = points.toFixed(1);
+    }
+    
+    // Update total points
+    updateTotalPoints();
+}
+
+/**
+ * Update the total points display in the header
+ */
+function updateTotalPoints() {
+    const units = getAllUnitsData();
+    const total = calcTotalPoints(units);
+    
+    const totalElement = document.getElementById('total-points-usage');
+    if (totalElement) {
+        totalElement.textContent = `Points Usage ${total.toFixed(1)}/34`;
+        
+        // Highlight red if over limit
+        if (total > 34) {
+            totalElement.style.color = 'red';
+            totalElement.style.fontWeight = 'bold';
+            
+            // Show warning (only once per edit)
+            if (!totalElement.dataset.warningShown) {
+                alert(`⚠️ Warning: You've exceeded the 34 point limit! Current total: ${total.toFixed(1)} points`);
+                totalElement.dataset.warningShown = 'true';
+            }
+        } else {
+            totalElement.style.color = '';
+            totalElement.style.fontWeight = '';
+            totalElement.dataset.warningShown = '';
+        }
+    }
+}
+
+/**
+ * Add event listeners to all inputs to update points
+ */
+function initializePointsSystem() {
+    // Add listeners to all contenteditable cells
+    const editableCells = ['MA', 'MD', 'M', 'CB', 'Armor', 'H', 'Accuracy'];
+    
+    for (let i = 1; i <= 15; i++) {
+        editableCells.forEach(prefix => {
+            const element = document.getElementById(`${prefix}-${i}`);
+            if (element) {
+                element.addEventListener('input', () => {
+                    updateUnitPoints(i);
+                });
+                element.addEventListener('blur', () => {
+                    updateUnitPoints(i);
+                });
+            }
+        });
+        
+        // Add listeners to select dropdowns
+        const selects = ['MW', 'S', 'Mount'];
+        selects.forEach(prefix => {
+            const element = document.getElementById(`${prefix}-${i}`);
+            if (element) {
+                element.addEventListener('change', () => {
+                    updateUnitPoints(i);
+                });
+            }
+        });
+    }
+    
+    // Initial calculation
+    for (let i = 1; i <= 15; i++) {
+        updateUnitPoints(i);
+    }
+}
+
