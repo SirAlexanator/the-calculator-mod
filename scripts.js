@@ -24,6 +24,9 @@ const ALL_INPUT_PREFIXES = [
 ];
 // Array of prefixes for SELECT elements
 const SELECT_PREFIXES = ["MW", "MisW", "S", "Mount", "AAC"];
+
+
+
 function updatePrice(rowNumber){
     let price = document.getElementById(`P-${rowNumber}`);
     if(price){
@@ -33,6 +36,8 @@ function updatePrice(rowNumber){
     price.textContent = Math.round(totalPrice[rowNumber-1]/10)*10;
     }
 }
+
+
 
 function calcPrice(rowNumber){
     calcCategory(rowNumber);
@@ -963,7 +968,6 @@ function startCalculator(){
     calcPrice(1);
         console.log("Ammo Calculation called:"+ ammoCost[a+1]);
     });
-
 const priceInput2 = document.getElementById('P-2');
     const meleeAttackInput2 = document.getElementById('MA-2');
     const moraleInput2=document.getElementById('M-2');
@@ -1021,8 +1025,6 @@ const priceInput2 = document.getElementById('P-2');
     calcPrice(2);
         console.log("Ammo Calculation called:"+ ammoCost[a+2]);
     });
-
-    
     const priceInput3 = document.getElementById('P-3');
     const meleeAttackInput3 = document.getElementById('MA-3');
     const moraleInput3=document.getElementById('M-3');
@@ -1810,6 +1812,7 @@ function populateTable(units) {
     }
 }
 
+
 document.addEventListener("DOMContentLoaded", () => {
     // ------------------------------------
     // MAIN TAB NAVIGATION
@@ -1935,35 +1938,63 @@ document.addEventListener("DOMContentLoaded", () => {
     const exportUnitsBtn = document.getElementById("exportUnitsBtn");
     const importUnitsBtn = document.getElementById("importUnitsBtn");
     const addUnitBtn = document.getElementById("addUnitBtn");
-// Wrap your code inside this block
+});
+// ------------------------------------
+// NAVIGATION: Show/Hide Sections
+// ------------------------------------
+function showSection(sectionId) {
+    document.querySelectorAll("main").forEach(main => main.classList.remove("active"));
+    document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+  
+    const targetPage = document.getElementById(sectionId);
+    if (targetPage) targetPage.classList.add("active");
+  
+    const relatedTab = document.querySelector(`[data-tab="${sectionId}"]`);
+    if (relatedTab) relatedTab.classList.add("active");
+}
+
+document.getElementById('toDeveloperBtn')?.addEventListener('click', () => {
+    showSection('developer');
+});
+
+document.getElementById('toFactionBtn')?.addEventListener('click', () => {
+    showSection('faction');
+});
+
+// ------------------------------------
+// EXPORT UNITS (for existing table)
+// ------------------------------------
 const exportButton = document.getElementById('exportUnitsBtn');
 
-if (!exportButton) {
-    console.error("Export Button (id='exportUnitsBtn') was NOT found in the DOM.");
-} else {
+if (exportButton) {
     exportButton.addEventListener('click', function() {
         const rows = [];
+        const MAX_ROWS = 15;
 
-        // Iterate through rows 1 to MAX_ROWS (or until a row doesn't exist)
         for (let i = 1; i <= MAX_ROWS; i++) {
             const rowElement = document.getElementById(`row-${i}`);
             if (!rowElement) continue;
 
-            const rowObject = {};
-            
-            // Loop through all input/select prefixes and retrieve their values
-            ALL_INPUT_PREFIXES.forEach(prefix => {
-                const element = document.getElementById(`${prefix}-${i}`);
-                if (element) {
-                    let cellValue;
-                    if (SELECT_PREFIXES.includes(prefix)) {
-                        cellValue = element.value;
-                    } else {
-                        cellValue = element.textContent.trim();
-                    }
-                    rowObject[prefix] = cellValue;
-                }
-            });
+            const rowObject = {
+                pointsUsage: document.getElementById(`PU-${i}`)?.textContent.trim() || "",
+                price: document.getElementById(`P-${i}`)?.textContent.trim() || "",
+                name: document.getElementById(`N-${i}`)?.textContent.trim() || "",
+                manCount: document.getElementById(`MC-${i}`)?.textContent.trim() || "",
+                morale: document.getElementById(`M-${i}`)?.textContent.trim() || "",
+                chargeBonus: document.getElementById(`CB-${i}`)?.textContent.trim() || "",
+                meleeAttack: document.getElementById(`MA-${i}`)?.textContent.trim() || "",
+                meleeDefense: document.getElementById(`MD-${i}`)?.textContent.trim() || "",
+                armor: document.getElementById(`Armor-${i}`)?.textContent.trim() || "",
+                hp: document.getElementById(`H-${i}`)?.textContent.trim() || "",
+                ammo: document.getElementById(`Ammo-${i}`)?.textContent.trim() || "",
+                accuracy: document.getElementById(`Accuracy-${i}`)?.textContent.trim() || "",
+                meleeWeapon: document.getElementById(`MW-${i}`)?.value || "",
+                missileWeapon: document.getElementById(`MisW-${i}`)?.value || "",
+                shield: document.getElementById(`S-${i}`)?.value || "",
+                mount: document.getElementById(`Mount-${i}`)?.value || "",
+                animalArtilleryChariot: document.getElementById(`AAC-${i}`)?.value || "",
+                numberOfAAC: document.getElementById(`NAAC-${i}`)?.textContent.trim() || ""
+            };
             
             rows.push(rowObject);
         }
@@ -1994,31 +2025,39 @@ if (!exportButton) {
     });
 }
 
+// ------------------------------------
+// TOGGLE SELECT/EDIT MODE
+// ------------------------------------
 const toggleBtn = document.getElementById('toggleSelectMode');
-let selectMode = false;
+if (toggleBtn) {
+    let selectMode = false;
 
-toggleBtn.addEventListener('click', () => {
-  selectMode = !selectMode;
-  const rows = document.querySelectorAll('#the-calc tr');
+    toggleBtn.addEventListener('click', () => {
+        selectMode = !selectMode;
+        const rows = document.querySelectorAll('#the-calc tr');
 
-  rows.forEach(row => {
-    const cells = row.querySelectorAll('td, th');
-    cells.forEach((cell, i) => {
-      if (i < 2) {
-        cell.setAttribute('contenteditable', 'false');
-        cell.classList.add('no-select');
-      } else {
-        cell.setAttribute('contenteditable', selectMode ? 'false' : 'true');
-        cell.classList.toggle('no-select', false);
-      }
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td, th');
+            cells.forEach((cell, i) => {
+                if (i < 2) {
+                    cell.setAttribute('contenteditable', 'false');
+                    cell.classList.add('no-select');
+                } else {
+                    cell.setAttribute('contenteditable', selectMode ? 'false' : 'true');
+                    cell.classList.toggle('no-select', false);
+                }
+            });
+        });
+
+        toggleBtn.textContent = selectMode
+            ? 'Switch to Edit Mode'
+            : 'Switch to Select Mode';
     });
-  });
+}
 
-  toggleBtn.textContent = selectMode
-    ? 'Switch to Edit Mode'
-    : 'Switch to Select Mode';
-});
-
+// ------------------------------------
+// IMPORT UNITS
+// ------------------------------------
 const importButton = document.getElementById('importUnitsBtn');
 const fileInput = document.getElementById('fileInput');
 
@@ -2036,6 +2075,7 @@ if (importButton && fileInput) {
         reader.onload = function(e) {
             try {
                 const importedData = JSON.parse(e.target.result);
+                // You'll need to implement populateTable function
                 populateTable(importedData);
             } catch (error) {
                 console.error('Error parsing JSON:', error);
@@ -2050,7 +2090,69 @@ if (importButton && fileInput) {
     console.warn("Import functionality setup elements (button/input) not found in HTML. Import is disabled.");
 }
 
+// ------------------------------------
+// CLEAR UNITS BUTTON
+// ------------------------------------
+const clearUnitsBtn = document.getElementById("clearUnitsBtn");
+if (clearUnitsBtn) {
+    clearUnitsBtn.addEventListener("click", () => {
+        if (!confirm("Clear all unit entries in the table?")) return;
+        
+        for (let i = 1; i <= 15; i++) {
+            // Clear contenteditable cells
+            ['N', 'MC', 'M', 'CB', 'MA', 'MD', 'Armor', 'H', 'Ammo', 'Accuracy', 'NAAC'].forEach(prefix => {
+                const el = document.getElementById(`${prefix}-${i}`);
+                if (el) el.textContent = '';
+            });
+            
+            // Reset selects
+            ['MW', 'MisW', 'S', 'Mount', 'AAC'].forEach(prefix => {
+                const el = document.getElementById(`${prefix}-${i}`);
+                if (el) el.selectedIndex = 0;
+            });
+        }
+    });
+}
+
+// ------------------------------------
+// FACTION PAGE BUTTONS
+// ------------------------------------
+const saveFactionBtn = document.getElementById("saveFactionBtn");
+const exportFactionsBtn = document.getElementById("exportFactionsBtn");
+const importFactionsBtn = document.getElementById("importFactionsBtn");
+const clearFactionsBtn = document.getElementById("clearFactionsBtn");
+
+if (saveFactionBtn) {
+    saveFactionBtn.addEventListener("click", () => {
+        alert("Faction saved! (You can later hook this up to localStorage or export logic.)");
+    });
+}
+
+if (exportFactionsBtn) {
+    exportFactionsBtn.addEventListener("click", () => {
+        alert("Exporting factions... (implement export logic here)");
+    });
+}
+
+if (importFactionsBtn) {
+    importFactionsBtn.addEventListener("click", () => {
+        alert("Importing factions... (implement import logic here)");
+    });
+}
+
+if (clearFactionsBtn) {
+    clearFactionsBtn.addEventListener("click", () => {
+        if (confirm("Clear all factions?")) {
+            document.getElementById("factionList").innerHTML = "";
+        }
+    });
+}
+
+// ------------------------------------
+// COLOR PICKER PREVIEWS
+// ------------------------------------
 const colorInputs = document.querySelectorAll(".color-pickers input[type='color']");
+// ... rest of color picker code
 
 colorInputs.forEach(input => {
   const preview = document.createElement("span");
@@ -2071,6 +2173,9 @@ colorInputs.forEach(input => {
   });
 });
 
+// =============================
+// DATA LOADING
+// =============================
 Promise.all([
     fetch('melee-weapons.json').then(response => response.json()),
     fetch('missile-weapons.json').then(response => response.json()),
@@ -2096,4 +2201,150 @@ Promise.all([
     console.error('Failed to load necessary data:', error);
 });
 
+// =============================
+// CLERK AUTHENTICATION
+// =============================
+window.addEventListener("load", async () => {
+    const clerk = window.Clerk;
+    await clerk.load();
+
+    const signedInDiv = document.getElementById("signedIn");
+    const userButton = document.getElementById("user-button");
+
+    if (clerk.user) {
+        signedInDiv.style.display = "block";  
+        clerk.mountUserButton(userButton);
+    } else {
+        signedInDiv.style.display = "block";
+    }
+
+    const signInLink = document.getElementById("openSignIn");
+    if (signInLink) {
+        signInLink.onclick = () => {
+            clerk.openSignIn({ redirectUrl: "/" });
+        };
+    }
 });
+
+// =============================
+// CSV EXPORT BUTTON
+// =============================
+const exportCSVButton = document.getElementById('exportCSVBtn');
+
+if (exportCSVButton) {
+    exportCSVButton.addEventListener('click', function() {
+        const rows = [];
+        const MAX_ROWS = 15;
+
+        for (let i = 1; i <= MAX_ROWS; i++) {
+            const rowElement = document.getElementById(`row-${i}`);
+            if (!rowElement) continue;
+
+            const rowObject = {};
+            
+            ALL_INPUT_PREFIXES.forEach(prefix => {
+                const element = document.getElementById(`${prefix}-${i}`);
+                if (element) {
+                    let cellValue;
+                    if (SELECT_PREFIXES.includes(prefix)) {
+                        cellValue = element.value;
+                    } else {
+                        cellValue = element.textContent.trim();
+                    }
+                    rowObject[prefix] = cellValue;
+                }
+            });
+
+            rows.push(rowObject);
+        }
+
+        if (rows.length === 0) {
+            alert("Error: No table rows found.");
+            return;
+        }
+
+        function convertToCSV(objArray) {
+            const headers = Object.keys(objArray[0]);
+            const csvRows = [];
+
+            csvRows.push(headers.join(','));
+
+            objArray.forEach(row => {
+                const values = headers.map(h => {
+                    const val = row[h] ?? "";
+                    return `"${val.replace(/"/g, '""')}"`;
+                });
+                csvRows.push(values.join(','));
+            });
+
+            return csvRows.join('\n');
+        }
+
+        const csvString = convertToCSV(rows);
+        const blob = new Blob([csvString], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+
+        const tempLink = document.createElement('a');
+        tempLink.href = url;
+        tempLink.download = 'unit_data_export.csv';
+        tempLink.style.display = 'none';
+
+        document.body.appendChild(tempLink);
+        tempLink.click();
+
+        setTimeout(() => {
+            document.body.removeChild(tempLink);
+            URL.revokeObjectURL(url);
+        }, 100);
+
+        alert("CSV file exported!");
+    });
+}
+
+// =============================
+// EMAIL SUBMISSION
+// =============================
+function openEmailDraft(factionData) {
+    const recipient = "example@example.com";
+    const subject = "Faction Data Submission";
+  
+    const body =
+        "Here is my faction data:\n\n" +
+        factionData +
+        "\n\n(Attached file downloaded automatically.)";
+  
+    window.location.href =
+        "mailto:" +
+        recipient +
+        "?subject=" +
+        encodeURIComponent(subject) +
+        "&body=" +
+        encodeURIComponent(body);
+}
+
+function handleFactionSubmission() {
+    const data = generateFactionData();
+  
+    downloadFactionFile(data);
+    openEmailDraft(data);
+  
+    setTimeout(() => {
+        alert("Email draft opened! Your faction file was downloaded.");
+    }, 600);
+}
+
+const emailBtn = document.getElementById("emailBtn");
+if (emailBtn) {
+    emailBtn.addEventListener("click", handleFactionSubmission);
+}
+
+// =============================
+// MODULE EXPORTS (for testing)
+// =============================
+if (typeof module !== "undefined") {
+    module.exports = {
+        vlookup,
+        updatePrice,
+        calcPrice
+    };
+}
