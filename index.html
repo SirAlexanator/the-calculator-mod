@@ -9,44 +9,67 @@
     <!-- Load external CSS styles -->
     <link rel="stylesheet" href="styles.css">
 
+    <!-- Clerk -->
+    <script async crossorigin="anonymous"
+    data-clerk-publishable-key="pk_test_ZmVhc2libGUtc3dpbmUtMjAuY2xlcmsuYWNjb3VudHMuZGV2JA"
+    src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js">
+    </script>
+
+  <script defer src="scripts.js"></script>
+
 </head>
 
 <body>
 
+<div id="sign-in"></div>
+   <!-- Signed-in content -->
+<div id="signedIn" style="display: none;">
     <nav class="navbar">
-    <h1>The Calculator Mod</h1>
-    <div class="nav-links">
-      <button class="tab-btn active" data-tab="faction">Faction</button>
-      <button class="tab-btn" data-tab="unit">Unit</button>
-
-      <!-- Developer Dropdown -->
-      <div class="dropdown">
-        <button class="tab-btn dropdown-btn" data-tab="developer">Developer ▼</button>
-        <div class="dropdown-content">
-          <a href="#land_units">land_units</a>
-          <a href="#main_units">main_units</a>
-          <a href="#unit_variants">unit_variants</a>
-          <a href="#land_units_loc">land_units.loc</a>
-          <a href="#unit_to_abilities">unit_to_abilities</a>
-          <a href="#short_descriptions">short_descriptions</a>
-          <a href="#unit_custom_battle_permissions">unit_custom_battle_permissions</a>
+      <h1>The Calculator Mod</h1>
+  
+      <div class="nav-links">
+        <button class="tab-btn active" data-tab="faction">Faction</button>
+        <button class="tab-btn" data-tab="unit">Unit</button>
+  
+        <!-- Developer Dropdown -->
+        <div class="dropdown">
+          <button class="tab-btn dropdown-btn" data-tab="developer">Developer ▼</button>
+          <div class="dropdown-content">
+            <a href="#land_units">land_units</a>
+            <a href="#main_units">main_units</a>
+            <a href="#unit_variants">unit_variants</a>
+            <a href="#land_units_loc">land_units.loc</a>
+            <a href="#unit_to_abilities">unit_to_abilities</a>
+            <a href="#short_descriptions">short_descriptions</a>
+            <a href="#unit_custom_battle_permissions">unit_custom_battle_permissions</a>
+          </div>
         </div>
-      </div>
-
-      <!-- Information Dropdown -->
-      <div class="dropdown">
-        <button class="tab-btn dropdown-btn" data-tab="information">Information ▼</button>
-        <div class="dropdown-content">
-          <a href="#weapons">Weapons</a>
-          <a href="#shields">Shields</a>
-          <a href="#mounts">Mounts</a>
-          <a href="#animals">Animals</a>
-          <a href="#artillery">Artillery</a>
-          <a href="#chariots">Chariots</a>
+  
+        <!-- Information Dropdown -->
+        <div class="dropdown">
+          <button class="tab-btn dropdown-btn" data-tab="information">Information ▼</button>
+          <div class="dropdown-content">
+            <a href="#weapons">Weapons</a>
+            <a href="#shields">Shields</a>
+            <a href="#mounts">Mounts</a>
+            <a href="#animals">Animals</a>
+            <a href="#artillery">Artillery</a>
+            <a href="#chariots">Chariots</a>
+          </div>
         </div>
+
+        <div class="sign-in-area">
+            <button class="nav-button" id="openSignIn">Sign In</button>
+            <div id="user-button"></div>
+        </div>
+
       </div>
-    </div>
-  </nav>
+    </nav>
+  </div>
+  
+ 
+ 
+
 
   <!-- Faction -->
 
@@ -100,6 +123,7 @@
         <button type = "button" class=" submit" id = "toDeveloperBtn"> Go To Developer</button>
         <button type = "button" class=" submit" id = "toFactionBtn"> Go To Faction</button>
         <button id="toggleSelectMode" class="mode-btn">Switch to Select Mode</button>
+        <button type="button" class="submit" class = "submit" id="exportCSVBtn">Submit Faction</button>
 
 
       </div>
@@ -2922,10 +2946,8 @@
   </tr>
 </table>
 </section>
-    </div>
+</div>
   </main>
-    <script src="scripts.js"></script>
 
 </body>
-
 </html>

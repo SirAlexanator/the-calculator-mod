@@ -24,6 +24,9 @@ const ALL_INPUT_PREFIXES = [
 ];
 // Array of prefixes for SELECT elements
 const SELECT_PREFIXES = ["MW", "MisW", "S", "Mount", "AAC"];
+
+
+
 function updatePrice(rowNumber){
     let price = document.getElementById(`P-${rowNumber}`);
     if(price){
@@ -33,6 +36,8 @@ function updatePrice(rowNumber){
     price.textContent = Math.round(totalPrice[rowNumber-1]/10)*10;
     }
 }
+
+
 
 function calcPrice(rowNumber){
     calcCategory(rowNumber);
@@ -1807,6 +1812,7 @@ function populateTable(units) {
     }
 }
 
+
 document.addEventListener("DOMContentLoaded", () => {
     // ------------------------------------
     // MAIN TAB NAVIGATION
@@ -2030,7 +2036,7 @@ toggleBtn.addEventListener('click', () => {
 
    const importButton = document.getElementById('importUnitsBtn');
     const fileInput = document.getElementById('fileInput');
-
+ 
     if (importButton && fileInput) {
         fileInput.accept = ".json"; // Ensure only JSON files are selectable
         fileInput.style.display = 'none'; // Keep the file input hidden
@@ -2111,3 +2117,170 @@ colorInputs.forEach(input => {
     });
 
 });
+
+// Initialize Clerk
+window.addEventListener("load", async () => {
+    const clerk = window.Clerk;
+    await clerk.load();
+
+    const signedInDiv = document.getElementById("signedIn");
+    const userButton = document.getElementById("user-button");
+
+    if (clerk.user) {
+        signedInDiv.style.display = "block";  
+        clerk.mountUserButton(userButton);
+    } else {
+        signedInDiv.style.display = "block"; // nav stays visible
+    }
+
+    const signInLink = document.getElementById("openSignIn");
+    if (signInLink) {
+        signInLink.onclick = () => {
+            // Don't hide the nav
+            clerk.openSignIn({ redirectUrl: "/" }); // Opens a modal sign-in
+        };
+    }
+
+    emailBtn.onclick = () => {
+        const factionData = generateFactionString(); // You create this function
+
+        createFactionFile(factionData);  // downloads copy/paste file
+        openEmail(factionData);          
+      };
+
+      
+});
+
+// =============================
+// CSV EXPORT BUTTON
+// =============================
+const exportCSVButton = document.getElementById('exportCSVBtn');
+
+if (!exportCSVButton) {
+    console.error("CSV Export Button (id='exportCSVBtn') was NOT found in the DOM.");
+} else {
+    exportCSVButton.addEventListener('click', function() {
+        const rows = [];
+
+        // Collect all row data (same pattern as your JSON exporter)
+        for (let i = 1; i <= MAX_ROWS; i++) {
+            const rowElement = document.getElementById(`row-${i}`);
+            if (!rowElement) continue;
+
+            const rowObject = {};
+
+            ALL_INPUT_PREFIXES.forEach(prefix => {
+                const element = document.getElementById(`${prefix}-${i}`);
+                if (element) {
+                    let cellValue;
+                    if (SELECT_PREFIXES.includes(prefix)) {
+                        cellValue = element.value;
+                    } else {
+                        cellValue = element.textContent.trim();
+                    }
+
+                    rowObject[prefix] = cellValue;
+                }
+            });
+
+            rows.push(rowObject);
+        }
+
+        if (rows.length === 0) {
+            alert("Error: No table rows found.");
+            return;
+        }
+
+        // Convert to CSV
+        function convertToCSV(objArray) {
+            const headers = Object.keys(objArray[0]);
+            const csvRows = [];
+
+            // header row
+            csvRows.push(headers.join(','));
+
+            // data rows
+            objArray.forEach(row => {
+                const values = headers.map(h => {
+                    const val = row[h] ?? "";
+                    return `"${val.replace(/"/g, '""')}"`; // escape double quotes
+                });
+                csvRows.push(values.join(','));
+            });
+
+            return csvRows.join('\n');
+        }
+
+        const csvString = convertToCSV(rows);
+
+        // Make file download
+        const blob = new Blob([csvString], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+
+        const tempLink = document.createElement('a');
+        tempLink.href = url;
+        tempLink.download = 'unit_data_export.csv';
+        tempLink.style.display = 'none';
+
+        document.body.appendChild(tempLink);
+        tempLink.click();
+
+        setTimeout(() => {
+            document.body.removeChild(tempLink);
+            URL.revokeObjectURL(url);
+        }, 100);
+
+        alert("CSV file exported!");
+    });
+}
+
+
+
+  
+  // Open email draft
+function openEmailDraft(factionData) {
+    const recipient = "example@example.com";
+    const subject = "Faction Data Submission";
+  
+    const body =
+      "Here is my faction data:\n\n" +
+      factionData +
+      "\n\n(Attached file downloaded automatically.)";
+  
+    // Open email client
+    window.location.href =
+      "mailto:" +
+      recipient +
+      "?subject=" +
+      encodeURIComponent(subject) +
+      "&body=" +
+      encodeURIComponent(body);
+  }
+  
+  // Master function for button
+  function handleFactionSubmission() {
+    const data = generateFactionData();
+  
+    downloadFactionFile(data);
+    openEmailDraft(data);
+  
+    setTimeout(() => {
+      alert("Email draft opened! Your faction file was downloaded.");
+    }, 600);
+  }
+  
+  const emailBtn = document.getElementById("emailBtn");
+  if (emailBtn) {
+      emailBtn.addEventListener("click", handleFactionSubmission);
+  }
+  
+
+
+  if (typeof module !== "undefined") {
+    module.exports = {
+        vlookup,
+        updatePrice,
+        calcPrice
+    };
+}
+

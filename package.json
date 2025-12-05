@@ -1,0 +1,32 @@
+{
+  "name": "the-calculator-mod",
+  "version": "1.0.0",
+  "main": "calculator.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SirAlexanator/the-calculator-mod.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SirAlexanator/the-calculator-mod/issues"
+  },
+  "homepage": "https://github.com/SirAlexanator/the-calculator-mod#readme",
+  "description": "",
+  "devDependencies": {
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0"
+  },
+  "type": "module",
+  "jest": {
+    "testEnvironment": "jest-environment-jsdom",
+    "transform": {}
+  }
+}
