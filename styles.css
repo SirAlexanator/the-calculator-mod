@@ -1,5 +1,91 @@
 /* Place your CSS styles in this file */
+/*
+h1 {
+    text-align: center;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: normal;
+}
 
+h2{
+    color: #4b3621;
+    margin-bottom: 1rem;
+}
+
+h3{
+    margin-top: 2rem;
+    color: #5b4226;
+}
+
+.form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.grid-2, .grid-3 {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.5rem
+}
+
+.grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    color: #4e3b2a;
+}
+
+input, select {
+    padding: 0.5rem;
+    border: 1px solid #d2b48c;
+    border-radius: 6px;
+    background-color: #fffefb;
+}
+
+input:focus, select:focus{
+    outline: none;
+    border-color: #a67c52;
+    box-shadow: 0 0 3px #a67c52;
+}
+
+button.submit{
+    background: #8b6b45;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+    background: #fffdf8;
+}
+
+
+tr {
+    border-top: 1px solid black;
+}
+
+body {
+    background-color: rgba(10,10,10,0.15);
+}
+
+select {
+    background-color: rgba(10,10,10,0.15);
+}
+*/
 body{
     margin: 0;
     font-family : 'Inter', sans-serif;
@@ -87,7 +173,15 @@ main.active{
     width: 80%;
     max-width: 1000px;
 }
+.card-unitM{
+    background: #fcf8fc;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 2200px;
 
+}
 h1 {
     text-align: center;
     font-family: "Source Sans Pro", sans-serif;
@@ -206,17 +300,18 @@ select {
   }
   
   /* Dropdown content box (hidden by default) */
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #fffdf8;
-    min-width: 200px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    z-index: 20;
-    margin-top: 0.25rem;
-    flex-direction: column;
-  }
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #fffdf8;
+  min-width: 200px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  z-index: 1000;
+  top: 100%; /* directly below button */
+  left: 0;
+  overflow: hidden;
+}
   
   /* Dropdown links */
   .dropdown-content a {
@@ -233,9 +328,10 @@ select {
   }
   
   /* Show dropdown when hovering over the container */
-  .dropdown:hover .dropdown-content {
-    display: block;
-  }
+.dropdown:hover .dropdown-content,
+.dropdown-content:hover {
+  display: block;
+}
   
   /* Optional: style the main button when open */
   .dropdown:hover > .dropdown-btn {
@@ -310,4 +406,47 @@ table {
   .table-wrapper tr:nth-child(even) {
     background-color: #f9f9f9;
   }
-  
+  td {
+    text-align: center;
+    min-width: 60px;
+}
+.mode-btn {
+    background: #8b6b45;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.mode-btn:hover {
+  background: #8b6b45;
+  transform: translateY(-1px);
+}
+
+.mode-btn:active {
+  transform: translateY(0);
+}
+
+
+/* Prevent highlighting/selecting in first two columns */
+#the-calc .no-select {
+  user-select: none;
+  cursor: not-allowed;
+}
+
+/* Prevent text jumping between modes */
+#the-calc td, #the-calc th {
+  padding: 4px 6px;
+  min-width: 70px;
+  text-align: center;
+  border: 1px solid #555;
+  white-space: nowrap;
+}
+
+#the-calc td[contenteditable="true"],
+#the-calc td[contenteditable="false"] {
+  height: 24px;
+  vertical-align: middle;
+}
