@@ -1,5 +1,5 @@
-<!doctype html>
 
+<!doctype html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -9,44 +9,66 @@
     <!-- Load external CSS styles -->
     <link rel="stylesheet" href="styles.css">
 
-</head>
+    <!-- Clerk -->
+    <script async crossorigin="anonymous"
+    data-clerk-publishable-key="pk_test_ZmVhc2libGUtc3dpbmUtMjAuY2xlcmsuYWNjb3VudHMuZGV2JA"
+    src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js">
+    </script>
 
+  <script defer src="scripts.js"></script>
+
+</head>
 <body>
 
+<div id="sign-in"></div>
+   <!-- Signed-in content -->
+<div id="signedIn" style="display: none;">
     <nav class="navbar">
-    <h1>The Calculator Mod</h1>
-    <div class="nav-links">
-      <button class="tab-btn active" data-tab="faction">Faction</button>
-      <button class="tab-btn" data-tab="unit">Unit</button>
-
-      <!-- Developer Dropdown -->
-      <div class="dropdown">
-        <button class="tab-btn dropdown-btn" data-tab="developer">Developer ▼</button>
-        <div class="dropdown-content">
-          <a href="#land_units">land_units</a>
-          <a href="#main_units">main_units</a>
-          <a href="#unit_variants">unit_variants</a>
-          <a href="#land_units_loc">land_units.loc</a>
-          <a href="#unit_to_abilities">unit_to_abilities</a>
-          <a href="#short_descriptions">short_descriptions</a>
-          <a href="#unit_custom_battle_permissions">unit_custom_battle_permissions</a>
+      <h1>The Calculator Mod</h1>
+  
+      <div class="nav-links">
+        <button class="tab-btn active" data-tab="faction">Faction</button>
+        <button class="tab-btn" data-tab="unit">Unit</button>
+  
+        <!-- Developer Dropdown -->
+        <div class="dropdown">
+          <button class="tab-btn dropdown-btn" data-tab="developer">Developer ▼</button>
+          <div class="dropdown-content">
+            <a href="#land_units">land_units</a>
+            <a href="#main_units">main_units</a>
+            <a href="#unit_variants">unit_variants</a>
+            <a href="#land_units_loc">land_units.loc</a>
+            <a href="#unit_to_abilities">unit_to_abilities</a>
+            <a href="#short_descriptions">short_descriptions</a>
+            <a href="#unit_custom_battle_permissions">unit_custom_battle_permissions</a>
+          </div>
         </div>
-      </div>
-
-      <!-- Information Dropdown -->
-      <div class="dropdown">
-        <button class="tab-btn dropdown-btn" data-tab="information">Information ▼</button>
-        <div class="dropdown-content">
-          <a href="#weapons">Weapons</a>
-          <a href="#shields">Shields</a>
-          <a href="#mounts">Mounts</a>
-          <a href="#animals">Animals</a>
-          <a href="#artillery">Artillery</a>
-          <a href="#chariots">Chariots</a>
+  
+        <!-- Information Dropdown -->
+        <div class="dropdown">
+          <button class="tab-btn dropdown-btn" data-tab="information">Information ▼</button>
+          <div class="dropdown-content">
+            <a href="#weapons">Weapons</a>
+            <a href="#shields">Shields</a>
+            <a href="#mounts">Mounts</a>
+            <a href="#animals">Animals</a>
+            <a href="#artillery">Artillery</a>
+            <a href="#chariots">Chariots</a>
+          </div>
         </div>
+
+        <div class="sign-in-area">
+            <button class="nav-button" id="openSignIn">Sign In</button>
+            <div id="user-button"></div>
+        </div>
+
       </div>
-    </div>
-  </nav>
+    </nav>
+  </div>
+  
+ 
+ 
+
 
   <!-- Faction -->
 
@@ -100,6 +122,7 @@
         <button type = "button" class=" submit" id = "toDeveloperBtn"> Go To Developer</button>
         <button type = "button" class=" submit" id = "toFactionBtn"> Go To Faction</button>
         <button id="toggleSelectMode" class="mode-btn">Switch to Select Mode</button>
+        <button type="button" class="submit" class = "submit" id="exportCSVBtn">Submit Faction</button>
 
 
       </div>
@@ -2922,10 +2945,154 @@
   </tr>
 </table>
 </section>
+</div>
+  </main>
+
+  <!-- Faction -->
+
+
+<main id="faction" class ="active">
+  <section class="page active">
+    <div class="card">
+      <h2>Faction Manager</h2>
+  
+      <div class="form-grid">
+        <label>
+          Faction Name
+          <input type="text" id="factionName" placeholder="Enter faction name">
+        </label>
+  
+        <label>
+          Faction Banner
+          <input type="file" id="factionImage" accept="image/*">
+        </label>
+      </div>
+  
+      <h3>Faction Colors</h3>
+      <div class="grid-4 color-pickers">
+        <label>Primary <input type="color" id="colorPrimary"></label>
+        <label>Secondary <input type="color" id="colorSecondary"></label>
+        <label>Tertiary <input type="color" id="colorTertiary"></label>
+        <label>Unit Card <input type="color" id="colorUnitCard"></label>
+      </div>
+  
+      <div class="btn-row">
+        <button class="submit" id="saveFactionBtn">Save Faction</button>
+        <button class="submit" id="exportFactionsBtn">Export Factions</button>
+        <button class="submit" id="importFactionsBtn">Import Factions</button>
+        <button class="submit danger" id="clearFactionsBtn">Clear All</button>
+      </div>
+  
+      <h3>Existing Factions</h3>
+      <ul id="factionList" class="faction-list"></ul>
+    </div>
+  </section>
+</main>
+
+  <!-- Unit -->
+  <main id="unit">
+    <div class="card">
+      <h2>Unit Manager</h2>
+  
+      <div class="btn-row">
+        <button type="button" class="submit" id="exportUnitsBtn">Export Units</button>
+        <button type="button" class="submit" id="importUnitsBtn">Import Units</button>
+        <button type="button" class="submit danger" id="clearUnitsBtn">Clear All</button>
+        <button type = "button" class=" submit" id = "toDeveloperBtn"> Go To Developer</button>
+        <button type = "button" class=" submit" id = "toFactionBtn"> Go To Faction</button>
+      </div>
+  
+      <div class="table-wrapper">
+        <table id="unitTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Faction</th>
+              <th>Name</th>
+              <th>Man Count</th>
+              <th>Melee Weapon</th>
+              <th>Armor</th>
+              <th>Speed</th>
+              <th>Morale</th>
+              <th>Price</th>
+              <th>Points</th>
+            </tr>
+          </thead>
+          <tbody id="unitTbody">
+            <!-- rows will be injected here by JS -->
+          </tbody>
+        </table>
+      </div>
+  
+      <h3>Information Links</h3>
+      <ul class="info-links">
+        <li><a href="#weapons">Weapons</a></li>
+        <li><a href="#shields">Shields</a></li>
+        <li><a href="#mounts">Mounts</a></li>
+        <li><a href="#animals">Animals</a></li>
+        <li><a href="#artillery">Artillery</a></li>
+        <li><a href="#chariots">Chariots</a></li>
+      </ul>
     </div>
   </main>
-    <script src="scripts.js"></script>
+  
 
+  <!-- Developer -->
+  <main id="developer">
+    <div class="card">
+      <h2>Developer Tables</h2>
+      <section id= "land_units" class = "dev-section active">
+        <h3>Land Units</h3>
+        <p> Content for land_units goes here...</p>
+      </section>
+
+      <section id ="main_units" class = "dev-section">
+        <h3>Main Units</h3>
+        <p> Content for main_units goes here...</p>
+      </section>
+
+      <section id = "unit_variants" class = "dev-section">
+        <h3>Unit Variants</h3>
+        <p> Content for unit_variants goes here...</p>
+      </section>
+
+      <section id = "land_units_loc" class = "dev-section">
+        <h3>Land Units Location</h3>
+        <p> Content for land_units_loc goes here...</p>
+      </section>
+      
+      <section id="unit_to_abilities" class= "dev-section">
+        <h3>Unit to Abilities</h3>
+        <p> Content for unit_to_abilities goes here...</p>
+      </section>
+
+      <section id="short_descriptions" class= "dev-section">
+        <h3>Short Descriptions</h3>
+        <p> Content for short_descriptions goes here...</p>
+      </section>
+
+     <section id="unit_custom_battle_permissions" class= "dev-section">
+        <h3>Unit Custom Battle Permissions</h3>  
+        <p> Content for unit_custom_battle_permissions goes here...</p>
+      </section> 
+      
+    </div>
+  </main>
+
+  <!-- Information -->
+  <main id="information">
+    <div class="card">
+      <h2>Information Reference</h2>
+
+      <section id="weapons" class = "info-section active"><h3>Weapons</h3><p>Details about all melee and ranged weapons...</p></section>
+      <section id="shields" class = "info-section"><h3>Shields</h3><p>Shield types and their properties...</p></section>
+      <section id="mounts" class = "info-section"><h3>Mounts</h3><p>Information about horses, camels, etc...</p></section>
+      <section id="animals" class = "info-section"><h3>Animals</h3><p>Elephants and other animals used in battle...</p></section>
+      <section id="artillery" class = "info-section"><h3>Artillery</h3><p>Ballista, catapults, trebuchets...</p></section>
+      <section id="chariots" class = "info-section"><h3>Chariots</h3><p>Chariot types and stats...</p></section>
+    </div>
+  </main>
+
+  <script src="scripts.js"></script>
 </body>
-
 </html>
