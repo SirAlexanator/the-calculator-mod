@@ -3,7 +3,6 @@ Code Documentation
 
 Project: Rome II Unit Calculator  
 Author: Alexander Redinger  
-Date: 10-31-25 
 Languages: HTML / CSS / JavaScript  
 
 ------------------------------------------------------------
